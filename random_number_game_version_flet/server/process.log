@@ -1,0 +1,162 @@
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:30:05] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root: 
+                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
+            
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:33:01] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:33:47] "GET /users HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root: 
+                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
+            
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:38:16] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.44:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:name 'get_db' is not defined
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:41:29] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:cannot access local variable 'db' where it is not associated with a value
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:42:00] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:Database.get_db() takes 0 positional arguments but 1 was given
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:43:11] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:name 'g' is not defined
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:43:25] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:name 'sqlite3' is not defined
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:45:16] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:'sqlite3.Connection' object has no attribute 'execute_query'
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:45:45] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:'sqlite3.Connection' object has no attribute 'execute_query'
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:46:21] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root: 
+                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
+            
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:47:21] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.44:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root: 
+                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
+            
+INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:49:45] "POST /users/register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
