@@ -16,6 +16,7 @@ logging.basicConfig(filename='process.log', level=logging.DEBUG)
 load_dotenv()
 
 user_admin = os.getenv("ADMIN_USER")
+email_admin = os.getenv("ADMIN_EMAIL")
 password_admin = os.getenv("PASSWORD_USER")
 
 db = Database()
@@ -89,16 +90,17 @@ def register():
         # logging.debug(json_data) 
 
         username = json_data.get("username", None )
+        email = json_data.get("email", None )
         password = json_data.get("password", None )
 
-        if username == None or password == None:
+        if username == None or email == None or password == None:
             return parse_json_response( "Incorrect credentials" , 400 )
 
         db.execute_query(
             """ 
-                SELECT * from users where name = ?
+                SELECT * from users where username = ? and email = ?
             """,
-            ( username, )
+            ( username, email )
         )
 
         # logging.debug(db.get_query())
@@ -108,13 +110,13 @@ def register():
         # logging.debug(result)
 
         if result:
-            return parse_json_response( f"User {username} is already taken" , 401 )
+            return parse_json_response( f"User {username} or email {email} is already taken" , 401 )
 
         db.execute_query(
             """ 
-                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
+                INSERT INTO users ( username, email , password, role ) VALUES ( ? , ? , ? , ? )
             """,
-            ( username , password , 2 )
+            ( username , email, password , 2 )
         )
 
         logging.debug(db.get_query())
@@ -143,6 +145,7 @@ def update():
         id_user = request.args.get('id_user')
 
         username = json_data.get("username", None )
+        email = json_data.get("email", None )
         password = json_data.get("password", None )
 
         db.execute_query(
@@ -157,23 +160,26 @@ def update():
         result = db.fetch_all()
 
         if username == None: 
-            username = result[0]["name"]
+            username = result[0]["username"]
+            
+        if email == None: 
+            email = result[0]["email"]
 
         if password == None: 
             password = result[0]["password"]
 
         db.execute_query(
             f""" 
-                UPDATE users SET name = ? , password = ? where id = {id_user} )
+                UPDATE users SET username = ?, email = ? , password = ? where id = {id_user} )
             """,
-            ( username , password )
+            ( username , email,  password )
         )
 
         logging.debug(db.get_query())
 
         db.close_connection()
 
-        return parse_json_response("User registered successfully", 200)
+        return parse_json_response("User updated successfully", 200)
 
     except Exception as e:
 
@@ -192,17 +198,17 @@ def login():
 
         # logging.debug(json_data) 
 
-        username = json_data.get("username", None )
+        email = json_data.get("email", None )
         password = json_data.get("password", None )
 
-        if username == None or password == None:
+        if email == None or password == None:
             return parse_json_response( "Incorrect credentials" , 400 )
 
         db.execute_query(
             """ 
-                SELECT * from users where name = ?
+                SELECT * from users where email = ?
             """,
-            ( username, )
+            ( email, )
         )
 
         # logging.debug(db.get_query())
@@ -212,7 +218,7 @@ def login():
         # logging.debug(result)
 
         if not result:
-            return parse_json_response( f"User {username} does not exist" , 402 )
+            return parse_json_response( f"User {email} does not exist" , 402 )
 
         password_db = result[0]["password"]
         

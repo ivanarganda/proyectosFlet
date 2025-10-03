@@ -160,3 +160,334 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 712-626-461
 INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+DEBUG:root:{'id': 1, 'name': 'ivan', 'password': 'ivan1234', 'role': 1}
+INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:33:33] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:33:49] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\conn.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.85:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:51:23] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:51:38] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 712-626-461
