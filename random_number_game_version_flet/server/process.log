@@ -1134,3 +1134,10 @@ INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 654-730-375
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 654-730-375
