@@ -8,6 +8,7 @@ from helpers.utils import get_queries
 load_dotenv()
 
 user_admin = os.getenv("ADMIN_USER")
+email_admin = os.getenv("ADMIN_EMAIL")
 password_admin = os.getenv("PASSWORD_USER")
 
 def init_connection( db ):
@@ -40,7 +41,7 @@ def init_tables( db ):
             if ( db.execute_query( get_queries()["create_users_table"] ) ):
                 print("✅ Created users table successfully")
             
-            if ( db.execute_query( get_queries()["init_user_admin_data"] , ( user_admin , password_admin ) ) ):
+            if ( db.execute_query( get_queries()["init_user_admin_data"] , ( user_admin , email_admin, password_admin ) ) ):
                 print("✅ Init dumped admin user data from users table")
 
             print(f"✅ Connected to {db.db_path} successfully")

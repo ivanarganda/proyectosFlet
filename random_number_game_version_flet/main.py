@@ -1,6 +1,7 @@
 import flet as ft
-
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 
-if __name__ == '__main__':
-    ft.app(target=renderTemplate)
+def main(page: ft.Page):
+    renderTemplate(page)
+
+ft.app(target=main)
