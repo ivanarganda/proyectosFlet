@@ -24,6 +24,7 @@ def get_queries():
                     username TEXT NOT NULL,
                     password TEXT NOT NULL,
                     role INTEGER,
+                    token TEXT,
                     FOREIGN KEY (role) REFERENCES roles(id) ON DELETE CASCADE
                 )
             """,

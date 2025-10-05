@@ -1,4 +1,30 @@
 import flet as ft
+import json
+import jwt  # PyJWT
+from jwt import InvalidTokenError
+
+def getSession( data , decrypt=False ):
+    if isinstance(data, str):
+        # Si es string JSON → parsear
+        user_data = json.loads(data)
+    elif isinstance(data, dict):
+        # Si Flet ya lo devolvió como dict
+        user_data = data
+    else:
+        user_data = {}
+    
+    if decrypt:
+        # Aquí iría la lógica de desencriptación si se implementa
+        if "token" in user_data:
+            try:
+                decoded = jwt.decode(user_data["token"], "secret", algorithms=["HS256"])
+                return decoded
+            except InvalidTokenError:
+                return {}
+        else:
+            return {}
+        
+    return user_data
 
 def regexes():
     return {
@@ -36,6 +62,8 @@ def clearInputsForm( page, inputs ):
         input_.value = ""
     page.update()
 
-def addElementsPage( page: ft.Page , elements ):
-    for el in elements:
-        page.add( el )
+def addElementsPage(page, elements):
+    for element in elements:
+        page.add(element)
+    page.update()
+    return ft.Stack(elements, expand=True)  # ✅ devuelve algo visible

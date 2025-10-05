@@ -1,506 +1,27 @@
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:30:05] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root: 
-                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
-            
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:33:01] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:33:47] "GET /users HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root: 
-                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
-            
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:38:16] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.44:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:name 'get_db' is not defined
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:41:29] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:cannot access local variable 'db' where it is not associated with a value
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:42:00] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:Database.get_db() takes 0 positional arguments but 1 was given
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:43:11] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:name 'g' is not defined
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:43:25] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:name 'sqlite3' is not defined
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:45:16] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:'sqlite3.Connection' object has no attribute 'execute_query'
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:45:45] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:'sqlite3.Connection' object has no attribute 'execute_query'
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:46:21] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root: 
-                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
-            
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:47:21] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with stat
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.44:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root: 
-                INSERT INTO users ( name , password, role ) VALUES ( ? , ? , ? )
-            
-INFO:werkzeug:127.0.0.1 - - [01/Oct/2025 13:49:45] "POST /users/register HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with stat
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
+DEBUG:root:'password'
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:33:04] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:{'id': 1, 'name': 'ivan', 'password': 'ivan1234', 'role': 1}
-INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:33:33] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:33:49] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\conn.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:51:23] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:51:38] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\BIGDATA\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.10.85:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 712-626-461
-DEBUG:root:{'id': 1, 'email': 'ivanartista96@gmail.com', 'username': 'ivan_arganda96', 'password': 'ivan1234', 'role': 1}
-INFO:werkzeug:127.0.0.1 - - [03/Oct/2025 13:53:22] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Debugger PIN: 945-655-022
 INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5000
@@ -508,89 +29,37 @@ INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a
 INFO:werkzeug:[33mPress CTRL+C to quit[0m
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flask\\__init__.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\werkzeug\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\werkzeug\\wrappers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flask\\json\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\typing.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\markupsafe\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\markupsafe\\_native.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\dotenv\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\dotenv\\main.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\logging\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sqlite3\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\os.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flask\\helpers.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\werkzeug\\datastructures\\mixins.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:name 'datetime' is not defined
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:34:26] "POST /users/login HTTP/1.1" 200 -
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:name 'datetime' is not defined
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:34:33] "POST /users/login HTTP/1.1" 200 -
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Debugger PIN: 945-655-022
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\inspect.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
@@ -605,28 +74,41 @@ INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a
 INFO:werkzeug:[33mPress CTRL+C to quit[0m
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 35, 19, 214457)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:35:19] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 35, 52, 737226)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:35:52] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 37, 44, 637598)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:37:44] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 39, 58, 698128)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:39:58] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 40, 3, 989167)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:40:03] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 40, 15, 551328)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:40:15] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 40, 57, 612810)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:40:57] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 41, 2, 924736)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:41:02] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\json\\__init__.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 47, 56, 880298)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:47:56] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 51, 14, 657245)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:51:14] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 56, 16, 799188)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:56:16] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 58, 0, 820880)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:58:00] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 14, 59, 13, 113218)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 15:59:13] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 15, 1, 43, 190507)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 16:01:43] "POST /users/login HTTP/1.1" 200 -
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 15, 3, 50, 942400)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 16:03:50] "POST /users/login HTTP/1.1" 200 -
 INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5000
@@ -634,510 +116,413 @@ INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a
 INFO:werkzeug:[33mPress CTRL+C to quit[0m
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.1.86:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.1.86:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.1.86:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.1.86:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:06:19] "GET /users HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:06:34] "GET /users HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:06:49] "POST /users/login HTTP/1.1" 200 -
-DEBUG:root:No module named 'jwt'
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:07:03] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\fernet.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\fernet.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\fernet.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\asn1.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\asn1.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\asn1.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\asn1.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\asn1\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\cmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\constant_time.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hashes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ec.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\rsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\modes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\argon2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\concatkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\hkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\kbkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\pbkdf2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ec.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\rsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ec.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ec.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\rsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\rsa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x448.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\modes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\modes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\modes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\cmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\cmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\constant_time.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\constant_time.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hashes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hashes.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hmac.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\argon2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\concatkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\hkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\kbkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\pbkdf2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\scrypt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\x963kdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\argon2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\argon2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\concatkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\concatkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\hkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\hkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\kbkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\kbkdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\pbkdf2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\pbkdf2.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\scrypt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\scrypt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\x963kdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\x963kdf.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\kdf\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\keywrap.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\keywrap.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\padding.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\poly1305.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\poly1305.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs12.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs7.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\ssh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs12.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs12.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs7.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\pkcs7.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\ssh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\ssh.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\hotp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\totp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\hotp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\hotp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\totp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\totp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\twofactor\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_asymmetric.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_asymmetric.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_cipheralgorithm.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_cipheralgorithm.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_serialization.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_serialization.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\_oid.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\_oid.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\hazmat\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\certificate_transparency.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\extensions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\general_name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\ocsp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\oid.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\verification.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\certificate_transparency.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\certificate_transparency.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\extensions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\extensions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\general_name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\general_name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\name.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\ocsp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\ocsp.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\oid.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\oid.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\verification.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\verification.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\x509\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\__about__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\__about__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\cryptography\\__init__.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwa.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwk.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwk.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwkset.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwkset.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jws.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jws.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\utils.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-DEBUG:root:{'id': 1, 'email': 'ivanartista96@gmail.com', 'username': 'ivan_arganda96', 'password': 'ivan1234', 'role': 1}
-DEBUG:root:module 'jwt' has no attribute 'encode'
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:07:41] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.1.86:5000
-INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-DEBUG:root:{'id': 1, 'email': 'ivanartista96@gmail.com', 'username': 'ivan_arganda96', 'password': 'ivan1234', 'role': 1}
-DEBUG:root:module 'jwt' has no attribute 'encode'
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:08:48] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\algorithms.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jwk.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jwk.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jws.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jws.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jwt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\api_jwt.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\help.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\help.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwk_set_cache.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwk_set_cache.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwks_client.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\jwks_client.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\warnings.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\jwt\\warnings.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-DEBUG:root:{'id': 1, 'email': 'ivanartista96@gmail.com', 'username': 'ivan_arganda96', 'password': 'ivan1234', 'role': 1}
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:09:55] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\_base.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flet_core\\page.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\_types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\_types.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\compat.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\compat.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\exceptions.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\socks4.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\socks4.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\socks5.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\socks5.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\socksio\\utils.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\requests_async\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\requests_async\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\requests_async\\__init__.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\requests_async\\client.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\requests_async\\client.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\httpx\\_client.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\httpx\\_transports\\default.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\contextlib.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\httpcore\\_async\\connection_pool.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:22:22] "[33mPOST /login HTTP/1.1[0m" 404 -
-DEBUG:root:415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:23:09] "POST /users/login HTTP/1.1" 200 -
-DEBUG:root:415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:24:01] "POST /users/login HTTP/1.1" 200 -
-DEBUG:root:415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:24:55] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Roaming\\Python\\Python312\\site-packages\\httpx\\_content.py', reloading
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:27:31] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:32:23] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:33:21] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:33:47] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:34:24] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:34:59] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:35:14] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:36:41] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:37:27] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:43:16] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:43:46] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:45:01] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:46:47] "POST /users/login HTTP/1.1" 200 -
-DEBUG:root:{'id': 1, 'email': 'ivanartista96@gmail.com', 'username': 'ivan_arganda96', 'password': 'ivan1234', 'role': 1}
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:48:04] "POST /users/login HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [04/Oct/2025 13:48:42] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'password': 'ivan1234', 'exp': datetime.datetime(2025, 10, 5, 20, 49, 28, 621987)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 21:49:28] "POST /users/login HTTP/1.1" 200 -
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flet_runtime\\app.py', reloading
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\thread.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flet_core\\control.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\DB.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flet_runtime\\app.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\thread.py', reloading
-INFO:werkzeug: * Restarting with watchdog (windowsapi)
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Debugger PIN: 945-655-022
 INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\flet_core\\page.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\conn.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\conf\\DB.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
-INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\helpers\\utils.py', reloading
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
 INFO:werkzeug: * Restarting with watchdog (windowsapi)
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 654-730-375
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.86:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'role': 1, 'exp': datetime.datetime(2025, 10, 5, 21, 7, 5, 329455)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 22:07:05] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.86:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:list index out of range
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 22:08:37] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:list index out of range
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 22:09:58] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\Desktop\\curso-inserta-big-data\\ProyectosPython\\random_number_game_version_flet\\server\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.86:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 945-655-022
+DEBUG:root:{'id': 1, 'username': 'ivan_arganda96', 'email': 'ivanartista96@gmail.com', 'role': 'admin', 'exp': datetime.datetime(2025, 10, 5, 21, 13, 22, 352167)}
+INFO:werkzeug:127.0.0.1 - - [05/Oct/2025 22:13:22] "POST /users/login HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\ivana\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\thread.py', reloading

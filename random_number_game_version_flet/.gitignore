@@ -12,6 +12,8 @@ venv/
 .vscode/
 .idea/
 
+server/process.log
+
 # Archivos del sistema
 .DS_Store
 Thumbs.db
