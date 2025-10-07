@@ -3,6 +3,7 @@ from helpers.utils import getSession
 import json
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
+from Tasks.Tasks import RenderTasks
 
 def main(page: ft.Page):
     # handle session here    
@@ -12,7 +13,7 @@ def main(page: ft.Page):
 
     # Check if the user is logged in
     if not user_data or not user_data.get("is_logged_in"):
-        page.go("/")       # Go to login page
+        page.go("/tasks")       # Go to login page
     else:
         page.go("/menu")   # Go to main menu
 
@@ -26,7 +27,7 @@ def route_change(e: ft.RouteChangeEvent):
     elif page.route == "/games":
         page.views.append(ft.View("/games", [renderGame(page)]))
     elif page.route == "/tasks":
-        page.views.append(ft.View("/tasks", [renderTasks(page)]))
+        page.views.append(ft.View("/tasks", [RenderTasks(page)]))
     page.update()
     
 ft.app(target=main)

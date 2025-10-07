@@ -2,6 +2,37 @@ import flet as ft
 import json
 import jwt  # PyJWT
 from jwt import InvalidTokenError
+import math
+
+# Colors
+def setGradient( color ):
+    return {
+        'black-blue':ft.SweepGradient(
+            center=ft.alignment.center,
+            start_angle=0.0,
+            end_angle=math.pi * 4,
+            colors=[
+                "0x00084F",
+                "0x00084F",
+                "0x2B2A2A",
+                "0x2B2A2A",
+                "0x2B2A2A"
+            ],
+            stops=[0.0, 0.63, 0.70, 0.66, 0.89],
+        )
+    }.get(color, "")
+
+def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" , border_color = "#E0E0E0" , focused_border_color = "#808080" ):
+    defaultTextField = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
+    return {
+        "search": (
+            ft.TextField(keyboard_type=ft.KeyboardType.TEXT, border_radius=5, border_color=border_color, focused_border_color=focused_border_color, border_width=1, prefix_icon=ft.icons.SEARCH , hint_text=placeholder)
+        ),
+        "text": (
+            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color )
+        )
+    }.get(type_, defaultTextField )
+
 
 def getSession( data , decrypt=False ):
     if isinstance(data, str):

@@ -324,6 +324,154 @@ def login():
         
         return parse_json_response( str(e) , 400 )
 
+# =========================
+# TASK CATEGORIES ENDPOINTS
+# =========================
+@app.route("/tasks/categories", methods=["GET", "POST", "DELETE"])
+def task_categories():
+    try:
+        if not init_connection(db):
+            raise Exception("Database connection failed")
+
+        # validar token
+        authorized = check_authorization(request.headers)
+        if not authorized:
+            return parse_json_response("Unauthorized", 401)
+
+        # obtener id_user desde token
+        token = request.headers.get("Authorization").split(" ")[1]
+        db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
+        user = db.fetch_one()
+        if not user:
+            raise Exception("User not found")
+        id_user = user["id"]
+
+        # GET → obtener todas las categorías del usuario
+        if request.method == "GET":
+            db.execute_query(
+                "SELECT id, category FROM tasks_categories WHERE id_user = ?", (id_user,)
+            )
+            result = db.fetch_all()
+            return parse_json_response(result, 200)
+
+        # POST → crear una categoría
+        if request.method == "POST":
+            data = request.json
+            category = data.get("category")
+            if not category:
+                raise Exception("Category name required")
+
+            db.execute_query(
+                "INSERT INTO tasks_categories (category, id_user) VALUES (?, ?)",
+                (category, id_user),
+            )
+            return parse_json_response("Category created successfully", 201)
+
+        # DELETE → eliminar una categoría
+        if request.method == "DELETE":
+            data = request.json
+            id_category = data.get("id")
+            if not id_category:
+                raise Exception("Category ID required")
+
+            db.execute_query(
+                "DELETE FROM tasks_categories WHERE id = ? AND id_user = ?",
+                (id_category, id_user),
+            )
+            db.execute_query(
+                "DELETE FROM tasks WHERE id_category = ? AND id_user = ?",
+                (id_category, id_user),
+            )
+            return parse_json_response("Category deleted successfully", 200)
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)
+
+# ============
+# TASKS ENDPOINTS
+# ============
+@app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
+def tasks():
+    try:
+        if not init_connection(db):
+            raise Exception("Database connection failed")
+
+        authorized = check_authorization(request.headers)
+        if not authorized:
+            return parse_json_response("Unauthorized", 401)
+
+        # obtener id_user desde token
+        token = request.headers.get("Authorization").split(" ")[1]
+        db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
+        user = db.fetch_one()
+        if not user:
+            raise Exception("User not found")
+        id_user = user["id"]
+
+        # GET → obtener todas las tareas del usuario
+        if request.method == "GET":
+            db.execute_query(
+                """SELECT t.id, t.task, t.label_text, c.category 
+                   FROM tasks t 
+                   LEFT JOIN tasks_categories c ON t.id_category = c.id 
+                   WHERE t.id_user = ?""",
+                (id_user,),
+            )
+            result = db.fetch_all()
+            return parse_json_response(result, 200)
+
+        # POST → crear nueva tarea
+        if request.method == "POST":
+            data = request.json
+            task = data.get("task")
+            label_text = data.get("label_text")
+            id_category = data.get("id_category")
+
+            if not task:
+                raise Exception("Task name required")
+
+            db.execute_query(
+                """INSERT INTO tasks (task, label_text, id_category, id_user) 
+                   VALUES (?, ?, ?, ?)""",
+                (task, label_text, id_category, id_user),
+            )
+            return parse_json_response("Task created successfully", 201)
+
+        # PUT → actualizar tarea
+        if request.method == "PUT":
+            data = request.json
+            id_task = data.get("id")
+            task = data.get("task")
+            label_text = data.get("label_text")
+            id_category = data.get("id_category")
+
+            if not id_task:
+                raise Exception("Task ID required")
+
+            db.execute_query(
+                """UPDATE tasks 
+                   SET task = ?, label_text = ?, id_category = ? 
+                   WHERE id = ? AND id_user = ?""",
+                (task, label_text, id_category, id_task, id_user),
+            )
+            return parse_json_response("Task updated successfully", 200)
+
+        # DELETE → eliminar tarea
+        if request.method == "DELETE":
+            data = request.json
+            id_task = data.get("id")
+            if not id_task:
+                raise Exception("Task ID required")
+
+            db.execute_query(
+                "DELETE FROM tasks WHERE id = ? AND id_user = ?",
+                (id_task, id_user),
+            )
+            return parse_json_response("Task deleted successfully", 200)
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)
+
 if __name__ == "__main__":
     
     host = "0.0.0.0"

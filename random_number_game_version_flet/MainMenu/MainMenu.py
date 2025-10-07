@@ -211,8 +211,9 @@ def renderMainMenu(page: ft.Page):
     global username, id_user, role, expired, email
 
     page.title = "Main Menu"
-    page.window_width = 420
+    page.window_width = 500
     page.window_height = 800
+    page.resizable = False
     page.bgcolor = "#F6F4FB"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER

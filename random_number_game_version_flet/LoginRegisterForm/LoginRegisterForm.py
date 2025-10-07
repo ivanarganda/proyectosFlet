@@ -3,14 +3,14 @@ import flet as ft
 import asyncio
 import requests_async as request
 import json
-from helpers.utils import loadLoader, addElementsPage, clearInputsForm, loadSnackbar
+from helpers.utils import loadLoader, addElementsPage, clearInputsForm, loadSnackbar, setInputField
 from LoginRegisterForm.views.login_view import renderLoginView
 from LoginRegisterForm.views.register_view import renderRegisterView
 
 # Give a UIX style
-username_field = ft.TextField(label="Username", keyboard_type=ft.KeyboardType.TEXT, bgcolor="#F5F5F5", border_radius=5, border_color="#E0E0E0")
-email_field = ft.TextField(label="Email", keyboard_type=ft.KeyboardType.EMAIL, bgcolor="#F5F5F5", border_radius=5, border_color="#E0E0E0")
-password_field = ft.TextField(label="Password", password=True, bgcolor="#F5F5F5", border_radius=5, border_color="#E0E0E0")
+username_field = setInputField("text", label="Username")
+email_field = setInputField("text", label="Email")
+password_field = setInputField("text", label="Password")
 
 login_view = False
 register_view = False
