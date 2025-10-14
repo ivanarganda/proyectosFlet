@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 from helpers.utils import get_queries
 from conf.conn import init_connection, init_tables
 
+import datetime
+
 logging.basicConfig(filename='process.log', level=logging.DEBUG)
 
 load_dotenv()
@@ -33,7 +35,39 @@ def parse_json_response( message , status = 200 ):
             message=message,
             status=status
         )
+    
+def check_authorization(headers):
+    
+    try:
+    
+        auth_header = headers.get("Authorization", None)
+        if not auth_header:
+            return False
 
+        if "Bearer" not in auth_header:
+            return False
+        
+        # Obtain token
+        token = auth_header.split(" ")[1]
+        if not token:
+            return False
+
+        # Validate token
+        db.execute_query(
+            """
+                SELECT * from users where token = ?
+            """,
+            (token,)
+        )
+
+        result = db.fetch_all()
+        if not result:
+            return False
+
+        return True
+    
+    except IndexError:
+        return False
 
 # Define routes outside of __main__ block
 @app.route("/roles", methods=["GET"])
@@ -42,6 +76,13 @@ def get_roles():
     try:
 
         handle_server()
+        
+        # Check autorization header
+        try:
+            authorized = check_authorization( request.headers )
+            if authorized != True: raise Exception( "Unauthorized" )
+        except Exception as e:
+            return parse_json_response( str(e) , 301 )
 
         db.execute_query(
             """ 
@@ -63,7 +104,15 @@ def get_users():
     try:
 
         handle_server()
+        
+        # Check autorization header
+        try:
+            authorized = check_authorization( request.headers )
+            if authorized != True: raise Exception( "Unauthorized" )
+        except Exception as e:
+            return parse_json_response( str(e) , 301 )
 
+        # If token is valid, proceed to fetch users
         db.execute_query(
             """ 
                 SELECT * from users
@@ -98,7 +147,7 @@ def register():
 
         db.execute_query(
             """ 
-                SELECT * from users where username = ? and email = ?
+                SELECT * from users where username = ? or email = ?
             """,
             ( username, email )
         )
@@ -114,9 +163,9 @@ def register():
 
         db.execute_query(
             """ 
-                INSERT INTO users ( username, email , password, role ) VALUES ( ? , ? , ? , ? )
+                INSERT INTO users ( username, email , password, role, token ) VALUES ( ? , ? , ? , ? , ? )
             """,
-            ( username , email, password , 2 )
+            ( username , email, password , 2 , None )
         )
 
         logging.debug(db.get_query())
@@ -206,7 +255,7 @@ def login():
 
         db.execute_query(
             """ 
-                SELECT * from users where email = ?
+                SELECT id, username, email,password from users where email = ?
             """,
             ( email, )
         )
@@ -215,7 +264,7 @@ def login():
 
         result = db.fetch_all()
 
-        # logging.debug(result)
+        # logging.debug(result) 
 
         if not result:
             return parse_json_response( f"User {email} does not exist" , 402 )
@@ -224,6 +273,24 @@ def login():
         
         if password_db != password:
             return parse_json_response( "Incorrect password" , 401 )
+        
+        # To set payload for JWT token
+        db.execute_query(
+            """ 
+               SELECT
+                    u.id,
+                    u.username,
+                    u.email,
+                    ( SELECT r.role from roles r where r.id = u.role ) as role
+                from users u
+                where u.email = ?
+            """,
+            ( email, )
+        )
+
+        # logging.debug(db.get_query())
+
+        result = db.fetch_all()
 
         import jwt
 
@@ -231,10 +298,19 @@ def login():
         secret_key = "secret"
 
         payload = result[0]
+        
+        payload["exp"] =  datetime.datetime.utcnow() + datetime.timedelta(hours=1)
 
         logging.debug(payload)
 
         encoded_jwt = jwt.encode(payload, secret_key, algorithm="HS256")
+        
+        db.execute_query(
+            """ 
+                UPDATE users SET token = ? where email = ?
+            """,
+            ( encoded_jwt , email )
+        )
 
         return parse_json_response( 
             {
@@ -248,15 +324,168 @@ def login():
         
         return parse_json_response( str(e) , 400 )
 
+# =========================
+# TASK CATEGORIES ENDPOINTS
+# =========================
+@app.route("/tasks/categories", methods=["GET", "POST", "DELETE"])
+def task_categories():
+    try:
+        if not init_connection(db):
+            raise Exception("Database connection failed")
+
+        # validar token
+        authorized = check_authorization(request.headers)
+        if not authorized:
+            return parse_json_response("Unauthorized", 401)
+
+        # obtener id_user desde token
+        token = request.headers.get("Authorization").split(" ")[1]
+        db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
+        user = db.fetch_one()
+        if not user:
+            raise Exception("User not found")
+        id_user = user["id"]
+
+        # GET → obtener todas las categorías del usuario
+        if request.method == "GET":
+            db.execute_query(
+                "SELECT id, category FROM tasks_categories WHERE id_user = ?", (id_user,)
+            )
+            result = db.fetch_all()
+            return parse_json_response(result, 200)
+
+        # POST → crear una categoría
+        if request.method == "POST":
+            data = request.json
+            category = data.get("category")
+            if not category:
+                raise Exception("Category name required")
+
+            db.execute_query(
+                "INSERT INTO tasks_categories (category, id_user) VALUES (?, ?)",
+                (category, id_user),
+            )
+            return parse_json_response("Category created successfully", 201)
+
+        # DELETE → eliminar una categoría
+        if request.method == "DELETE":
+            data = request.json
+            id_category = data.get("id")
+            if not id_category:
+                raise Exception("Category ID required")
+
+            db.execute_query(
+                "DELETE FROM tasks_categories WHERE id = ? AND id_user = ?",
+                (id_category, id_user),
+            )
+            db.execute_query(
+                "DELETE FROM tasks WHERE id_category = ? AND id_user = ?",
+                (id_category, id_user),
+            )
+            return parse_json_response("Category deleted successfully", 200)
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)
+
+# ============
+# TASKS ENDPOINTS
+# ============
+@app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
+def tasks():
+    try:
+        if not init_connection(db):
+            raise Exception("Database connection failed")
+
+        authorized = check_authorization(request.headers)
+        if not authorized:
+            return parse_json_response("Unauthorized", 401)
+
+        # obtener id_user desde token
+        token = request.headers.get("Authorization").split(" ")[1]
+        db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
+        user = db.fetch_one()
+        if not user:
+            raise Exception("User not found")
+        id_user = user["id"]
+
+        # GET → obtener todas las tareas del usuario
+        if request.method == "GET":
+            db.execute_query(
+                """SELECT t.id, t.content, c.category 
+                   FROM tasks t 
+                   LEFT JOIN tasks_categories c ON t.id_category = c.id 
+                   WHERE t.id_user = ?""",
+                (id_user,),
+            )
+            result = db.fetch_all()
+            return parse_json_response(result, 200)
+
+        # POST → crear nueva tarea
+        if request.method == "POST":
+            data = request.json
+            task = data.get("task")
+            content = data.get("content")
+            id_category = data.get("id_category")
+
+            if not task:
+                raise Exception("Task name required")
+
+            db.execute_query(
+                """INSERT INTO tasks (task, content, id_category, id_user) 
+                   VALUES (?, ?, ?, ?)""",
+                (task, content, id_category, id_user),
+            )
+            return parse_json_response("Task created successfully", 201)
+
+        # PUT → actualizar tarea
+        if request.method == "PUT":
+            data = request.json
+            id_task = data.get("id")
+            task = data.get("task")
+            content = data.get("content")
+            id_category = data.get("id_category")
+
+            if not id_task:
+                raise Exception("Task ID required")
+
+            db.execute_query(
+                """UPDATE tasks 
+                   SET task = ?, content = ?, id_category = ? 
+                   WHERE id = ? AND id_user = ?""",
+                (task, content, id_category, id_task, id_user),
+            )
+            return parse_json_response("Task updated successfully", 200)
+
+        # DELETE → eliminar tarea
+        if request.method == "DELETE":
+            data = request.json
+            id_task = data.get("id")
+            if not id_task:
+                raise Exception("Task ID required")
+
+            db.execute_query(
+                "DELETE FROM tasks WHERE id = ? AND id_user = ?",
+                (id_task, id_user),
+            )
+            return parse_json_response("Task deleted successfully", 200)
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)
+
 if __name__ == "__main__":
+    
+    host = "0.0.0.0"
+    port = 5000
     try:
         # initialize DB before running server
         handle_server()
 
         if init_tables( db ) == False: raise Exception("❌ unable intializing tables in database")
+        
+        print(f"Server is running and listening to {host}:{port}")
 
-        app.run(host="0.0.0.0", port=5000, debug=True)
-    
+        app.run(host=host, port=port, debug=True)
+
     except Exception as e:
 
         print(e)

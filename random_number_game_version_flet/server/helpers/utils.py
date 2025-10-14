@@ -24,6 +24,7 @@ def get_queries():
                     username TEXT NOT NULL,
                     password TEXT NOT NULL,
                     role INTEGER,
+                    token TEXT,
                     FOREIGN KEY (role) REFERENCES roles(id) ON DELETE CASCADE
                 )
             """,
@@ -33,6 +34,25 @@ def get_queries():
                     WHERE NOT EXISTS (
                         SELECT 1 FROM users WHERE email = 'ivanartista96@gmail.com'
                     )
+            """,
+            "create_tasks_categories_table": """ 
+                CREATE TABLE IF NOT EXISTS tasks_categories (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    category TEXT NOT NULL, 
+                    label_color TEXT DEFAULT('#FFFFFF'),
+                    id_user INTEGER,
+                    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """,
+            "create_tasks_table": """ 
+                CREATE TABLE IF NOT EXISTS tasks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    content JSON NULL, 
+                    id_category INTEGER,
+                    id_user INTEGER,
+                    FOREIGN KEY (id_category) REFERENCES tasks_categories(id) ON DELETE CASCADE,
+                    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
+                )
             """
         }
 

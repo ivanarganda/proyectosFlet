@@ -43,6 +43,12 @@ def init_tables( db ):
             
             if ( db.execute_query( get_queries()["init_user_admin_data"] , ( user_admin , email_admin, password_admin ) ) ):
                 print("✅ Init dumped admin user data from users table")
+            
+            if ( db.execute_query( get_queries()["create_tasks_categories_table"] ) ):
+                print("✅ Created tasks categories table successfully")
+
+            if ( db.execute_query( get_queries()["create_tasks_table"] ) ):
+                print("✅ Created tasks table successfully")
 
             print(f"✅ Connected to {db.db_path} successfully")
 
