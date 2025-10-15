@@ -8,6 +8,10 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 
+import logging # TODO only for testing
+
+logging.basicConfig(filename='process.log', level=logging.DEBUG)
+
 # Load environment variables
 load_dotenv()
 
@@ -58,8 +62,50 @@ def talk():
 
     console.print("[bold green]💬 Chat started. Type your message (or 'exit' to quit).[/bold green]\n")
 
+    default_prompt = """ Eres un experto en análisis de datos.
+                Te doy una muestra de unos DataFrames en JSON.
+                fichero users.csv
+                {
+                    "users":[
+                        {"id":1,"username":"ivan_arganda96"},
+                        {"id":2,"username":"pablo_arganda"},
+                        {"id":3,"username":"igvarg__"},
+                        {"id":4,"username":"saraitg_654"},
+                    ]
+                }
+                fechero tasks.xlsx 
+                {
+                    "tasks":[
+                        {"id":1,"title":"go for a walk", id_user=1},
+                        {"id":2,"title":"laundry", id_user=1},
+                        {"id":3,"title":"housework", id_user=2},
+                        {"id":4,"title":"go for classes", id_user=4},
+                    ]
+                }
+
+                Tu tarea:
+                1. Identifica el tipo de cada columna (numérico, texto, fecha, categoría, booleano, id, etc.)
+                2. Detecta si alguna columna es clave primaria o clave externa.
+                3. Agrupa columnas relacionadas lógicamente.
+                4. Ya por último me pasas el codigo python pandas completo
+
+                Devuelve un JSON con:
+                {
+                "columns": {
+                    "col_name": {
+                        "type": ...,
+                        "role": ...,
+                        "rename_suggestion": ...,
+                        "notes": ...
+                    }
+                },
+                "relationships": [...],
+                "final_model": ...
+                }
+                """
+
     while True:
-        message = input("[You]: ").strip()
+        message = input("\n[you]").strip() or default_prompt
 
         if message.lower() == "exit":
             console.print("[bold red]👋 Exiting chat...[/bold red]")
@@ -75,22 +121,27 @@ def talk():
 
         try:
             # Call Cohere Chat endpoint   
-            res = co.chat(  # What I send to agent
+            res = co.chat_stream(  # What I send to agent
                 model="command-a-03-2025",
                 messages=[
                     {"role": "user", "content": message}
                 ],
             )
+            
+            reply_cohere = ""
+            for event in res:
+                if event.type == "content-delta":
+                    reply_cohere = f"{event.delta.message.content.text}"
+                    print(reply_cohere, end="")
 
-            # Extract text properly
-            reply = res.message.content[0].text if res.message and res.message.content else "No response" # What agent replies me
+            reply = reply_cohere if reply_cohere else "No response" # What agent replies me
 
-            # Save conversation
+            # # Save conversation
             conv_id = str(uuid.uuid4())
             conversation[conv_id] = {"user": message, "agent": reply}
 
-            # Display agent response
-            console.print(f"[bold blue]Cohere:[/bold blue] {reply}\n")
+            # # Display agent response
+            # console.print(f"[bold blue]Cohere:[/bold blue] {reply}\n")
 
         except requests.exceptions.RequestException as e:
             console.print(f"[bold red]API Error:[/bold red] {e}")

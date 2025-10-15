@@ -12,14 +12,14 @@ def loadTasksCategories(page: ft.Page):
     # count title is category the number of tasks of this category from table
     # bgcolor is the label_color from table
     sample_tasks = sample_tasks = [
-        {"content": { "bg_color": { "title":"orange"  } , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"black" }}},
-        {"content": { "bg_color": { "title":"blue"  } , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"black" }}},
-        {"content": { "bg_color": { "title":"red"  } , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"black" }}},
-        {"content": { "bg_color": { "title":"yellow"  } , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"black" }}},
-        {"content": { "bg_color": { "title":"purple"  } , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"black" }}}
+        {"id_category":{"id":1},"content": { "bg_color": { "title":"orange"  } , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
+        {"id_category":{"id":2},"content": { "bg_color": { "title":"blue"  } , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
+        {"id_category":{"id":3},"content": { "bg_color": { "title":"red"  } , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
+        {"id_category":{"id":4},"content": { "bg_color": { "title":"yellow"  } , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
+        {"id_category":{"id":5},"content": { "bg_color": { "title":"purple"  } , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
     ]
 
-    return setCarrousel( sample_tasks )
+    return setCarrousel( page, sample_tasks, addTask )
 
 def ListTasks(page: ft.Page):
     # Fondo degradado azul
@@ -100,6 +100,9 @@ def ListTasks(page: ft.Page):
 
     return background
 
+
+def addTask(page, id_category):
+    page.go(f"/tasks/create/{id_category}")
 
 def RenderTasks(page: ft.Page):
     page.title = "Tasks"

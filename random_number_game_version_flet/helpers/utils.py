@@ -22,7 +22,7 @@ def setGradient( color ):
         )
     }.get(color, "")
 
-def setCarrousel(nodes):
+def setCarrousel(page, nodes, on_add_task=None):
     items = []
 
     for node in nodes:
@@ -37,11 +37,22 @@ def setCarrousel(nodes):
             }
             parts.append(ft.Text(text_value, **text_kwargs))
 
+        id_category_task = node["id_category"].get("id",None)
+        parts.append(ft.Container(
+            content=ft.IconButton(
+                icon=ft.icons.ADD,
+                icon_size=28,
+                icon_color="gray",
+                on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
+            ),
+            alignment=ft.alignment.center,
+        ))
+
         # cada tarea = una columna de textos
         card = ft.Container(
             width=160,
-            height=120,
-            bgcolor=f"{node["content"]["bg_color"]["title"]}",
+            height=200,
+            bgcolor=f"{node['content']['bg_color']['title']}",
             border_radius=20,
             padding=15,
             shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),

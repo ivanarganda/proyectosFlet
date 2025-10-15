@@ -1,0 +1,515 @@
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECAFFB0320>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001ECAFFAF850> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECAFBAB560>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'8688c990974aeccbe141d39041582a5b'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:32:25 GMT'), (b'x-envoy-upstream-service-time', b'177'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB0042180>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001ECAFFAF850> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECAFFFA4B0>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'449ed86adf7dc92a6a2ed2f530989982'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:39:02 GMT'), (b'x-envoy-upstream-service-time', b'154'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB0043260>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001ECAFFAF850> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB0043380>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'8186915e715152f11007c50e67861285'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 08:39:51 GMT'), (b'x-envoy-upstream-service-time', b'150'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB00514F0>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001ECAFFAF850> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB00513A0>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'1644f03733a678efb1ae9eb24aa12092'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:41:25 GMT'), (b'x-envoy-upstream-service-time', b'192'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB00516D0>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001ECAFFAF850> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001ECB0051130>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'53ecad030477cf402fab98e6cbe6729a'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 08:42:12 GMT'), (b'x-envoy-upstream-service-time', b'159'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019CA307DB80>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x0000019CA34943D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019CA307DD00>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'06881d237139c4f9137189147943cf84'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:43:37 GMT'), (b'x-envoy-upstream-service-time', b'161'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019CA34D2EA0>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x0000019CA34943D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000019CA30BA5A0>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'207d94df2b7e576c57e8edb05ae45349'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 08:44:35 GMT'), (b'x-envoy-upstream-service-time', b'194'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001BF40AADCD0>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001BF40EC43D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001BF40AADD00>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'01db4ad4b17eae7d88b590f4c79f7e6f'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:49:55 GMT'), (b'x-envoy-upstream-service-time', b'443'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'7e70eb90e22aba08a74d2383b3665ec7'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 08:50:02 GMT'), (b'x-envoy-upstream-service-time', b'233'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'f93f15b0fd3d1c38c4ba38aa68e1d36c'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'7'), (b'date', b'Wed, 15 Oct 2025 08:50:05 GMT'), (b'x-envoy-upstream-service-time', b'163'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'50f8d498d83c448459a81a1421e522b1'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'6'), (b'date', b'Wed, 15 Oct 2025 08:50:08 GMT'), (b'x-envoy-upstream-service-time', b'205'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'e41247e414e183003fde2c9e714869a0'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'5'), (b'date', b'Wed, 15 Oct 2025 08:50:19 GMT'), (b'x-envoy-upstream-service-time', b'147'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'bf9f439277463af2d12d0981995a3b66'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'4'), (b'date', b'Wed, 15 Oct 2025 08:50:27 GMT'), (b'x-envoy-upstream-service-time', b'148'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'c2b1d5a6fa759f6bb975dc82c4db32ef'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 08:50:36 GMT'), (b'x-envoy-upstream-service-time', b'110'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'4a50b2158ee4007860cedc82340066f1'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'2'), (b'date', b'Wed, 15 Oct 2025 08:50:38 GMT'), (b'x-envoy-upstream-service-time', b'158'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.failed exception=GeneratorExit()
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001F9A7033020>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001F9A85943D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001F9A6EFD160>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'25d755393fb11183186959575ec4a532'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 08:59:07 GMT'), (b'x-envoy-upstream-service-time', b'206'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'26c8e70b7360f86245cadd1212113867'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 08:59:14 GMT'), (b'x-envoy-upstream-service-time', b'167'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'26ed513255a91b0114a1d9c46aea1953'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'7'), (b'date', b'Wed, 15 Oct 2025 08:59:23 GMT'), (b'x-envoy-upstream-service-time', b'112'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'a859612552381059af788bdfb9daab7d'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'6'), (b'date', b'Wed, 15 Oct 2025 08:59:32 GMT'), (b'x-envoy-upstream-service-time', b'248'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'232729398299b3a4c100c2b5b28122d7'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'5'), (b'date', b'Wed, 15 Oct 2025 08:59:45 GMT'), (b'x-envoy-upstream-service-time', b'162'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'9398da581291f6987b1d4dcddb4ed9f1'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'4'), (b'date', b'Wed, 15 Oct 2025 08:59:54 GMT'), (b'x-envoy-upstream-service-time', b'163'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'08e65ba528748f94e548587ca50fa5f6'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:02 GMT'), (b'x-envoy-upstream-service-time', b'176'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'868b1aa8896daf5111b43ec227bcf1fc'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:10 GMT'), (b'x-envoy-upstream-service-time', b'211'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'ccb0eb4eda1406896f69f828786997a4'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:20 GMT'), (b'x-envoy-upstream-service-time', b'161'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'17ad0c6f454e6a25d88f5cefc3e7dae4'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:30 GMT'), (b'x-envoy-upstream-service-time', b'214'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'4730844baf56ddab7ee936bc70ffcbfc'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:40 GMT'), (b'x-envoy-upstream-service-time', b'172'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'0d222fd5270a4d8b86eb71817e253b82'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:00:50 GMT'), (b'x-envoy-upstream-service-time', b'143'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'91945f68b0af5cc3c787292d5ace0116'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:01:01 GMT'), (b'x-envoy-upstream-service-time', b'215'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'11c1da0ab70bf23d1bd49e83efbfe70e'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'4'), (b'date', b'Wed, 15 Oct 2025 09:01:10 GMT'), (b'x-envoy-upstream-service-time', b'142'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'b6c86570f0d9438a9b4ccae55453f84a'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:01:17 GMT'), (b'x-envoy-upstream-service-time', b'174'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'3717cf0f71bad2a571cd6b308a67fc59'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:01:24 GMT'), (b'x-envoy-upstream-service-time', b'118'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'303edbe0b01215dc880771712b685d56'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'3'), (b'date', b'Wed, 15 Oct 2025 09:01:31 GMT'), (b'x-envoy-upstream-service-time', b'170'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.failed exception=KeyboardInterrupt()
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001D911338440>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000001D9113543D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001D910FA1700>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'49703b1b29dc997951b1522a0d74234d'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 09:02:43 GMT'), (b'x-envoy-upstream-service-time', b'168'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'e5cf0f3441188af72097bb8b95f411d7'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 09:03:04 GMT'), (b'x-envoy-upstream-service-time', b'169'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'09b58f75f770e4588203568d67cb433a'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'7'), (b'date', b'Wed, 15 Oct 2025 09:03:18 GMT'), (b'x-envoy-upstream-service-time', b'162'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'e5950ac36e4f48c607a4e5c8444c7f55'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'6'), (b'date', b'Wed, 15 Oct 2025 09:03:27 GMT'), (b'x-envoy-upstream-service-time', b'146'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'57832db0c418dd8cfe49a697c4f2f4e3'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'5'), (b'date', b'Wed, 15 Oct 2025 09:03:35 GMT'), (b'x-envoy-upstream-service-time', b'149'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.failed exception=KeyboardInterrupt()
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000228DD04D6D0>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x00000228DD4643D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000228DD228BF0>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'dae72e143a6639dd641505e3410b0907'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 09:05:24 GMT'), (b'x-envoy-upstream-service-time', b'156'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'2693856d4fe38d71215d5bcd4bf440c6'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'8'), (b'date', b'Wed, 15 Oct 2025 09:05:35 GMT'), (b'x-envoy-upstream-service-time', b'170'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.failed exception=KeyboardInterrupt()
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002A46BC7BA40>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000002A46BC943D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002A46BC78680>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'077639c394a05cf0eb19cb1ea30ff9e4'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 09:06:55 GMT'), (b'x-envoy-upstream-service-time', b'157'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:httpcore.connection:close.started
+DEBUG:httpcore.connection:close.complete
+DEBUG:httpcore.connection:connect_tcp.started host='api.cohere.com' port=443 local_address=None timeout=300 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002A46C032360>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x000002A46BC943D0> server_hostname='api.cohere.com' timeout=300
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002A46C031FA0>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'access-control-expose-headers', b'X-Debug-Trace-ID'), (b'cache-control', b'no-cache, no-store, no-transform, must-revalidate, private, max-age=0'), (b'content-type', b'text/event-stream'), (b'expires', b'Thu, 01 Jan 1970 00:00:00 GMT'), (b'pragma', b'no-cache'), (b'vary', b'Origin'), (b'x-accel-expires', b'0'), (b'x-debug-trace-id', b'acf03489a4465a1bc87ec20334e9aee7'), (b'x-endpoint-monthly-call-limit', b'1000'), (b'x-trial-endpoint-call-limit', b'10'), (b'x-trial-endpoint-call-remaining', b'9'), (b'date', b'Wed, 15 Oct 2025 09:09:15 GMT'), (b'x-envoy-upstream-service-time', b'194'), (b'server', b'envoy'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+INFO:httpx:HTTP Request: POST https://api.cohere.com/v2/chat "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete

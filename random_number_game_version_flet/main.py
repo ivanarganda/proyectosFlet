@@ -4,6 +4,7 @@ import json
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
 from Tasks.Tasks import RenderTasks
+from Tasks.views.AddCategoryTasksForm import AddCategoryTasksForm
 
 def main(page: ft.Page):
     # handle session here    
@@ -28,6 +29,14 @@ def route_change(e: ft.RouteChangeEvent):
         page.views.append(ft.View("/games", [renderGame(page)]))
     elif page.route == "/tasks":
         page.views.append(ft.View("/tasks", [RenderTasks(page)]))
+    elif page.route.startswith("/tasks/create/"):
+        id_category = page.route.split("/")[-1]  # "5", "12", etc.
+        page.views.append(
+            ft.View(
+                f"/tasks/create/{id_category}",
+                [AddCategoryTasksForm(page, id_category)]
+            )
+        )
     page.update()
     
 ft.app(target=main)
