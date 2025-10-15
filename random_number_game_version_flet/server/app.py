@@ -1,5 +1,6 @@
 import logging # TODO only for debug
 
+import json
 from flask import Flask, request, jsonify, g
 from markupsafe import escape
 
@@ -341,15 +342,15 @@ def task_categories():
         # obtener id_user desde token
         token = request.headers.get("Authorization").split(" ")[1]
         db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
-        user = db.fetch_one()
+        user = db.fetch_all()
         if not user:
             raise Exception("User not found")
-        id_user = user["id"]
+        id_user = user[0]["id"]
 
         # GET → obtener todas las categorías del usuario
         if request.method == "GET":
             db.execute_query(
-                "SELECT id, category FROM tasks_categories WHERE id_user = ?", (id_user,)
+                f"""SELECT tc.id, tc.category, tc.content, ( SELECT u.username from users u where u.id = tc.id_user ) FROM tasks_categories tc WHERE tc.id_user = ?", ({id_user},)"""
             )
             result = db.fetch_all()
             return parse_json_response(result, 200)
@@ -358,12 +359,17 @@ def task_categories():
         if request.method == "POST":
             data = request.json
             category = data.get("category")
+            content = data.get("content")
             if not category:
                 raise Exception("Category name required")
+            if not content:
+                content = {}
+
+            content_json = json.dumps(content)
 
             db.execute_query(
-                "INSERT INTO tasks_categories (category, id_user) VALUES (?, ?)",
-                (category, id_user),
+                "INSERT INTO tasks_categories (category, content, id_user) VALUES (?, ?, ?)",
+                (category, content_json, id_user),
             )
             return parse_json_response("Category created successfully", 201)
 
@@ -403,15 +409,15 @@ def tasks():
         # obtener id_user desde token
         token = request.headers.get("Authorization").split(" ")[1]
         db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
-        user = db.fetch_one()
+        user = db.fetch_all()
         if not user:
             raise Exception("User not found")
-        id_user = user["id"]
+        id_user = user[0]["id"] 
 
         # GET → obtener todas las tareas del usuario
         if request.method == "GET":
             db.execute_query(
-                """SELECT t.id, t.content, c.category 
+                """SELECT t.id, t.content
                    FROM tasks t 
                    LEFT JOIN tasks_categories c ON t.id_category = c.id 
                    WHERE t.id_user = ?""",
@@ -424,11 +430,25 @@ def tasks():
         if request.method == "POST":
             data = request.json
             task = data.get("task")
-            content = data.get("content")
+            content = data.get("content") 
+            # @ format: 
+            """
+                {
+                 "title": "title", 
+                 "description": "description",
+                 "date": datetime
+                }
+
+            """
             id_category = data.get("id_category")
 
             if not task:
                 raise Exception("Task name required")
+                
+            if not content:
+                content = {}
+
+            content_json = json.dumps(content)
 
             db.execute_query(
                 """INSERT INTO tasks (task, content, id_category, id_user) 
@@ -487,5 +507,9 @@ if __name__ == "__main__":
         app.run(host=host, port=port, debug=True)
 
     except Exception as e:
+
+        print(e)
+
+    except SyntaxError as e:
 
         print(e)

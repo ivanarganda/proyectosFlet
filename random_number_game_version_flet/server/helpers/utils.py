@@ -39,7 +39,7 @@ def get_queries():
                 CREATE TABLE IF NOT EXISTS tasks_categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     category TEXT NOT NULL, 
-                    label_color TEXT DEFAULT('#FFFFFF'),
+                    content JSON NOT NULL,
                     id_user INTEGER,
                     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
                 )
@@ -47,7 +47,7 @@ def get_queries():
             "create_tasks_table": """ 
                 CREATE TABLE IF NOT EXISTS tasks (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    content JSON NULL, 
+                    content JSON NOT NULL, 
                     id_category INTEGER,
                     id_user INTEGER,
                     FOREIGN KEY (id_category) REFERENCES tasks_categories(id) ON DELETE CASCADE,

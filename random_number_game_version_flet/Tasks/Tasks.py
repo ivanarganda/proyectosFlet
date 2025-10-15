@@ -3,7 +3,7 @@ from helpers.utils import getSession, addElementsPage, setGradient, setInputFiel
 
 input_search_field = setInputField("search", placeholder="Look for...")
 
-def loadTasks(page: ft.Page):
+def loadTasksCategories(page: ft.Page):
 
     # Lista simulada (luego vendrá de tu API /tasks)
 
@@ -66,7 +66,7 @@ def ListTasks(page: ft.Page):
                     vertical_alignment=ft.CrossAxisAlignment.CENTER
                 ),
                 input_search,
-                loadTasks(page)
+                loadTasksCategories(page)
             ]
         )
         
