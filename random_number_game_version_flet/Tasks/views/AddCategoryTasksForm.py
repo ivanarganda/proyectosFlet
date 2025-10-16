@@ -1,9 +1,8 @@
 import flet as ft
 from helpers.utils import addElementsPage, loadLoader, loadSnackbar, setInputField
 
-username_field = setInputField("text", label="Username")
-email_field = setInputField("text", label="Email")
-password_field = setInputField("text", label="Password")
+title_category_field = setInputField("text", label="Category name")
+select_picker_icon = setInputField("text", label="Picker icon")
 
 loader_overlay = loadLoader()
 
@@ -22,7 +21,7 @@ def AddCategoryTasksForm( page: ft.Page, id_category):
            ft.Stack([
                 ft.Container(
                     expand=True,
-                    image_src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
+                    image_src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/form-wallpaper.png",
                     image_fit=ft.ImageFit.COVER
                 ),
                 ft.Container(
@@ -33,22 +32,15 @@ def AddCategoryTasksForm( page: ft.Page, id_category):
                     bottom=0, left=0, right=0,
                     content=ft.Column(
                         [
-                            email_field,
-                            password_field,
+                            title_category_field,
+                            select_picker_icon,
                             ft.Row(
                                 [
                                     ft.ElevatedButton(
-                                        "Let's play", 
+                                        "Add new category", 
                                         bgcolor="#5A2D9C", 
                                         color="white",
                                         on_click=lambda e: page.run_task(login, e, page)  # 🔑 aquí
-                                    ),
-                                    # With switch mode
-                                    ft.Row(
-                                        [
-                                            ft.Text("Don't have an account yet?"),
-                                            ft.TextButton("Sign up", on_click=lambda _: toogle_view(page, "register"))
-                                        ]
                                     )
                                 ],
                                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
