@@ -1,5 +1,13 @@
+import os
 import flet as ft
 from helpers.utils import loadLoader, addElementsPage, clearInputsForm, loadSnackbar, setInputField, build_color_dialog
+from footer_navegation.navegation import footer_navbar
+
+current_path = {
+    "path":os.path.abspath(__file__),
+    "folder":os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
+    "file":__file__.split("\\")[-1]
+}
 
 def AddCategoryTasksForm(page: ft.Page):
     page.title = "New Category"
@@ -152,21 +160,25 @@ def AddCategoryTasksForm(page: ft.Page):
     )
 
     # ---------- Fondo ----------
-    background = ft.Stack(
-        [
+    background = [
             ft.Container(
                 expand=True,
                 image_src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/form-wallpaper.png",
                 image_fit=ft.ImageFit.COVER,
             ),
             white_card,
-        ],
-        expand=True,
+        ]
+
+    footer = footer_navbar(page= page, current_path = current_path, dispatches={} )
+
+    stack = ft.Stack(
+        [*background, footer],  # 👈 aquí el truco
+        expand=True
     )
 
     return addElementsPage(
         page, 
         [
-            background
+            stack
         ]
     )

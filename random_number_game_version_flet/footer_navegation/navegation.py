@@ -1,18 +1,25 @@
 import flet as ft
 
-def footer_navbar(page: ft.Page, current_path, addCategory ):
+def footer_navbar(page: ft.Page, current_path = {} , dispatches = {} ):
+
+    func_add_category, args_add_category = dispatches.get("add_category", (lambda *a, **k: None, []))
 
     full_path = current_path["path"]
     folder = current_path["folder"]
     file = current_path["file"]
+
+    print( full_path, folder, file )
+
     page.bgcolor = ft.colors.WHITE
 
     footer = ft.Container(
         content=ft.Row(
             [
-                ft.IconButton(ft.icons.HOME, icon_color="#4e73df"),
+                ft.IconButton(ft.icons.HOME, on_click=lambda _: page.go("/menu"), icon_color="#4e73df"),
                 ft.IconButton(ft.icons.SEARCH, icon_color="#4e73df"),
-                ft.FloatingActionButton(on_click=lambda _: addCategory(page), icon=ft.icons.ADD, bgcolor="#4e73df", visible= folder == 'Tasks' ),
+                ft.FloatingActionButton(on_click=lambda _: func_add_category(*args_add_category), icon=ft.icons.ADD, bgcolor="#4e73df", visible= folder == 'Tasks' ),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/tasks"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'views') and (file == 'AddCategoryTasksForm.py') ),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'profile') and (file == 'profile.py') ),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
                 ft.IconButton(ft.icons.PERSON, icon_color="#4e73df", visible= folder != 'Profile'),
             ],

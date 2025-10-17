@@ -129,7 +129,12 @@ def RenderTasks(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.START
 
     background_layers = ListTasks(page)
-    footer = footer_navbar(page, current_path, addCategory )
+
+    dispatches = {
+        "add_category": ( addCategory , [ page ] )   # [ function , ( *Args ) ]
+    }
+
+    footer = footer_navbar(page = page, current_path = current_path, dispatches = dispatches )
 
     stack = ft.Stack(
         [*background_layers, footer],  # 👈 aquí el truco
