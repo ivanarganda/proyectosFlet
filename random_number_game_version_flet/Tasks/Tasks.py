@@ -1,7 +1,16 @@
+import os
 import flet as ft
 from helpers.utils import getSession, addElementsPage, setGradient, setInputField, setCarrousel
+from footer_navegation.navegation import footer_navbar
 
 input_search_field = setInputField("search", placeholder="Look for...")
+
+current_path = {
+    "path":os.path.abspath(__file__),
+    "folder":os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
+    "file":__file__.split("\\")[-1]
+}
+
 
 def loadTasksCategories(page: ft.Page):
 
@@ -12,11 +21,11 @@ def loadTasksCategories(page: ft.Page):
     # count title is category the number of tasks of this category from table
     # bgcolor is the label_color from table
     sample_tasks = sample_tasks = [
-        {"id_category":{"id":1},"content": { "bg_color": { "title":"orange"  } , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
-        {"id_category":{"id":2},"content": { "bg_color": { "title":"blue"  } , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
-        {"id_category":{"id":3},"content": { "bg_color": { "title":"red"  } , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
-        {"id_category":{"id":4},"content": { "bg_color": { "title":"yellow"  } , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
-        {"id_category":{"id":5},"content": { "bg_color": { "title":"purple"  } , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
+        {"id_category":{"id":1},"content": { "bg_color": "orange" , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
+        {"id_category":{"id":2},"content": { "bg_color": "blue" , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
+        {"id_category":{"id":3},"content": { "bg_color": "red" , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
+        {"id_category":{"id":4},"content": { "bg_color": "yellow" , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
+        {"id_category":{"id":5},"content": { "bg_color": "purple" , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
     ]
 
     return setCarrousel( page, sample_tasks, addTask )
@@ -58,9 +67,16 @@ def ListTasks(page: ft.Page):
                         ),
                         # Avatar a la derecha
                         ft.CircleAvatar(
-                            foreground_image_url="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
-                            radius=25
-                        ),
+                            radius=25,  # circle size
+                            content=ft.Image(
+                                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                                width=50,
+                                height=50,
+                                border_radius=100,
+                                fit=ft.ImageFit.COVER
+                            )
+                        )
+
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     vertical_alignment=ft.CrossAxisAlignment.CENTER
@@ -89,20 +105,19 @@ def ListTasks(page: ft.Page):
     )
 
     # Stack general: degradado + card blanca + header arriba
-    background = ft.Stack(
-        [
+    background = [
             backwallpaper,  # fondo degradado
             content_area,   # card blanca encima del degradado
             header          # header fijo arriba
-        ],
-        expand=True
-    )
+        ]
 
     return background
 
-
 def addTask(page, id_category):
-    page.go(f"/tasks/create/{id_category}")
+    page.go(f"/task/create/{id_category}")
+
+def addCategory(page):
+    page.go(f"/category/create")
 
 def RenderTasks(page: ft.Page):
     page.title = "Tasks"
@@ -113,4 +128,12 @@ def RenderTasks(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.START
 
-    return addElementsPage(page, [ListTasks(page)])
+    background_layers = ListTasks(page)
+    footer = footer_navbar(page, current_path, addCategory )
+
+    stack = ft.Stack(
+        [*background_layers, footer],  # 👈 aquí el truco
+        expand=True
+    )
+
+    return addElementsPage(page, [ stack ])

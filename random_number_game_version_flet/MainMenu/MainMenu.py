@@ -46,8 +46,14 @@ def list_menu_items(page: ft.Page):
         [
             ft.Container(
                 content=ft.CircleAvatar(
-                    foreground_image_url="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
-                    radius=25,
+                    content=ft.Image(
+                        src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                        width=50,
+                        height=50,
+                        border_radius=100,
+                        fit=ft.ImageFit.COVER
+                    ),
+                    radius=25
                 ),
                 alignment=ft.alignment.top_left,
                 padding=ft.padding.only(left=20, top=20),
