@@ -114,7 +114,7 @@ def ListTasks(page: ft.Page):
     return background
 
 def addTask(page, id_category):
-    page.go(f"/task/create/{id_category}")
+    page.go(f"/tasks/create/{id_category}")
 
 def addCategory(page):
     page.go(f"/category/create")
