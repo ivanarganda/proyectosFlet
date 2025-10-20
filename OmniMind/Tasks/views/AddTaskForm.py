@@ -5,10 +5,10 @@ import flet as ft
 from datetime import datetime
 from helpers.utils import (
     getSession, addElementsPage, setGradient,
-    setInputField, loadLoader, loadSnackbar, clearInputsForm
+    setInputField, loadLoader, loadSnackbar, clearInputsForm, handle_logout
 )
+from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar
-
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -16,17 +16,16 @@ current_path = {
     "file": __file__.split("\\")[-1]
 }
 
-
 # --------------------------------------------------------------------------
 def AddTaskForm(page: ft.Page, id_category=None):
+
+    middleware_auth(page) # check session
+
     page.title = "New Task"
     page.window_width = 420
     page.window_height = 820
     page.window_resizable = False
     page.bgcolor = "#F6F4FB"
-
-    # Sesión
-    session = getSession(page)
 
     # Loader
     loader = loadLoader()
@@ -38,12 +37,13 @@ def AddTaskForm(page: ft.Page, id_category=None):
     txt_description = ft.TextField(
         label="Task description",
         multiline=True,
-        min_lines=5,
-        max_lines=10,
         border_radius=12,
         bgcolor="#FFFFFF",
         border_color="#E0E0E0",
         prefix_icon=ft.icons.DESCRIPTION,
+        height=100,         # fixed visible area
+        expand=False,       # prevent expansion
+        max_lines=None,     # allows unlimited typing, internal scroll appears automatically
     )
 
     # --- PREVIEW ------------------------------------------------------------
@@ -63,22 +63,29 @@ def AddTaskForm(page: ft.Page, id_category=None):
         text_align=ft.TextAlign.CENTER,
     )
 
-    preview_desc = ft.Text(
-        "Start writing your task description to see a live preview here...",
-        size=15,
-        color="#444",
-        text_align=ft.TextAlign.JUSTIFY,
-        selectable=True,
-    )
+    preview_desc = ft.Column(
+        [
+            ft.Text(
+                "Start writing your task description to see a live preview here...",
+                size=15,
+                color="#444",
+                text_align=ft.TextAlign.JUSTIFY,
+                selectable=True,
+            )
+        ],
+        height=100,
+        scroll=ft.ScrollMode.AUTO,
+        expand=False
+    ) 
 
     preview_card = ft.Container(
         content=ft.Column(
             [
                 ft.Text("Live Preview", size=18, weight=ft.FontWeight.BOLD, color="#4e73df"),
-                ft.Divider(height=8, color="#4e73df"),
+                # ft.Divider(height=8, color="#4e73df"),
                 preview_title,
                 preview_date,
-                ft.Divider(height=8, color="transparent"),
+                # ft.Divider(height=8, color="transparent"),
                 preview_desc,
             ],
             spacing=10,
@@ -106,6 +113,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
 
     # --- GUARDAR ------------------------------------------------------------
     def save_task(e):
+
         if not txt_title.value.strip():
             loadSnackbar(page, "Title is required", "red")
             return
@@ -151,7 +159,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
             txt_title,
             txt_description,
             preview_card,
-            ft.Divider(height=15, color="transparent"),
+            # ft.Divider(height=15, color="transparent"),
             btn_save,
         ],
         spacing=14,

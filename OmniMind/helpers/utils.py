@@ -4,6 +4,23 @@ import jwt  # PyJWT
 from jwt import InvalidTokenError
 import math
 
+# --- Validación HEX estricta ---
+def is_valid_hex(color: str) -> bool:
+    import re
+    # Admite formatos tipo #FFF o #FFFFFF
+    return bool(re.fullmatch(r"#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})", color))
+
+# --- Detección de colores claros ---
+def is_light_color(hex_color: str) -> bool:
+    try:
+        hex_color = hex_color.lstrip("#")
+        if len(hex_color) == 3:
+            hex_color = "".join([c * 2 for c in hex_color])  # expandir #FFF → #FFFFFF
+        r, g, b = [int(hex_color[i:i+2], 16) for i in (0, 2, 4)]
+        return (r + g + b) / 3 > 200
+    except Exception:
+        return False
+
 # Colors
 def setGradient( color ):
     return {
@@ -44,6 +61,24 @@ def hex_to_rgb(hx, default=(90, 45, 156)):  # "#5A2D9C" por defecto
         return (r, g, b)
     except:
         return default
+
+def open_bg_picker(e):
+        def on_pick(color_hex):
+            bg_color_field.value = color_hex
+            bg_color_field.update()
+            update_preview()
+        page.dialog = build_color_dialog("Pick background color", bg_color_field.value, on_pick)
+        page.dialog.open = True
+        page.update()
+
+def open_text_picker(e):
+    def on_pick(color_hex):
+        text_color_field.value = color_hex
+        text_color_field.update()
+        update_preview()
+    page.dialog = build_color_dialog("Pick text color", text_color_field.value, on_pick)
+    page.dialog.open = True
+    page.update()
 
 def build_color_dialog(title: str, initial_hex: str, on_pick):
     # Paleta base (puedes ampliar)
@@ -199,16 +234,17 @@ def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" 
         )
     }.get(type_, defaultTextField )
 
+def handle_logout(page: ft.Page):
+    page.session.clear()
+    page.client_storage.clear()
+    page.go("/")
+
 
 def getSession( data , decrypt=False ):
-    if isinstance(data, str):
-        # Si es string JSON → parsear
-        user_data = json.loads(data)
-    elif isinstance(data, dict):
-        # Si Flet ya lo devolvió como dict
-        user_data = data
-    else:
-        user_data = {}
+
+    data = json.loads( data )
+
+    user_data = data
     
     if decrypt:
         # Aquí iría la lógica de desencriptación si se implementa

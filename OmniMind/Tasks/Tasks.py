@@ -1,7 +1,12 @@
 import os
 import flet as ft
 from helpers.utils import getSession, addElementsPage, setGradient, setInputField, setCarrousel
+from middlewares.auth import middleware_auth
+import asyncio
+import requests_async as request
+import json
 from footer_navegation.navegation import footer_navbar
+from params import *
 
 input_search_field = setInputField("search", placeholder="Look for...")
 
@@ -11,22 +16,64 @@ current_path = {
     "file":__file__.split("\\")[-1]
 }
 
+user_session = {}
+token_session = None
 
 def loadTasksCategories(page: ft.Page):
 
-    # Lista simulada (luego vendrá de tu API /tasks)
+    global user_session, token_session
+
+    # # Lista simulada (luego vendrá de tu API /tasks)
+    async def load_data():
+        headers = HEADERS
+        headers["Authorization"] = f"Bearer {token_session}"
+
+        response = await request.get(f"{REQUEST_URL_TEST}/tasks/categories", headers=headers)
+
+        # Verificamos el código de estado
+        if response.status_code != 200:
+            print(f"❌ Error HTTP: {response.status_code}")
+            print(f"Response text: {response.json()}")
+            return None
+
+        try:
+            data = response.json()
+            return data
+        except json.JSONDecodeError:
+            print("❌ La respuesta no es JSON válido:")
+            print(response.json())
+            return None
+
+    data = asyncio.run(load_data())
+    if not data:
+        print("⚠️ No se recibieron datos")
+        return
+
+    print(data.get("message", []))
+
+    newData = []
+    for id_category, content in enumerate(data["message"], start=1):
+        newData.append({
+            "id_category": {"id": id_category},
+            "content": content
+        })
+
+    print(newData)
 
     # icon title is icon field from table
     # task title  is category field from table with size and weight
     # count title is category the number of tasks of this category from table
     # bgcolor is the label_color from table
-    sample_tasks = sample_tasks = [
-        {"id_category":{"id":1},"content": { "bg_color": "orange" , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
-        {"id_category":{"id":2},"content": { "bg_color": "blue" , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
-        {"id_category":{"id":3},"content": { "bg_color": "red" , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
-        {"id_category":{"id":4},"content": { "bg_color": "yellow" , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
-        {"id_category":{"id":5},"content": { "bg_color": "purple" , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
+    sample_tasks = [
+        # {"id_category":{"id":1},"content": { "bg_color": "orange" , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
+        # {"id_category":{"id":2},"content": { "bg_color": "blue" , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
+        # {"id_category":{"id":3},"content": { "bg_color": "red" , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
+        # {"id_category":{"id":4},"content": { "bg_color": "yellow" , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
+        # {"id_category":{"id":5},"content": { "bg_color": "purple" , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
+        newData
     ]
+
+    # await asyncio.sleep(3)
 
     return setCarrousel( page, sample_tasks, addTask )
 
@@ -58,7 +105,7 @@ def ListTasks(page: ft.Page):
                         ft.Column(
                             [
                                 ft.Text("Hello", size=22, color="white", weight=ft.FontWeight.BOLD),
-                                ft.Text("Ivan_arganda_96", size=18, color="white")  # TODO sesión
+                                ft.Text(user_session.get("username","guest"), size=18, color="white")  # TODO sesión
                             ],
                             spacing=4,
                             alignment=ft.MainAxisAlignment.START,
@@ -120,6 +167,14 @@ def addCategory(page):
     page.go(f"/category/create")
 
 def RenderTasks(page: ft.Page):
+
+    global user_session, token_session
+
+    session = middleware_auth(page)
+
+    user_session = session.get("session")
+    token_session = session.get("token")
+
     page.title = "Tasks"
     page.window_width = 500
     page.window_height = 900

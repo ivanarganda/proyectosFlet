@@ -4,8 +4,10 @@ import os
 import flet as ft
 from helpers.utils import (
     loadLoader, addElementsPage, clearInputsForm, loadSnackbar,
-    setInputField, build_color_dialog
+    setInputField, build_color_dialog, open_bg_picker,open_text_picker, is_valid_hex,is_light_color
 )
+
+from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar
 
 
@@ -18,6 +20,9 @@ current_path = {
 
 # --------------------------------------------------------------------------
 def AddCategoryTasksForm(page: ft.Page):
+
+    middleware_auth(page) # check session
+
     page.title = "New Category"
     page.window_width = 420
     page.window_height = 800
@@ -118,23 +123,6 @@ def AddCategoryTasksForm(page: ft.Page):
         bg_value = (bg_color_field.value or "").strip()
         text_value = (text_color_field.value or "").strip()
 
-    # --- Validación HEX estricta ---
-        def is_valid_hex(color: str) -> bool:
-            import re
-            # Admite formatos tipo #FFF o #FFFFFF
-            return bool(re.fullmatch(r"#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})", color))
-
-        # --- Detección de colores claros ---
-        def is_light_color(hex_color: str) -> bool:
-            try:
-                hex_color = hex_color.lstrip("#")
-                if len(hex_color) == 3:
-                    hex_color = "".join([c * 2 for c in hex_color])  # expandir #FFF → #FFFFFF
-                r, g, b = [int(hex_color[i:i+2], 16) for i in (0, 2, 4)]
-                return (r + g + b) / 3 > 200
-            except Exception:
-                return False
-
         # --- Validación: si hay solo "#" o el valor es inválido → no tocar nada
         if bg_value == "#" or (bg_value and not is_valid_hex(bg_value)):
             return  # 🚫 Salir sin actualizar nada visual
@@ -157,24 +145,6 @@ def AddCategoryTasksForm(page: ft.Page):
     text_color_field.on_change = lambda e: update_preview()
 
     # ---------- Pickers ----------
-    def open_bg_picker(e):
-        def on_pick(color_hex):
-            bg_color_field.value = color_hex
-            bg_color_field.update()
-            update_preview()
-        page.dialog = build_color_dialog("Pick background color", bg_color_field.value, on_pick)
-        page.dialog.open = True
-        page.update()
-
-    def open_text_picker(e):
-        def on_pick(color_hex):
-            text_color_field.value = color_hex
-            text_color_field.update()
-            update_preview()
-        page.dialog = build_color_dialog("Pick text color", text_color_field.value, on_pick)
-        page.dialog.open = True
-        page.update()
-
     bg_picker_btn = ft.IconButton(
         icon=ft.icons.COLORIZE, tooltip="Pick background color", on_click=open_bg_picker
     )
@@ -221,13 +191,13 @@ def AddCategoryTasksForm(page: ft.Page):
     form = ft.Column(
         [
             ft.Text("Create new category", size=24, weight=ft.FontWeight.BOLD, color="#4e73df"),
-            ft.Divider(height=10, color="transparent"),
+            # ft.Divider(height=5, color="transparent"),
             preview_section,
             category_name,
             icon_field,
             ft.Row([bg_color_field, bg_picker_btn], spacing=10),
             ft.Row([text_color_field, text_picker_btn], spacing=10),
-            ft.Divider(height=15, color="transparent"),
+            # ft.Divider(height=15, color="transparent"),
             btn_save,
         ],
         spacing=14,

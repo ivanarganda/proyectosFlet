@@ -350,9 +350,10 @@ def task_categories():
         # GET → obtener todas las categorías del usuario
         if request.method == "GET":
             db.execute_query(
-                f"""SELECT tc.id, tc.category, tc.content, ( SELECT u.username from users u where u.id = tc.id_user ) FROM tasks_categories tc WHERE tc.id_user = ?", ({id_user},)"""
+                f"SELECT tc.id, tc.category, tc.content, ( SELECT u.username from users u where u.id = tc.id_user ) as username FROM tasks_categories tc WHERE tc.id_user = {id_user}"
             )
             result = db.fetch_all()
+
             return parse_json_response(result, 200)
 
         # POST → crear una categoría

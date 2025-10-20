@@ -15,7 +15,7 @@ def main(page: ft.Page):
 
     # Check if the user is logged in
     if not user_data or not user_data.get("is_logged_in"):
-        page.go("/tasks")       # Go to login page
+        page.go("/")       # Go to login page
     else:
         page.go("/menu")   # Go to main menu
 

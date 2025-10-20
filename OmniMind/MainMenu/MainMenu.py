@@ -1,14 +1,25 @@
+import os
+from params import ICONS
 import flet as ft
-from helpers.utils import addElementsPage, getSession
+from helpers.utils import addElementsPage, getSession, handle_logout
+from footer_navegation.navegation import footer_navbar
+from middlewares.auth import middleware_auth
 
 username = None
 id_user = None
 email = None
 role = None
 expired = None
+token = None
 
+current_path = {
+    "path":os.path.abspath(__file__),
+    "folder":os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
+    "file":__file__.split("\\")[-1]
+}
 
 def list_menu_items(page: ft.Page):
+
     # ✅ Definimos el sidebar fuera del callback
     sidebar = ft.Container(
         bgcolor="#FFFFFF",
@@ -115,13 +126,13 @@ def list_menu_items(page: ft.Page):
             ft.Row(
                 [
                     menu_button(
-                        "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_tasks.png",
+                        ICONS.get("tasks",""),
                         "Tasks",
                         "/tasks",
                         size=35,
                     ),
                     menu_button(
-                        "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_game.png",
+                        ICONS.get("games",""),
                         "Games",
                         "/games",
                         size=35,
@@ -132,14 +143,14 @@ def list_menu_items(page: ft.Page):
             ft.Row(
                 [
                     menu_button(
-                        "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon-pingpong.png",
-                        "Sport",
-                        "/game",
+                        ICONS.get("dataMind",""),
+                        "Data management",
+                        "/dataMind",
                     ),
                     menu_button(
-                        "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon-space.png",
-                        "Logic",
-                        "/game",
+                        ICONS.get("foro",""),
+                        "Stats foro",
+                        "/foro",
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_EVENLY,
@@ -188,8 +199,7 @@ def list_menu_items(page: ft.Page):
     )
 
     # Fondo + overlay (sidebar flotante)
-    background = ft.Stack(
-        [
+    background = [
             ft.Container(
                 expand=True,
                 bgcolor="#F6F4FB",
@@ -197,7 +207,6 @@ def list_menu_items(page: ft.Page):
                 content=white_card,
             )
         ]
-    )
 
     return background
 
@@ -206,15 +215,14 @@ def toggle_sidebar(page, sidebar):
     sidebar.visible = not sidebar.visible
     page.update()
 
-
-def handle_logout(page: ft.Page):
-    page.session.clear()
-    page.client_storage.clear()
-    page.go("/")
-
-
 def renderMainMenu(page: ft.Page):
+
     global username, id_user, role, expired, email
+
+    session = middleware_auth(page) # check session. In case true, return user session object but go to login page
+
+    user = session.get("session")
+    token = session.get("token")
 
     page.title = "Main Menu"
     page.window_width = 500
@@ -224,11 +232,17 @@ def renderMainMenu(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    user = getSession(page.client_storage.get("user") or "{}", True)
     username = user.get("username", "Guest")
     id_user = int(user.get("id", 0))
     role = user.get("role", None)
     expired = user.get("exp", None)
     email = user.get("email", None)
 
-    return addElementsPage(page, [list_menu_items(page)])
+    footer = footer_navbar(page = page, current_path = current_path, dispatches = {} )
+
+    stack = ft.Stack(
+        [*list_menu_items(page), footer],  # 👈 aquí el truco
+        expand=True
+    )
+
+    return addElementsPage(page,[stack])
