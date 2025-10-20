@@ -20,17 +20,14 @@ user_session = {}
 token_session = None
 
 def loadTasksCategories(page: ft.Page):
-
     global user_session, token_session
 
-    # # Lista simulada (luego vendrá de tu API /tasks)
     async def load_data():
         headers = HEADERS
         headers["Authorization"] = f"Bearer {token_session}"
 
         response = await request.get(f"{REQUEST_URL_TEST}/tasks/categories", headers=headers)
 
-        # Verificamos el código de estado
         if response.status_code != 200:
             print(f"❌ Error HTTP: {response.status_code}")
             print(f"Response text: {response.json()}")
@@ -41,7 +38,7 @@ def loadTasksCategories(page: ft.Page):
             return data
         except json.JSONDecodeError:
             print("❌ La respuesta no es JSON válido:")
-            print(response.json())
+            print(response.json()) 
             return None
 
     data = asyncio.run(load_data())
@@ -49,33 +46,27 @@ def loadTasksCategories(page: ft.Page):
         print("⚠️ No se recibieron datos")
         return
 
-    print(data.get("message", []))
-
     newData = []
     for id_category, content in enumerate(data["message"], start=1):
+        # ⚠️ Aquí hacemos el json.loads
+        try:
+            parsed_content = json.loads(content["content"]) if isinstance(content["content"], str) else content["content"]
+        except Exception as e:
+            print(f"❌ Error al parsear content: {e}")
+            parsed_content = {}
+
         newData.append({
             "id_category": {"id": id_category},
-            "content": content
+            "content": parsed_content
         })
 
-    print(newData)
+    # print("✅ Datos parseados correctamente:")
+    # print(newData)
 
-    # icon title is icon field from table
-    # task title  is category field from table with size and weight
-    # count title is category the number of tasks of this category from table
-    # bgcolor is the label_color from table
-    sample_tasks = [
-        # {"id_category":{"id":1},"content": { "bg_color": "orange" , "icon": { "title": "✅" , "size":28 }, "task": { "title": "Study Python" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "5 tasks" , "color":"gray" }}},
-        # {"id_category":{"id":2},"content": { "bg_color": "blue" , "icon": { "title": "📦" , "size":28 }, "task": { "title": "Logistics" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "2 tasks" , "color":"gray" }}},
-        # {"id_category":{"id":3},"content": { "bg_color": "red" , "icon": { "title": "💼" , "size":28 }, "task": { "title": "Work" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "7 tasks" , "color":"gray" }}},
-        # {"id_category":{"id":4},"content": { "bg_color": "yellow" , "icon": { "title": "🏋️" , "size":28 }, "task": { "title": "Gym" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "3 tasks" , "color":"gray" }}},
-        # {"id_category":{"id":5},"content": { "bg_color": "purple" , "icon": { "title": "🧠" , "size":28 }, "task": { "title": "AI Project" , "size":18 , "weight":ft.FontWeight.BOLD }, "count": { "title": "4 tasks" , "color":"gray" }}}
-        newData
-    ]
+    # Ya no hacemos json.dumps aquí
+    sample_tasks = newData
 
-    # await asyncio.sleep(3)
-
-    return setCarrousel( page, sample_tasks, addTask )
+    return setCarrousel(page, sample_tasks, addTask)
 
 def ListTasks(page: ft.Page):
     # Fondo degradado azul

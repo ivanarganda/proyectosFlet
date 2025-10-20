@@ -171,14 +171,37 @@ def setCarrousel(page, nodes, on_add_task=None):
     items = []
 
     for node in nodes:
-        parts = []
+        # ---------- 1. Validar y parsear content ----------
+        content = node.get("content", {})
 
-        for k, data in node["content"].items():
+        # Si el content viene como string JSON -> convertirlo
+        if isinstance(content, str):
+            try:
+                content = json.loads(content)
+            except json.JSONDecodeError:
+                print(f"⚠️ No se pudo parsear el content del nodo: {content}")
+                content = {}
+
+        if not isinstance(content, dict):
+            print(f"⚠️ Formato inesperado en content: {type(content)}")
+            continue
+
+        # ---------- 2. Crear los textos ----------
+        parts = []
+        for k, data in content.items():
+            # Saltar bg_color porque no se renderiza como texto
             if k == "bg_color":
                 continue
+
+            # data podría no ser dict (seguridad)
+            if not isinstance(data, dict):
+                print(f"⚠️ Valor inesperado en '{k}': {data}")
+                continue
+
             text_value = data.get("title", "")
             if not text_value:
                 continue
+
             text_kwargs = {
                 key: data[key]
                 for key in ["size", "width", "color", "weight"]
@@ -186,22 +209,26 @@ def setCarrousel(page, nodes, on_add_task=None):
             }
             parts.append(ft.Text(text_value, **text_kwargs))
 
-        id_category_task = node["id_category"].get("id",None)
-        parts.append(ft.Container(
-            content=ft.IconButton(
-                icon=ft.icons.ADD,
-                icon_size=28,
-                icon_color="gray",
-                on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
-            ),
-            alignment=ft.alignment.center,
-        ))
+        # ---------- 3. Botón de añadir tarea ----------
+        id_category_task = node.get("id_category", {}).get("id", None)
+        parts.append(
+            ft.Container(
+                content=ft.IconButton(
+                    icon=ft.icons.ADD,
+                    icon_size=28,
+                    icon_color="gray",
+                    on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
+                ),
+                alignment=ft.alignment.center,
+            )
+        )
 
-        # cada tarea = una columna de textos
+        # ---------- 4. Construir la tarjeta ----------
+        bg_color = content.get("bg_color", {}).get("title", "#F0F0F0")  # valor por defecto
         card = ft.Container(
             width=160,
             height=200,
-            bgcolor=node['content']['bg_color'],
+            bgcolor=bg_color,
             border_radius=20,
             padding=15,
             shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
@@ -214,7 +241,7 @@ def setCarrousel(page, nodes, on_add_task=None):
         )
         items.append(card)
 
-    # fila con scroll horizontal
+    # ---------- 5. Devolver la fila con scroll horizontal ----------
     return ft.Row(
         controls=items,
         scroll=ft.ScrollMode.ALWAYS,
