@@ -2,7 +2,7 @@ import sqlite3 as sql
 
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__) , "game.db")
+DB_PATH = os.path.join(os.path.dirname(__file__) , "omnimind.db")
 
 class Database:
 
