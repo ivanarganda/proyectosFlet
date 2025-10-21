@@ -192,7 +192,7 @@ def AddCategoryTasksForm(page: ft.Page):
 
         headers = HEADERS
 
-        response = await request.post(f"{REQUEST_URL_TEST}/tasks/categories", headers=headers, data=json.dumps(json_data))
+        response = await request.post(f"{REQUEST_URL}/tasks/categories", headers=headers, data=json.dumps(json_data))
 
         data = response.json()
 

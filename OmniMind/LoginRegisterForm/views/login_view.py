@@ -1,9 +1,10 @@
 import flet as ft
+from params import WALLPAPERS
 def renderLoginView(page: ft.Page, email_field: ft.TextField, password_field: ft.TextField, login: callable, toogle_view: callable, loader_overlay: ft.Container) -> ft.Stack:
     return ft.Stack([
         ft.Container(
             expand=True,
-            image_src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
+            image_src=WALLPAPERS["login"],
             image_fit=ft.ImageFit.COVER
         ),
         ft.Container(

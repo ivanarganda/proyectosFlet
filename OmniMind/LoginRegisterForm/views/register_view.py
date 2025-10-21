@@ -1,9 +1,10 @@
 import flet as ft
+from params import WALLPAPERS
 def renderRegisterView(page: ft.Page, username_field: ft.TextField, email_field: ft.TextField, password_field: ft.TextField, register: callable, toogle_view: callable, loader_overlay: ft.Container) -> ft.Stack:
     return ft.Stack([
         ft.Container(
             expand=True,
-            image_src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/sign-up-wallpaper.png",
+            image_src=WALLPAPERS["register"],
             image_fit=ft.ImageFit.COVER
         ),
         ft.Container(

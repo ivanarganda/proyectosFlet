@@ -146,7 +146,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
 
         headers = HEADERS
 
-        response = await request.post(f"{REQUEST_URL_TEST}/tasks", headers=headers, data=json.dumps(json_data))
+        response = await request.post(f"{REQUEST_URL}/tasks", headers=headers, data=json.dumps(json_data))
 
         data = response.json()
 
