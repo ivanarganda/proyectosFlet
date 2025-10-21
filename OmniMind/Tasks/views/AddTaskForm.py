@@ -10,16 +10,28 @@ from helpers.utils import (
 from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar
 
+import asyncio
+import requests_async as request
+import json
+from params import *
+
 current_path = {
     "path": os.path.abspath(__file__),
     "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
     "file": __file__.split("\\")[-1]
 }
 
+user_session = {}
+token_session = None
 # --------------------------------------------------------------------------
 def AddTaskForm(page: ft.Page, id_category=None):
 
-    middleware_auth(page) # check session
+    global user_session, token_session
+
+    session = middleware_auth(page) # check session
+
+    user_session = session.get("session")
+    token_session = session.get("token")
 
     page.title = "New Task"
     page.window_width = 420
@@ -112,7 +124,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
     txt_description.on_change = update_preview
 
     # --- GUARDAR ------------------------------------------------------------
-    def save_task(e):
+    async def save_task(e):
 
         if not txt_title.value.strip():
             loadSnackbar(page, "Title is required", "red")
@@ -121,15 +133,24 @@ def AddTaskForm(page: ft.Page, id_category=None):
         loader.visible = True
         page.update()
 
-        task = {
-            "title": txt_title.value.strip(),
-            "description": txt_description.value.strip(),
-            "category_id": id_category,
-            "created_at": str(datetime.now()),
-            "user": session.get("username", "guest"),
+        title = txt_title.value.strip()
+        description = txt_description.value.strip()
+        json_data = {
+            "content": {
+                 "title": title , 
+                 "description": description,
+                 "date": datetime.now().strftime('%Y-%m-%d %H:%M')
+            },
+            "id_category": id_category
         }
 
-        print("✅ Task added:", task)
+        headers = HEADERS
+
+        response = await request.post(f"{REQUEST_URL_TEST}/tasks", headers=headers, data=json.dumps(json_data))
+
+        data = response.json()
+
+        print("✅ Task added:", json_data)
         loadSnackbar(page, "Task successfully added!", "#4e73df")
 
         clearInputsForm(page, [txt_title, txt_description])

@@ -60,9 +60,6 @@ def loadTasksCategories(page: ft.Page):
             "content": parsed_content
         })
 
-    # print("✅ Datos parseados correctamente:")
-    # print(newData)
-
     # Ya no hacemos json.dumps aquí
     sample_tasks = newData
 
@@ -130,8 +127,8 @@ def ListTasks(page: ft.Page):
     content_area = ft.Container(
         bgcolor="#F6F4FB",
         border_radius=ft.border_radius.only(top_left=30, top_right=30),
-        height=400,  # altura de la card
-        bottom=0,    # 👈 la anclamos al fondo
+        height=400,
+        bottom=0,
         left=0,
         right=0,
         alignment=ft.alignment.top_center,
@@ -144,9 +141,9 @@ def ListTasks(page: ft.Page):
 
     # Stack general: degradado + card blanca + header arriba
     background = [
-            backwallpaper,  # fondo degradado
-            content_area,   # card blanca encima del degradado
-            header          # header fijo arriba
+            backwallpaper,
+            content_area,
+            header
         ]
 
     return background

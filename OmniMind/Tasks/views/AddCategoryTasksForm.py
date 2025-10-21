@@ -10,6 +10,11 @@ from helpers.utils import (
 from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar
 
+import asyncio
+import requests_async as request
+import json
+from params import *
+
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -17,11 +22,17 @@ current_path = {
     "file": __file__.split("\\")[-1]
 }
 
-
+user_session = {}
+token_session = None
 # --------------------------------------------------------------------------
 def AddCategoryTasksForm(page: ft.Page):
 
-    middleware_auth(page) # check session
+    global user_session, token_session
+
+    session = middleware_auth(page) # check session
+
+    user_session = session.get("session")
+    token_session = session.get("token")
 
     page.title = "New Category"
     page.window_width = 420
@@ -153,7 +164,7 @@ def AddCategoryTasksForm(page: ft.Page):
     )
 
     # ---------- Submit ----------
-    def save_category(e):
+    async def save_category(e):
         name = (category_name.value or "").strip()
         icon = (icon_field.value or "").strip()
         bg = (bg_color_field.value or "").strip()
@@ -163,11 +174,27 @@ def AddCategoryTasksForm(page: ft.Page):
             loadSnackbar(page, "Name is required", "red")
             return
 
+        # Following template 
+        # {"bg_color": {"title": "orange"}, "icon": {"title": "\u2705", "size": 28}, "task": {"title": "Study Python", "size": 18, "weight": 400}, "count": {"title": "0 tasks", "color": "black"}}
+
         print("✅ Saving category:")
         print("  name:", name)
         print("  icon:", icon)
         print("  bg:", bg)
         print("  text color:", fg)
+
+        json_data = {
+
+            "category":name,
+            "content": { "bg_color": {"title": bg}, "icon": {"title": icon, "size": 28}, "task": {"title": name, "size": 18, "weight": 400}, "count": {"title": "0 tasks", "color": "black"} }
+
+        }
+
+        headers = HEADERS
+
+        response = await request.post(f"{REQUEST_URL_TEST}/tasks/categories", headers=headers, data=json.dumps(json_data))
+
+        data = response.json()
 
         loadSnackbar(page, "Category created!", "#4e73df")
         clearInputsForm(page, [category_name, icon_field, bg_color_field, text_color_field])

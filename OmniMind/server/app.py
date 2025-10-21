@@ -430,7 +430,6 @@ def tasks():
         # POST → crear nueva tarea
         if request.method == "POST":
             data = request.json
-            task = data.get("task")
             content = data.get("content") 
             # @ format: 
             """
@@ -452,8 +451,8 @@ def tasks():
             content_json = json.dumps(content)
 
             db.execute_query(
-                """INSERT INTO tasks (task, content, id_category, id_user) 
-                   VALUES (?, ?, ?, ?)""",
+                """INSERT INTO tasks (content, id_category, id_user) 
+                   VALUES ( ?, ?, ?)""",
                 (task, content, id_category, id_user),
             )
             return parse_json_response("Task created successfully", 201)
