@@ -9,6 +9,7 @@ from helpers.utils import (
 )
 from LoginRegisterForm.views.login_view import renderLoginView
 from LoginRegisterForm.views.register_view import renderRegisterView
+from LoginRegisterForm.views.change_password_view import renderChangePasswordView
 
 # -------------------------------
 # Campos UI base
@@ -19,7 +20,9 @@ password_field = setInputField("text", label="Password")
 
 login_view = None
 register_view = None
+change_password_view = None
 loader_overlay = loadLoader()
+attempts = 0
 
 # -------------------------------
 # Función auxiliar para logs
@@ -48,6 +51,8 @@ def validate_inputs(page, username=None, email=None, password=None):
         loadSnackbar(page, f"⚠️ {ve}", "red")
         return False
 
+async def change_password( e, page: ft.Page ):
+    pass
 
 # -------------------------------
 # Registro
@@ -165,11 +170,25 @@ async def login(e, page: ft.Page):
 # -------------------------------
 # Renderización de vistas
 # -------------------------------
+def renderChangePasswordForm(page: ft.Page):
+    global change_password_view
+    try:
+        password_field_confirm = setInputField("text", label="Confirm Password")
+        change_password_view = renderChangePasswordView(
+            page, email_field, password_field_confirm, password_field, change_password, toggle_view, loader_overlay
+        )
+    except Exception as e:
+        log_error("renderChangePasswordForm", e)
+        loadSnackbar(page, "❌ Error loading change password form.", "red")
+
+# -------------------------------
+# Renderización de vistas
+# -------------------------------
 def renderRegisterForm(page: ft.Page):
     global register_view
     try:
         register_view = renderRegisterView(
-            page, username_field, email_field, password_field, register, toogle_view, loader_overlay
+            page, username_field, email_field, password_field, register, toggle_view, loader_overlay
         )
     except Exception as e:
         log_error("renderRegisterForm", e)
@@ -179,27 +198,40 @@ def renderRegisterForm(page: ft.Page):
 def renderLoginForm(page: ft.Page):
     global login_view
     try:
+        forgot_password = ft.Container(
+            content=ft.Row(
+                [
+                    ft.Text("Forgot your password?"),
+                    ft.TextButton("Change password", on_click=lambda _: toggle_view(page, "changePassword"))
+                ]
+            ),
+            width=page.window_width,
+            height=50,
+            border_radius=ft.border_radius.all(10),
+            visible=attempts == 0
+        )
+
         login_view = renderLoginView(
-            page, email_field, password_field, login, toogle_view, loader_overlay
+            page, forgot_password, email_field, password_field, login, toggle_view, loader_overlay
         )
     except Exception as e:
         log_error("renderLoginForm", e)
         loadSnackbar(page, "❌ Error loading login form.", "red")
 
 
-def toogle_view(page: ft.Page, switched: str):
-    """Alterna entre login/register."""
-    global login_view, register_view, email_field, password_field, username_field
+def toggle_view(page: ft.Page, switched: str):
+    """Alterna entre login/register/changePassword."""
+    global login_view, register_view, change_password_view
     try:
-        if login_view and register_view:
-            login_view.visible = switched == "login"
-            register_view.visible = switched == "register"
-            clearInputsForm(page, [email_field, password_field, username_field])
-            page.update()
-        else:
+        if any(v is None for v in [login_view, register_view, change_password_view]):
             raise Exception("Views not initialized.")
+        login_view.visible = switched == "login"
+        register_view.visible = switched == "register"
+        change_password_view.visible = switched == "changePassword"
+        clearInputsForm(page, [email_field, password_field, username_field])
+        page.update()
     except Exception as e:
-        log_error("toogle_view", e)
+        log_error("toggle_view", e)
         loadSnackbar(page, "❌ Unable to switch views.", "red")
 
 
@@ -213,12 +245,14 @@ def renderTemplate(page: ft.Page):
         page.window_height = 800
         page.window_resizable = False
 
+        renderChangePasswordForm(page)
         renderLoginForm(page)
         renderRegisterForm(page)
 
         return addElementsPage(
             page,
             [
+                change_password_view or ft.Text("⚠️ Login view not loaded"),
                 login_view or ft.Text("⚠️ Login view not loaded"),
                 register_view or ft.Text("⚠️ Register view not loaded")
             ]

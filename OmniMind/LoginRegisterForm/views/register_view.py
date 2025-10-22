@@ -21,7 +21,7 @@ def renderRegisterView(page: ft.Page, username_field: ft.TextField, email_field:
                     ft.Row(
                         [
                             ft.ElevatedButton(
-                                "Let's play", 
+                                "Let's go", 
                                 bgcolor="#5A2D9C", 
                                 color="white",
                                 on_click=lambda e: page.run_task(register, e, page)  # 🔑 aquí

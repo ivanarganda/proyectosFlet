@@ -4,6 +4,12 @@ import jwt  # PyJWT
 from jwt import InvalidTokenError
 import math
 
+# --------------------------
+# Función auxiliar para logs
+# --------------------------
+def log_error(context: str, error: Exception):
+    print(f"❌ Error en {context}: {type(error).__name__} -> {error}")
+
 # --- Validación HEX estricta ---
 def is_valid_hex(color: str) -> bool:
     import re

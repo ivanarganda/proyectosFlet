@@ -1,6 +1,7 @@
 # OmniMind 🧠
 
 OmniMind es una suite todo-en-uno desarrollada con **Flet**, que integra:
+
 - ✅ Gestión de tareas (To-Do List)
 - 📊 Limpieza, modelado y análisis de datos inteligentes (DataMind)
 - 🎮 Juegos interactivos (Adivina el número, Tetris, Tres en Raya…)

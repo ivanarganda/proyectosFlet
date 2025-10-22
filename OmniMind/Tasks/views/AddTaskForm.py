@@ -5,7 +5,7 @@ import flet as ft
 from datetime import datetime
 from helpers.utils import (
     getSession, addElementsPage, setGradient,
-    setInputField, loadLoader, loadSnackbar, clearInputsForm, handle_logout
+    setInputField, loadLoader, loadSnackbar, clearInputsForm, handle_logout, log_error
 )
 from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar

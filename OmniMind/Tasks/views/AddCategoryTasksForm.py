@@ -4,7 +4,7 @@ import os
 import flet as ft
 from helpers.utils import (
     loadLoader, addElementsPage, clearInputsForm, loadSnackbar,
-    setInputField, build_color_dialog, open_bg_picker,open_text_picker, is_valid_hex,is_light_color
+    setInputField, build_color_dialog, open_bg_picker,open_text_picker, is_valid_hex,is_light_color, log_error
 )
 
 from middlewares.auth import middleware_auth

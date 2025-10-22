@@ -5,7 +5,7 @@ import flet as ft
 import requests_async as request
 from helpers.utils import (
     getSession, addElementsPage, setGradient,
-    setInputField, setCarrousel
+    setInputField, setCarrousel, log_error
 )
 from middlewares.auth import middleware_auth
 from footer_navegation.navegation import footer_navbar
@@ -24,14 +24,6 @@ current_path = {
 
 user_session = {}
 token_session = None
-
-
-# --------------------------
-# Función auxiliar para logs
-# --------------------------
-def log_error(context: str, error: Exception):
-    print(f"❌ Error en {context}: {type(error).__name__} -> {error}")
-
 
 # --------------------------
 # Función principal: carga categorías
@@ -118,7 +110,7 @@ def loadTasksCategories(page: ft.Page):
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                alignment=ft.MainAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER
             ),
             alignment=ft.alignment.center,
             padding=40,

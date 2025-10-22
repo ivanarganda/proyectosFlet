@@ -1,7 +1,7 @@
 import os
 import flet as ft
 from params import ICONS
-from helpers.utils import addElementsPage, getSession, handle_logout
+from helpers.utils import addElementsPage, getSession, handle_logout, log_error
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
 
@@ -17,14 +17,6 @@ current_path = {
     "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
     "file": __file__.split("\\")[-1]
 }
-
-
-# -----------------------------------------------------------
-# Función auxiliar para registrar errores
-def log_error(context: str, error: Exception):
-    print(f"❌ Error en {context}: {type(error).__name__} -> {error}")
-# -----------------------------------------------------------
-
 
 def list_menu_items(page: ft.Page):
     try:
