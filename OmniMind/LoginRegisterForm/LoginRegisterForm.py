@@ -5,7 +5,7 @@ import requests_async as request
 from params import *
 from helpers.utils import (
     loadLoader, addElementsPage, clearInputsForm,
-    loadSnackbar, setInputField
+    loadSnackbar, setInputField, validate_inputs
 )
 from LoginRegisterForm.views.login_view import renderLoginView
 from LoginRegisterForm.views.register_view import renderRegisterView
@@ -21,6 +21,7 @@ password_field = setInputField("text", label="Password")
 login_view = None
 register_view = None
 change_password_view = None
+forgot_password = None
 loader_overlay = loadLoader()
 attempts = 0
 
@@ -33,24 +34,6 @@ def log_error(context: str, error: Exception):
 # -------------------------------
 # Validaciones previas
 # -------------------------------
-def validate_inputs(page, username=None, email=None, password=None):
-    """Valida campos antes de enviar al servidor."""
-    try:
-        if username is not None and not username.strip():
-            raise ValueError("Username is required.")
-        if email is not None:
-            if not email.strip():
-                raise ValueError("Email is required.")
-            if "@" not in email or "." not in email:
-                raise ValueError("Invalid email format.")
-        if password is not None:
-            if len(password.strip()) < 4:
-                raise ValueError("Password must be at least 4 characters.")
-        return True
-    except ValueError as ve:
-        loadSnackbar(page, f"⚠️ {ve}", "red")
-        return False
-
 async def change_password( e, page: ft.Page ):
     pass
 
@@ -109,7 +92,7 @@ async def register(e, page: ft.Page):
 # Login
 # -------------------------------
 async def login(e, page: ft.Page):
-    global email_field, password_field, loader_overlay
+    global email_field, password_field, loader_overlay, attempts
 
     loader_overlay.visible = True
     page.update()
@@ -119,6 +102,8 @@ async def login(e, page: ft.Page):
 
         if not validate_inputs(page, email=email, password=password):
             loader_overlay.visible = False
+            attempts+=1
+            update_forgot_password_visibility(page)   # ✅ actualiza el botón
             page.update()
             return
 
@@ -165,8 +150,6 @@ async def login(e, page: ft.Page):
         loader_overlay.visible = False
         page.update()
 
-
-
 # -------------------------------
 # Renderización de vistas
 # -------------------------------
@@ -194,23 +177,34 @@ def renderRegisterForm(page: ft.Page):
         log_error("renderRegisterForm", e)
         loadSnackbar(page, "❌ Error loading register form.", "red")
 
+def update_forgot_password_visibility(page: ft.Page):
+    global forgot_password
+    if forgot_password:
+        forgot_password.visible = attempts > 1
+        page.update()
+
+def renderForgetPasswordInput(page: ft.Page):
+    global attempts
+    return ft.Container(
+        content=ft.Row(
+            [
+                ft.Text("Forgot your password?"),
+                ft.TextButton("Change password", on_click=lambda _: toggle_view(page, "changePassword"))
+            ]
+        ),
+        width=page.window_width,
+        height=50,
+        border_radius=ft.border_radius.all(10),
+        visible=attempts > 1  # Se actualizará dinámicamente
+    )
+
+
 
 def renderLoginForm(page: ft.Page):
-    global login_view
+    global login_view, forgot_password
+    
     try:
-        forgot_password = ft.Container(
-            content=ft.Row(
-                [
-                    ft.Text("Forgot your password?"),
-                    ft.TextButton("Change password", on_click=lambda _: toggle_view(page, "changePassword"))
-                ]
-            ),
-            width=page.window_width,
-            height=50,
-            border_radius=ft.border_radius.all(10),
-            visible=attempts == 0
-        )
-
+        forgot_password = renderForgetPasswordInput(page)
         login_view = renderLoginView(
             page, forgot_password, email_field, password_field, login, toggle_view, loader_overlay
         )

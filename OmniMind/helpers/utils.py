@@ -10,6 +10,25 @@ import math
 def log_error(context: str, error: Exception):
     print(f"❌ Error en {context}: {type(error).__name__} -> {error}")
 
+def validate_inputs(page, username=None, email=None, password=None):
+    """Valida campos antes de enviar al servidor."""
+    try:
+        if username is not None and not username.strip():
+            raise ValueError("Username is required.")
+        if email is not None:
+            if not email.strip():
+                raise ValueError("Email is required.")
+            if "@" not in email or "." not in email:
+                raise ValueError("Invalid email format.")
+        if password is not None:
+            if len(password.strip()) < 4:
+                raise ValueError("Password must be at least 4 characters.")
+        return True
+    except ValueError as ve:
+        loadSnackbar(page, f"⚠️ {ve}", "red")
+        page.update()
+        return False
+
 # --- Validación HEX estricta ---
 def is_valid_hex(color: str) -> bool:
     import re
