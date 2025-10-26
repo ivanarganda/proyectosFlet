@@ -13,6 +13,6 @@ ICONS = {
 WALLPAPERS = {
     "login":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
     "register":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
-    "ch_password":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png"
+    "ch_password":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/security_wallpaper.png"
 }
 

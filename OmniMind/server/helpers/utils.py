@@ -50,6 +50,7 @@ def get_queries():
                     content JSON NOT NULL, 
                     id_category INTEGER,
                     id_user INTEGER,
+                    state INTEGER NOT NULL DEFAULT 0,
                     FOREIGN KEY (id_category) REFERENCES tasks_categories(id) ON DELETE CASCADE,
                     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
                 )

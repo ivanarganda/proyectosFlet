@@ -18,6 +18,7 @@ def footer_navbar(page: ft.Page, current_path = {} , dispatches = {} ):
                 ft.FloatingActionButton(on_click=lambda _: func_add_category(*args_add_category), icon=ft.icons.ADD, bgcolor="#4e73df", visible= folder == 'Tasks' ),
                 ft.FloatingActionButton(on_click=lambda _: page.go("/tasks"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'views') and (file == 'AddCategoryTasksForm.py') ),
                 ft.FloatingActionButton(on_click=lambda _: page.go("/tasks"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'views') and (file == 'AddTaskForm.py') ),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/tasks"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'views') and (file == 'details_category.py') ),
                 ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'profile') and (file == 'profile.py') ),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
                 ft.IconButton(ft.icons.PERSON, icon_color="#4e73df", visible= folder != 'Profile'),

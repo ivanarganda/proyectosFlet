@@ -4,6 +4,7 @@ import json
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
 from Tasks.Tasks import RenderTasks
+from Tasks.views.details_category import loadDetailsCategory
 from Tasks.views.AddCategoryTasksForm import AddCategoryTasksForm
 from Tasks.views.AddTaskForm import AddTaskForm
 
@@ -43,6 +44,14 @@ def route_change(e: ft.RouteChangeEvent):
             ft.View(
                 f"/tasks/create/{id_category}",
                 [AddTaskForm(page, id_category)]
+            )
+        )
+    elif page.route.startswith("/category/details/"):
+        category = page.route.split("/")[-1]  # "5", "12", etc.
+        page.views.append(
+            ft.View(
+                f"/category/details/{category}",
+                [loadDetailsCategory(page, category)]
             )
         )
     page.update()

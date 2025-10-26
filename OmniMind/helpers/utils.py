@@ -192,7 +192,7 @@ def build_color_dialog(title: str, initial_hex: str, on_pick):
     )
     return dlg
 
-def setCarrousel(page, nodes, on_add_task=None):
+def setCarrousel(page, nodes, on_view_category, on_add_task):
     items = []
 
     for node in nodes:
@@ -236,15 +236,35 @@ def setCarrousel(page, nodes, on_add_task=None):
 
         # ---------- 3. Botón de añadir tarea ----------
         id_category_task = node.get("id_category", {}).get("id", None)
+        category_name = node.get("category", {}).get("name", None)
         parts.append(
-            ft.Container(
-                content=ft.IconButton(
-                    icon=ft.icons.ADD,
-                    icon_size=28,
-                    icon_color="gray",
-                    on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
-                ),
-                alignment=ft.alignment.center,
+            ft.Row(
+                [
+                    ft.Container(
+                        content=ft.IconButton(
+                            icon=ft.icons.ADD,
+                            icon_size=28,
+                            icon_color="gray",
+                            on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
+                        ),
+                        alignment=ft.alignment.center,
+                    ),
+                    ft.Container(
+                        content=ft.IconButton(
+                            icon=ft.icons.REMOVE_RED_EYE_OUTLINED,
+                            icon_size=28,
+                            icon_color="gray",
+                            on_click=lambda _, category=f'{{"id": "{id_category_task}", "name": "{category_name}"}}': on_view_category(
+                                page=page,
+                                t="AllTasks",
+                                category=category
+                            ) if on_view_category else None
+
+                        ),
+                        alignment=ft.alignment.center,
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
             )
         )
 

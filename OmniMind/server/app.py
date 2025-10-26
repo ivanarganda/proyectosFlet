@@ -3,6 +3,7 @@ import logging # TODO only for debug
 import json
 from flask import Flask, request, jsonify, g
 from markupsafe import escape
+import time
 
 import sqlite3 as sql
 from conf.DB import Database
@@ -237,6 +238,54 @@ def update():
         
         return parse_json_response( str(e) , 400 ) 
 
+@app.route("/users/change_password", methods=["POST"])
+def change_password():
+
+    try:
+
+        handle_server()
+
+        json_data = request.json
+
+        # logging.debug(json_data) 
+
+        email = json_data.get("email", None )
+        new_password = json_data.get("new_password", None )
+
+        if email == None or new_password == None:
+            return parse_json_response( "Incorrect credentials" , 400 )
+
+        db.execute_query(
+            """ 
+                SELECT * from users where email = ?
+            """,
+            ( email, )
+        )
+
+        # logging.debug(db.get_query())
+
+        result = db.fetch_all()
+
+        # logging.debug(result) 
+
+        if not result:
+            return parse_json_response( f"User {email} does not exist" , 402 )
+
+        db.execute_query(
+            """ 
+                UPDATE users SET password = ? where email = ?
+            """,
+            ( new_password , email )
+        )
+
+        return parse_json_response("Password changed successfully", 200)
+
+    except Exception as e:
+
+        logging.debug(e)
+        
+        return parse_json_response( str(e) , 400 )
+
 @app.route("/users/login", methods=["POST"])
 def login():
 
@@ -372,6 +421,7 @@ def task_categories():
                 "INSERT INTO tasks_categories (category, content, id_user) VALUES (?, ?, ?)",
                 (category, content_json, id_user),
             )
+
             return parse_json_response("Category created successfully", 201)
 
         # DELETE → eliminar una categoría
@@ -429,39 +479,48 @@ def tasks():
 
         # POST → crear nueva tarea
         if request.method == "POST":
+
             data = request.json
-            content = data.get("content") 
-            # @ format: 
-            """
-                {
-                 "title": "title", 
-                 "description": "description",
-                 "date": datetime
-                }
-
-            """
+            content = data.get("content")
             id_category = data.get("id_category")
-
-            if not task:
-                raise Exception("Task name required")
                 
             if not content:
                 content = {}
 
             content_json = json.dumps(content)
 
-            db.execute_query(
-                """INSERT INTO tasks (content, id_category, id_user) 
-                   VALUES ( ?, ?, ?)""",
-                (task, content, id_category, id_user),
+            db.execute_query( "INSERT INTO tasks (content, id_category, id_user) VALUES ( ?, ?, ? )",
+            (content_json, id_category, id_user)
             )
+            
+            time.sleep(0.5)  # Simulate processing delay
+
+            db.execute_query(
+                """UPDATE tasks_categories
+                SET content = JSON_SET(
+                    JSON_SET(
+                        content,
+                        '$.count.title',
+                        CONCAT(
+                            (SELECT COUNT(*) FROM tasks t_ WHERE t_.id_category = ? AND t_.id_user = ?),
+                            ' tasks'
+                        )
+                    ),
+                    '$.task.title',
+                    (SELECT u.username FROM users u WHERE u.id = ?)
+                )
+                WHERE id_user = ?
+                AND id = ?""",
+                (id_category, id_user, id_user, id_user, id_category)
+            )
+
+
             return parse_json_response("Task created successfully", 201)
 
         # PUT → actualizar tarea
         if request.method == "PUT":
             data = request.json
             id_task = data.get("id")
-            task = data.get("task")
             content = data.get("content")
             id_category = data.get("id_category")
 
@@ -470,9 +529,9 @@ def tasks():
 
             db.execute_query(
                 """UPDATE tasks 
-                   SET task = ?, content = ?, id_category = ? 
+                   SET content = ?, id_category = ? 
                    WHERE id = ? AND id_user = ?""",
-                (task, content, id_category, id_task, id_user),
+                (content, id_category, id_task, id_user),
             )
             return parse_json_response("Task updated successfully", 200)
 

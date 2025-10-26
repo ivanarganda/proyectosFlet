@@ -17,6 +17,7 @@ from LoginRegisterForm.views.change_password_view import renderChangePasswordVie
 username_field = setInputField("text", label="Username")
 email_field = setInputField("text", label="Email")
 password_field = setInputField("text", label="Password")
+password_field_confirm = setInputField("text", label="Confirm Password")
 
 login_view = None
 register_view = None
@@ -35,7 +36,56 @@ def log_error(context: str, error: Exception):
 # Validaciones previas
 # -------------------------------
 async def change_password( e, page: ft.Page ):
-    pass
+    global email_field, password_field, loader_overlay, toggle_view
+
+    loader_overlay.visible = True
+    page.update()
+
+    try:
+        email, new_password = email_field.value, password_field.value
+
+        if not validate_inputs(page, email=email, password=new_password):
+            loader_overlay.visible = False
+            page.update()
+            return
+        
+        if new_password != password_field_confirm.value:
+            raise Exception("Passwords do not match.")
+
+        headers = HEADERS
+        payload = {"email": email, "new_password": new_password}
+
+        response = await request.post(
+            f"{REQUEST_URL}/users/change_password",
+            headers=headers,
+            data=json.dumps(payload),
+            timeout=10
+        )
+
+        data = response.json()
+
+        if data.get("status") != 200:
+            raise Exception(data.get("message", "Change password failed."))
+
+        if data.get("error"):
+            raise Exception(data["error"])
+
+        loadSnackbar(page, "✅ Password changed successfully! Redirecting to login...", "green")
+        await asyncio.sleep(2)
+        toggle_view(page, "login")
+
+    except (asyncio.TimeoutError, OSError, ConnectionError):
+        loadSnackbar(page, "⚠️ Network error or timeout. Please check your internet connection.", "red")
+
+    except Exception as e:
+        log_error("change_password", e)
+        loadSnackbar(page, f"Error: {e}", "red")
+
+    finally:
+        loader_overlay.visible = False
+        attempts = 0
+        update_forgot_password_visibility(page)   # ✅ resetea el botón
+        page.update()
 
 # -------------------------------
 # Registro
@@ -156,7 +206,6 @@ async def login(e, page: ft.Page):
 def renderChangePasswordForm(page: ft.Page):
     global change_password_view
     try:
-        password_field_confirm = setInputField("text", label="Confirm Password")
         change_password_view = renderChangePasswordView(
             page, email_field, password_field_confirm, password_field, change_password, toggle_view, loader_overlay
         )

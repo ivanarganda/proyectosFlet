@@ -5,6 +5,7 @@ def renderChangePasswordView( page: ft.Page, email_field: ft.TextField, password
     contentForm = ft.Column([
                         email_field,
                         password_field,
+                        password_field_confirm,
                         ft.Row(
                             [
                                 ft.ElevatedButton(

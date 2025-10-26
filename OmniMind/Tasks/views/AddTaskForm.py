@@ -145,6 +145,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
         }
 
         headers = HEADERS
+        headers["Authorization"] = f"Bearer {token_session}"
 
         response = await request.post(f"{REQUEST_URL}/tasks", headers=headers, data=json.dumps(json_data))
 
@@ -153,7 +154,7 @@ def AddTaskForm(page: ft.Page, id_category=None):
         print("✅ Task added:", json_data)
         loadSnackbar(page, "Task successfully added!", "#4e73df")
 
-        clearInputsForm(page, [txt_title, txt_description])
+        # clearInputsForm(page, [txt_title, txt_description])
         update_preview()
         loader.visible = False
         page.update()
