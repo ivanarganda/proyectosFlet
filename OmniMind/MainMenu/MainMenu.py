@@ -251,4 +251,5 @@ def renderMainMenu(page: ft.Page):
 
     except Exception as e:
         log_error("renderMainMenu", e)
+        page.go("/")
         return addElementsPage(page, [ft.Text("❌ Error cargando menú principal")])
