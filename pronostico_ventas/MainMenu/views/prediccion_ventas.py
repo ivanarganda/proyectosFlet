@@ -3,6 +3,8 @@ import io
 import base64
 import flet as ft
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")  # 👈 aquí
 import matplotlib.pyplot as plt
 from prophet import Prophet
 from helpers.utils import addElementsPage
