@@ -467,53 +467,73 @@ def tasks():
 
         # GET → obtener todas las tareas del usuario
         if request.method == "GET":
-            db.execute_query(
-                """SELECT t.id, t.content
-                   FROM tasks t 
-                   LEFT JOIN tasks_categories c ON t.id_category = c.id 
-                   WHERE t.id_user = ?""",
-                (id_user,),
-            )
-            result = db.fetch_all()
-            return parse_json_response(result, 200)
+            id_category = request.args.get("id_category", None)
+            print("id_category:", id_category)  # Debugging line
+            if id_category:
+                print("Category specified, fetching tasks for category:", id_category)
+                db.execute_query(
+                    """SELECT *
+                       FROM list_tasks lt
+                       WHERE lt.id_user = ? AND lt.id_category = ?""",
+                    (id_user, id_category),
+                )
+                result = db.fetch_all()
+                return parse_json_response(result, 200)
+            else:
+                # Mostrar solo las 3 tareas de hoy del usuario
+                print("No category specified, fetching today's tasks.")
+                db.execute_query(
+                    """SELECT *
+                       FROM list_tasks lt
+                       WHERE lt.id_user = ?
+                       --AND date(lt.created_at) = date('now','localtime')
+                       ORDER BY lt.created_at DESC
+                       LIMIT 3""",
+                    (id_user,),
+                )
+                result = db.fetch_all()
+                return parse_json_response(result, 200)
 
         # POST → crear nueva tarea
         if request.method == "POST":
 
             data = request.json
-            content = data.get("content")
+            title = data.get("title")
+            description = data.get("description", "")
             id_category = data.get("id_category")
-                
-            if not content:
-                content = {}
 
-            content_json = json.dumps(content)
+            if not title or not id_category:
+                raise Exception("Title and category required")
 
-            db.execute_query( "INSERT INTO tasks (content, id_category, id_user) VALUES ( ?, ?, ? )",
-            (content_json, id_category, id_user)
-            )
-            
-            time.sleep(0.5)  # Simulate processing delay
+            # icono y color tambien
+            icon = data.get("icon", None)
+            color = data.get("color", None)
 
+            created_at = datetime.datetime.utcnow().isoformat()
+            updated_at = created_at
+            state = data.get("state", 0)
+
+            # Insert nueva tarea con los campos actualizados (incluyendo icon y color)
             db.execute_query(
-                """UPDATE tasks_categories
-                SET content = JSON_SET(
-                    JSON_SET(
-                        content,
-                        '$.count.title',
-                        CONCAT(
-                            (SELECT COUNT(*) FROM tasks t_ WHERE t_.id_category = ? AND t_.id_user = ?),
-                            ' tasks'
-                        )
-                    ),
-                    '$.task.title',
-                    (SELECT u.username FROM users u WHERE u.id = ?)
-                )
-                WHERE id_user = ?
-                AND id = ?""",
-                (id_category, id_user, id_user, id_user, id_category)
+                "INSERT INTO tasks (title, description, id_category, created_at, updated_at, state, id_user, icon, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (title, description, id_category, created_at, updated_at, state, id_user, icon, color)
             )
 
+            # Actualizar metadatos de la categoría: conteo y último task
+            db.execute_query(
+                """
+                UPDATE tasks_categories
+                SET content = JSON_SET(
+                    content,
+                    '$.count', (SELECT COUNT(*) FROM tasks t_ WHERE t_.id_category = ? AND t_.id_user = ?),
+                    '$.last_task.title', ?,
+                    '$.last_task.description', ?,
+                    '$.last_task.user', (SELECT u.username FROM users u WHERE u.id = ?)
+                )
+                WHERE id_user = ? AND id = ?
+                """,
+                (id_category, id_user, title, description, id_user, id_user, id_category),
+            )
 
             return parse_json_response("Task created successfully", 201)
 
