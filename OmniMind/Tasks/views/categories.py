@@ -100,6 +100,7 @@ def loadTasksCategories(page: ft.Page, token, viewDetailsCategory, addTask, addC
     # Procesar datos recibidos
     newData = []
     for id_category, category_data in enumerate(data.get("message", []), start=1):
+        tasks = category_data.get("tasks", 0)
         try:
             content = category_data.get("content", {})
             parsed_content = (
@@ -113,8 +114,11 @@ def loadTasksCategories(page: ft.Page, token, viewDetailsCategory, addTask, addC
             log_error(f"parse_content id={id_category}", e)
             parsed_content = {}
 
+        
+
         newData.append({
             "id_category": {"id": id_category},
+            "tasks": {"total": tasks},
             "category": {"name": category_data.get("name", f"Category {id_category}")},
             "content": parsed_content
         })

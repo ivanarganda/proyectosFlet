@@ -175,7 +175,7 @@ def AddCategoryTasksForm(page: ft.Page):
             return
 
         # Following template 
-        # {"bg_color": {"title": "orange"}, "icon": {"title": "\u2705", "size": 28}, "task": {"title": "Study Python", "size": 18, "weight": 400}, "count": {"title": "0 tasks", "color": "black"}}
+        # {"bg_color": {"title": "orange"}, "icon": {"title": "\u2705", "size": 28}, "task": {"title": "Study Python", "size": 18, "weight": 400}}
 
         print("✅ Saving category:")
         print("  name:", name)
@@ -186,7 +186,7 @@ def AddCategoryTasksForm(page: ft.Page):
         json_data = {
 
             "category":name,
-            "content": { "bg_color": {"title": bg}, "icon": {"title": icon, "size": 28}, "task": {"title": name, "size": 18, "weight": 400}, "count": {"title": 0, "color": "black"} }
+            "content": { "bg_color": {"title": bg}, "icon": {"title": icon, "size": 28}, "task": {"title": name, "size": 18, "weight": 400}}
 
         }
 

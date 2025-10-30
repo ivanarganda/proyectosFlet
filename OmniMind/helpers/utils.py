@@ -234,6 +234,10 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
             }
             parts.append(ft.Text(text_value, **text_kwargs))
 
+        # ---------- 2. Contador de tareas ----------
+        tasks = node.get("tasks", 0).get("total", 0)
+        parts.append(ft.Text(f"{tasks} tasks", size=12, color="black"))
+
         # ---------- 3. Botón de añadir tarea ----------
         id_category_task = node.get("id_category", {}).get("id", None)
         category_name = node.get("category", {}).get("name", None)

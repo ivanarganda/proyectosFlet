@@ -399,7 +399,7 @@ def task_categories():
         # GET → obtener todas las categorías del usuario
         if request.method == "GET":
             db.execute_query(
-                f"SELECT tc.id, tc.category, tc.content, ( SELECT u.username from users u where u.id = tc.id_user ) as username FROM tasks_categories tc WHERE tc.id_user = {id_user}"
+                f"SELECT * FROM categories WHERE id_user = {id_user}"
             )
             result = db.fetch_all()
 
@@ -517,22 +517,6 @@ def tasks():
             db.execute_query(
                 "INSERT INTO tasks (title, description, id_category, created_at, updated_at, state, id_user, icon, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (title, description, id_category, created_at, updated_at, state, id_user, icon, color)
-            )
-
-            # Actualizar metadatos de la categoría: conteo y último task
-            db.execute_query(
-                """
-                UPDATE tasks_categories
-                SET content = JSON_SET(
-                    content,
-                    '$.count', (SELECT COUNT(*) FROM tasks t_ WHERE t_.id_category = ? AND t_.id_user = ?),
-                    '$.last_task.title', ?,
-                    '$.last_task.description', ?,
-                    '$.last_task.user', (SELECT u.username FROM users u WHERE u.id = ?)
-                )
-                WHERE id_user = ? AND id = ?
-                """,
-                (id_category, id_user, title, description, id_user, id_user, id_category),
             )
 
             return parse_json_response("Task created successfully", 201)
