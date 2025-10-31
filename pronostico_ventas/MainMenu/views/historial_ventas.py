@@ -2,26 +2,19 @@ import os
 import io
 import base64
 from dotenv import load_dotenv
-import asyncio
 import flet as ft
 import pandas as pd
 import numpy as np
-import requests_async as requests
 import matplotlib
 
-matplotlib.use("Agg")  # ✅ sin interfaz gráfica
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from helpers.utils import addElementsPage, log_error
 from footer_navegation.navegation import footer_navbar
-from params import HEADERS
 
-# --- CARGAR VARIABLES DE ENTORNO ---
+# === CARGA ENTORNO ===
 load_dotenv()
-API_KEY = os.getenv("API_KEY_EXCHANGE_RATES")
-
-headers = HEADERS.copy()
-headers["apikey"] = f"{API_KEY}"
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -29,24 +22,27 @@ current_path = {
     "file": os.path.basename(__file__),
 }
 
-# --- Cargar dataset real ---
+# === CARGAR DATASET LOCAL ===
 DATASET_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "all_stocks_5yr.csv")
 df = pd.read_csv(DATASET_PATH)
 df = df[["date", "open", "close", "high", "low", "volume", "Name"]]
 df["date"] = pd.to_datetime(df["date"])
 
+# === CARGAR RATES LOCALES ===
+RATES_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "rates_yearly_symbols.json")
+rates_df = pd.read_json(RATES_PATH)
+
+# Obtener monedas únicas
+available_currencies = sorted(rates_df["currency"].unique().tolist())
+
 # --- Fechas mínimas y máximas ---
 min_date = pd.to_datetime(df["date"].min())
 max_date = pd.to_datetime(df["date"].max())
 
-# --- Acción por defecto ---
 DEFAULT_NAME = "AAL" if "AAL" in df["Name"].unique() else df["Name"].unique()[0]
-
 DEFAULT_CURRENCY = "USD"
 current_currency = DEFAULT_CURRENCY
 rate_currency = 1.0
-
-currencies = None
 
 filters = {
     "accion": DEFAULT_NAME,
@@ -55,43 +51,32 @@ filters = {
 }
 
 
-# --- ASYNC: Obtener lista de monedas ---
-async def loadCurrencies():
-    try:
-        response = await requests.get(
-            "https://api.apilayer.com/exchangerates_data/symbols",
-            headers=headers
-        )
-        data = response.json()
-        if response.status_code != 200:
-            print(f"⚠️ Error API {response.status_code}")
-            return {"USD": "US Dollar"}
-        return data.get("symbols", {"USD": "US Dollar"})
-    except Exception as e:
-        log_error("loadCurrencies", e)
-        return {"USD": "US Dollar"}
-
-
-# --- ASYNC: Obtener tasa de conversión ---
-async def get_conversion_rate(base_currency: str, target_currency: str):
-    """Devuelve la tasa base→target actual"""
+# === FUNCIONES DE CONVERSIÓN LOCAL ===
+def get_local_rate(base_currency: str, target_currency: str, year: int = None) -> float:
+    """Busca la tasa base→target más reciente en el JSON local."""
     if base_currency == target_currency:
         return 1.0
+
     try:
-        url = f"https://api.apilayer.com/exchangerates_data/latest?base={base_currency}&symbols={target_currency}"
-        response = await requests.get(url, headers=headers, timeout=10)
-        data = response.json()
-        if "rates" in data and target_currency in data["rates"]:
-            return float(data["rates"][target_currency])
+        if year is None:
+            year = rates_df["year"].max()
+        base_row = rates_df[(rates_df["currency"] == base_currency) & (rates_df["year"] == year)]
+        target_row = rates_df[(rates_df["currency"] == target_currency) & (rates_df["year"] == year)]
+
+        if base_row.empty or target_row.empty:
+            return 1.0
+
+        base_rate = base_row["rate"].values[0]
+        target_rate = target_row["rate"].values[0]
+        return target_rate / base_rate
     except Exception as e:
-        log_error("get_conversion_rate", e)
-    return 1.0
+        log_error("get_local_rate", e)
+        return 1.0
 
 
 def historial_ventas(page: ft.Page):
     global current_currency, rate_currency
 
-    # --- CONFIGURACIÓN DE LA PÁGINA ---
     page.title = "Historial de Acciones"
     page.window_width = 600
     page.window_height = 850
@@ -119,18 +104,17 @@ def historial_ventas(page: ft.Page):
     )
     lbl_paginacion = ft.Text("", size=13, color="white")
 
-    # --- FUNCIONES AUXILIARES ---
+    # === FUNCIONES DE TABLA ===
     def actualizar_tabla(df_filtrado):
         nonlocal filtrado_global
         filtrado_global = df_filtrado
         actualizar_pagina(1)
 
     def actualizar_pagina(pagina):
-        global current_page
+        nonlocal current_page
         total_filas = len(filtrado_global)
         total_paginas = max(1, (total_filas + page_size - 1) // page_size)
         current_page = max(1, min(pagina, total_paginas))
-
         start = (current_page - 1) * page_size
         end = start + page_size
         subset = filtrado_global.iloc[start:end]
@@ -167,6 +151,7 @@ def historial_ventas(page: ft.Page):
         alignment=ft.MainAxisAlignment.CENTER,
     )
 
+    # === GRAFICO ===
     def actualizar_grafico(df_filtrado):
         if df_filtrado.empty:
             grafico_img.visible = False
@@ -187,7 +172,7 @@ def historial_ventas(page: ft.Page):
         grafico_img.visible = True
         page.update()
 
-    # --- FECHAS ---
+    # === FECHAS ===
     fecha_inicio_val = ft.Text(filters["fecha_inicio"], color="black")
     fecha_fin_val = ft.Text(filters["fecha_fin"], color="black")
 
@@ -209,7 +194,7 @@ def historial_ventas(page: ft.Page):
     btn_inicio = ft.ElevatedButton("📅 Desde", on_click=lambda e: picker_inicio.pick_date(), bgcolor="#5A2D9C", color="white")
     btn_fin = ft.ElevatedButton("📅 Hasta", on_click=lambda e: picker_fin.pick_date(), bgcolor="#5A2D9C", color="white")
 
-    # --- FILTRO POR ACCIÓN ---
+    # === FILTRO POR ACCIÓN ===
     acciones = sorted(df["Name"].unique().tolist())
     combo_accion = ft.Dropdown(
         label="Acción (empresa)",
@@ -220,68 +205,34 @@ def historial_ventas(page: ft.Page):
         on_change=lambda e: filtrar_dataset(),
     )
 
-    # --- CARGAR MONEDAS Y CONVERSIÓN ---
-    async def load_currency_selector():
+    # === SELECTOR DE MONEDA LOCAL ===
+    currencies = ft.Dropdown(
+        label="Moneda",
+        options=[ft.dropdown.Option(c) for c in available_currencies],
+        value=DEFAULT_CURRENCY,
+        width=150,
+        border_color="#5A2D9C",
+    )
 
-        loading_text = ft.Row(
-            [
-                ft.ProgressRing(width=20, height=20, color="#5A2D9C"),
-                ft.Text("Cargando monedas...", color="#5A2D9C", size=16, weight=ft.FontWeight.BOLD),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
+    def on_currency_change(e):
+        global rate_currency, current_currency
+        new_currency = currencies.value
 
-        # Insertamos el mensaje visual justo debajo del título
-        currency_container = ft.Container(content=loading_text)
-        contenido.controls.insert(2, currency_container)
+        snackbar = ft.SnackBar(ft.Text(f"💱 Convirtiendo valores a {new_currency}..."), bgcolor="#5A2D9C")
+        page.snack_bar = snackbar
+        snackbar.open = True
         page.update()
 
-        currencies_dict = await loadCurrencies()
+        rate_currency = get_local_rate(current_currency, new_currency)
+        current_currency = new_currency
 
-        # 🔹 Si la API falla, mostramos mensaje y usamos USD
-        if not currencies_dict or len(currencies_dict) == 0:
-            currencies_dict = {"USD": "US Dollar"}
-            fallback_text = ft.Text("⚠️ No se pudieron cargar las monedas. Usando USD por defecto.", color="red", size=14)
-            currency_container.content = fallback_text
-            page.update()
-            return
-
-        options = [ft.dropdown.Option(c) for c in sorted(currencies_dict.keys())]
-        currencies = ft.Dropdown(
-            label="Moneda",
-            options=options,
-            value=DEFAULT_CURRENCY,
-            width=150,
-            border_color="#5A2D9C",
-        )
-
-        async def on_currency_change(e):
-            global rate_currency, current_currency
-            new_currency = currencies.value
-
-            # Mostrar aviso visual
-            snackbar = ft.SnackBar(ft.Text(f"💱 Convirtiendo valores a {new_currency}..."), bgcolor="#5A2D9C")
-            page.snack_bar = snackbar
-            snackbar.open = True
-            page.update()
-
-            rate_currency = await get_conversion_rate(current_currency, new_currency)
-            current_currency = new_currency
-
-            snackbar.open = False
-            filtrar_dataset()
-            page.update()
-
-        currencies.on_change = on_currency_change
-
-        # ✅ Sobrescribimos el contenedor anterior con el selector real
-        currency_container.content = currencies
+        snackbar.open = False
+        filtrar_dataset()
         page.update()
 
-    import threading
-    threading.Thread(target=lambda: asyncio.run(load_currency_selector())).start()
+    currencies.on_change = on_currency_change
 
-    # --- FILTRADO GENERAL ---
+    # === FILTRADO ===
     def filtrar_dataset(e=None):
         accion = combo_accion.value or DEFAULT_NAME
         start = pd.to_datetime(fecha_inicio_val.value)
@@ -292,7 +243,7 @@ def historial_ventas(page: ft.Page):
         actualizar_tabla(filtrado)
         actualizar_grafico(filtrado)
 
-    # --- UI ---
+    # === UI ===
     titulo = ft.Text("📊 Historial de Acciones", size=26, weight=ft.FontWeight.BOLD, color="#1E1E1E")
     filtros = ft.Column(
         [
@@ -307,6 +258,7 @@ def historial_ventas(page: ft.Page):
         [
             titulo,
             combo_accion,
+            currencies,
             filtros,
             ft.Container(height=15),
             grafico_img,
@@ -325,12 +277,12 @@ def historial_ventas(page: ft.Page):
     layout = ft.Stack(
         [
             ft.Container(content=contenido, expand=True),
-            ft.Container(content=footer, bottom=0, left=0, right=0, bgcolor="#F6F4FB", shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black"))),
+            ft.Container(content=footer, bottom=0, left=0, right=0, bgcolor="#F6F4FB",
+                         shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black"))),
         ],
         expand=True,
     )
 
-    # --- Inicialización ---
     filtrado_inicial = df[(df["Name"] == DEFAULT_NAME) & (df["date"] >= min_date) & (df["date"] <= max_date)]
     actualizar_tabla(filtrado_inicial)
     actualizar_grafico(filtrado_inicial)
