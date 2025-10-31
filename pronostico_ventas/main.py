@@ -9,7 +9,7 @@ def main(page: ft.Page):
     # handle session here    
     page.on_route_change = route_change
 
-    page.go("/menu")   # Go to main menu
+    page.go("/historial_ventas")   # Go to main menu
 
 def route_change(e: ft.RouteChangeEvent):
     page = e.page
