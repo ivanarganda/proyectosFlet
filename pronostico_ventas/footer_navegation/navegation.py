@@ -3,8 +3,6 @@ import flet as ft
 def footer_navbar(page: ft.Page, current_path={}, dispatches={}):
     func_add_category, args_add_category = dispatches.get("add_category", (lambda *a, **k: None, []))
 
-    print( current_path )
-
     folder = current_path.get("folder", "")
     file = current_path.get("file", "")
 
@@ -13,8 +11,8 @@ def footer_navbar(page: ft.Page, current_path={}, dispatches={}):
             [
                 ft.IconButton(ft.icons.HOME, on_click=lambda _: page.go("/menu"), icon_color="#4e73df"),
                 ft.IconButton(ft.icons.SEARCH, icon_color="#4e73df"),
-                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible=(folder == 'views') and (file in ['historial_ventas.py', 'prediccion_ventas.py'])),
-                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible=(folder == 'profile') and (file == 'profile.py')),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible=(folder == 'views')),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible=(folder == 'profile')),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
                 ft.IconButton(ft.icons.PERSON, icon_color="#4e73df", visible=folder != 'Profile'),
             ],

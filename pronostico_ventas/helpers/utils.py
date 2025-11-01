@@ -1,8 +1,56 @@
+import os
+import io
+import base64
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import flet as ft
 import json
 import jwt  # PyJWT
 from jwt import InvalidTokenError
 import math
+from prophet import Prophet
+from footer_navegation.navegation import footer_navbar
+
+def init_window(
+    page: ft.Page,
+    title: str = "Test",
+    size: dict = None,
+    bg_color: str = "white",
+    alignment: dict = None,
+):
+    """
+    Inicializa una ventana Flet con parámetros personalizados.
+    """
+
+    # ✅ Valores por defecto seguros
+    if size is None:
+        size = {"width": 300, "height": 300}
+
+    if alignment is None:
+        alignment = {
+            "horizontal": ft.CrossAxisAlignment.CENTER,
+            "vertical": ft.MainAxisAlignment.START,
+        }
+
+    # ✅ Asignación correcta
+    width = size.get("width", 300)
+    height = size.get("height", 300)
+    horizontal = alignment.get("horizontal", ft.CrossAxisAlignment.CENTER)
+    vertical = alignment.get("vertical", ft.MainAxisAlignment.START)
+
+    # ✅ Aplicar propiedades de ventana
+    page.title = title
+    page.window_width = width
+    page.window_height = height
+    page.bgcolor = bg_color
+    page.horizontal_alignment = horizontal
+    page.vertical_alignment = vertical
+
+    # (Opcional) fuerza actualización inicial
+    page.update()
+
 
 # --------------------------
 # Función auxiliar para logs
@@ -29,23 +77,6 @@ def validate_inputs(page, username=None, email=None, password=None):
         page.update()
         return False
 
-# --- Validación HEX estricta ---
-def is_valid_hex(color: str) -> bool:
-    import re
-    # Admite formatos tipo #FFF o #FFFFFF
-    return bool(re.fullmatch(r"#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})", color))
-
-# --- Detección de colores claros ---
-def is_light_color(hex_color: str) -> bool:
-    try:
-        hex_color = hex_color.lstrip("#")
-        if len(hex_color) == 3:
-            hex_color = "".join([c * 2 for c in hex_color])  # expandir #FFF → #FFFFFF
-        r, g, b = [int(hex_color[i:i+2], 16) for i in (0, 2, 4)]
-        return (r + g + b) / 3 > 200
-    except Exception:
-        return False
-
 # Colors
 def setGradient( color ):
     return {
@@ -64,261 +95,88 @@ def setGradient( color ):
         )
     }.get(color, "")
 
-# ---------- Helpers de color ----------
-def close_dialog(e):
-    e.page.dialog.open = False
-    e.page.update()
-def clamp(v, lo=0, hi=255): return max(lo, min(hi, int(v)))
+def setInputField(
+    type_: str,
+    label: str = "",
+    placeholder: str = "",
+    value: str = "",
+    bg_color: str = "#F5F5F5",
+    border_color: str = "#E0E0E0",
+    focused_border_color: str = "#808080",
+    options=None,
+    width: int = 350
+):
+    """
+    Crea un campo de entrada genérico en Flet.
 
-def rgb_to_hex(r, g, b):
-    return f"#{clamp(r):02X}{clamp(g):02X}{clamp(b):02X}"
+    type_ puede ser uno de:
+      - "search"
+      - "text"
+      - "password"
+      - "dropdown"
 
-def hex_to_rgb(hx, default=(90, 45, 156)):  # "#5A2D9C" por defecto
-    try:
-        h = hx.strip().lstrip("#")
-        if len(h) == 3:
-            h = "".join(c*2 for c in h)
-        if len(h) != 6:
-            return default
-        r = int(h[0:2], 16)
-        g = int(h[2:4], 16)
-        b = int(h[4:6], 16)
-        return (r, g, b)
-    except:
-        return default
+    Retorna un control Flet (TextField o Dropdown) según el tipo especificado.
+    """
+    if options is None:
+        options = []
 
-def open_bg_picker(e):
-        def on_pick(color_hex):
-            bg_color_field.value = color_hex
-            bg_color_field.update()
-            update_preview()
-        page.dialog = build_color_dialog("Pick background color", bg_color_field.value, on_pick)
-        page.dialog.open = True
-        page.update()
+    # Campo por defecto si no se reconoce el tipo
+    default_field = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
 
-def open_text_picker(e):
-    def on_pick(color_hex):
-        text_color_field.value = color_hex
-        text_color_field.update()
-        update_preview()
-    page.dialog = build_color_dialog("Pick text color", text_color_field.value, on_pick)
-    page.dialog.open = True
-    page.update()
-
-def build_color_dialog(title: str, initial_hex: str, on_pick):
-    # Paleta base (puedes ampliar)
-    palette = [
-        "#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF",
-        "#9D4EDD", "#F72585", "#FF9E00", "#00B4D8",
-        "#F0F0FF", "#EAEAEA", "#1A1A1A", "#5A2D9C",
-    ]
-
-    # Estado interno
-    r, g, b = hex_to_rgb(initial_hex or "#5A2D9C")
-    hex_field = ft.TextField(label="HEX", value=rgb_to_hex(r, g, b), width=140)
-    swatch = ft.Container(width=36, height=36, bgcolor=rgb_to_hex(r, g, b), border_radius=8)
-
-    r_slider = ft.Slider(min=0, max=255, divisions=255, value=r, label="{value}", expand=True)
-    g_slider = ft.Slider(min=0, max=255, divisions=255, value=g, label="{value}", expand=True)
-    b_slider = ft.Slider(min=0, max=255, divisions=255, value=b, label="{value}", expand=True)
-
-    def apply_color_from_rgb():
-        hx = rgb_to_hex(r_slider.value, g_slider.value, b_slider.value)
-        hex_field.value = hx
-        swatch.bgcolor = hx
-        hex_field.update()
-        swatch.update()
-        # Callback inmediato para previsualizar “en vivo”
-        on_pick(hx)
-
-    def apply_color_from_hex():
-        nonlocal r, g, b
-        rr, gg, bb = hex_to_rgb(hex_field.value)
-        r_slider.value, g_slider.value, b_slider.value = rr, gg, bb
-        swatch.bgcolor = rgb_to_hex(rr, gg, bb)
-        r_slider.update(); g_slider.update(); b_slider.update(); swatch.update()
-        on_pick(swatch.bgcolor)
-
-    def on_palette_click(col):
-        hex_field.value = col
-        apply_color_from_hex()
-
-    r_slider.on_change = lambda e: apply_color_from_rgb()
-    g_slider.on_change = lambda e: apply_color_from_rgb()
-    b_slider.on_change = lambda e: apply_color_from_rgb()
-    hex_field.on_change = lambda e: apply_color_from_hex()
-
-    palette_controls = [
-        ft.Container(
-            width=32, height=32, bgcolor=c, border_radius=16,
-            on_click=lambda e, col=c: on_palette_click(col),
-            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.colors.GREY_300),
-        ) for c in palette
-    ]
-
-    # Custom section (HEX + RGB sincronizados)
-    custom_section = ft.Column(
-        [
-            ft.Row([hex_field, swatch], alignment=ft.MainAxisAlignment.START, spacing=12),
-            ft.Row([ft.Text("R", width=16), r_slider]),
-            ft.Row([ft.Text("G", width=16), g_slider]),
-            ft.Row([ft.Text("B", width=16), b_slider]),
-        ],
-        spacing=10,
-    )
-
-    dlg = ft.AlertDialog(
-        title=ft.Text(title, weight=ft.FontWeight.BOLD),
-        content=ft.Column(
-            [
-                ft.Text("Palette", size=14, color="#666"),
-                ft.Row(
-                    controls=palette_controls,
-                    spacing=8,
-                    scroll=ft.ScrollMode.AUTO,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                ft.Divider(height=24, color="#DDD"),
-                ft.Text("Custom color", size=14, color="#666"),
-                custom_section,
-            ],
-            width=340,
-            height=320,
-            scroll=ft.ScrollMode.AUTO
+    field_types = {
+        "search": ft.TextField(
+            value=value,
+            keyboard_type=ft.KeyboardType.TEXT,
+            border_radius=5,
+            border_color=border_color,
+            focused_border_color=focused_border_color,
+            border_width=1,
+            prefix_icon=ft.icons.SEARCH,
+            hint_text=placeholder,
+            width=width,
         ),
-        actions=[
-            ft.TextButton("Close", on_click=lambda e: close_dialog(e))
-        ],
-    )
-    return dlg
-
-def setCarrousel(page, nodes, on_view_category, on_add_task):
-    items = []
-
-    for node in nodes:
-        # ---------- 1. Validar y parsear content ----------
-        content = node.get("content", {})
-
-        # Si el content viene como string JSON -> convertirlo
-        if isinstance(content, str):
-            try:
-                content = json.loads(content)
-            except json.JSONDecodeError:
-                print(f"⚠️ No se pudo parsear el content del nodo: {content}")
-                content = {}
-
-        if not isinstance(content, dict):
-            print(f"⚠️ Formato inesperado en content: {type(content)}")
-            continue
-
-        # ---------- 2. Crear los textos ----------
-        parts = []
-        for k, data in content.items():
-            # Saltar bg_color porque no se renderiza como texto
-            if k == "bg_color":
-                continue
-
-            # data podría no ser dict (seguridad)
-            if not isinstance(data, dict):
-                print(f"⚠️ Valor inesperado en '{k}': {data}")
-                continue
-
-            text_value = data.get("title", "")
-            if not text_value:
-                continue
-
-            text_kwargs = {
-                key: data[key]
-                for key in ["size", "width", "color", "weight"]
-                if key in data
-            }
-            parts.append(ft.Text(text_value, **text_kwargs))
-
-        # ---------- 3. Botón de añadir tarea ----------
-        id_category_task = node.get("id_category", {}).get("id", None)
-        category_name = node.get("category", {}).get("name", None)
-        parts.append(
-            ft.Row(
-                [
-                    ft.Container(
-                        content=ft.IconButton(
-                            icon=ft.icons.ADD,
-                            icon_size=28,
-                            icon_color="gray",
-                            on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
-                        ),
-                        alignment=ft.alignment.center,
-                    ),
-                    ft.Container(
-                        content=ft.IconButton(
-                            icon=ft.icons.REMOVE_RED_EYE_OUTLINED,
-                            icon_size=28,
-                            icon_color="gray",
-                            on_click=lambda _, category=f'{{"id": "{id_category_task}", "name": "{category_name}"}}': on_view_category(
-                                page=page,
-                                t="AllTasks",
-                                category=category
-                            ) if on_view_category else None
-
-                        ),
-                        alignment=ft.alignment.center,
-                    )
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            )
-        )
-
-        # ---------- 4. Construir la tarjeta ----------
-        bg_color = content.get("bg_color", {}).get("title", "#F0F0F0")  # valor por defecto
-        card = ft.Container(
-            width=160,
-            height=200,
+        "text": ft.TextField(
+            label=label,
+            value=value,
+            keyboard_type=ft.KeyboardType.TEXT,
             bgcolor=bg_color,
-            border_radius=20,
-            padding=15,
-            shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
-            content=ft.Column(
-                parts,
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=5,
-            ),
-        )
-        items.append(card)
-
-    # ---------- 5. Devolver la fila con scroll horizontal ----------
-    return ft.Row(
-        controls=items,
-        scroll=ft.ScrollMode.ALWAYS,
-        spacing=15,
-        alignment=ft.MainAxisAlignment.START,
-    )
-
-
-def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" , border_color = "#E0E0E0" , focused_border_color = "#808080" ):
-    defaultTextField = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
-    return {
-        "search": (
-            ft.TextField(keyboard_type=ft.KeyboardType.TEXT, border_radius=5, border_color=border_color, focused_border_color=focused_border_color, border_width=1, prefix_icon=ft.icons.SEARCH , hint_text=placeholder)
+            border_radius=5,
+            border_color=border_color,
+            hint_text=placeholder,
+            width=width,
         ),
-        "text": (
-            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color )
+        "password": ft.TextField(
+            label=label,
+            value=value,
+            keyboard_type=ft.KeyboardType.TEXT,
+            bgcolor=bg_color,
+            border_radius=5,
+            border_color=border_color,
+            password=True,
+            can_reveal_password=True,
+            hint_text=placeholder,
+            width=width,
         ),
-        "password": (
-            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color , password=True , can_reveal_password=True )
-        )
-    }.get(type_, defaultTextField )
+        "dropdown": ft.Dropdown(
+            label=label,
+            bgcolor=bg_color,
+            border_radius=5,
+            options=options,
+            width=width,
+            border_color=border_color,
+        ),
+    }
+
+    return field_types.get(type_, default_field)
 
 def handle_logout(page: ft.Page):
     page.session.clear()
     page.client_storage.clear()
     page.go("/")
 
-
 def getSession( data , decrypt=False ):
 
     data = json.loads( data )
-
     user_data = data
     
     if decrypt:
@@ -359,6 +217,22 @@ def loadLoader():
         expand=True,
         visible=False
     )
+
+def generateFooter( page:ft.Page, current_path: dict, dispatches={} ):
+
+    footer = footer_navbar(page=page, current_path=current_path, dispatches=dispatches)
+    footer_container = ft.Container(
+        content=footer,
+        bgcolor="#F6F4FB",
+        bottom=0,
+        left=0,
+        right=0,
+        height=60,
+        alignment=ft.alignment.center,
+        shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black"))
+    )
+    return footer_container
+
     
 def loadSnackbar( page: ft.Page, message: str, color: str ):
     page.snack_bar = ft.SnackBar(ft.Text(message), bgcolor=color)
@@ -374,4 +248,143 @@ def addElementsPage(page, elements):
     for element in elements:
         page.add(element)
     page.update()
-    return ft.Stack(elements, expand=True)  # ✅ devuelve algo visible
+    return ft.Stack(elements, expand=True) 
+
+# ABOUT LAYOUT
+def create_layout(
+    page: ft.Page,
+    content_controls: list,
+    current_path: dict,
+    dispatches: dict,
+    bgcolor: str = "#F6F4FB",
+    footer_bg: str = "#F6F4FB",
+    padding_v: int = 20,
+    padding_h: int = 15,
+    spacing: int = 20,
+):
+    """
+    Crea una estructura visual completa con:
+      - un cuerpo que ocupa toda la pantalla
+      - un footer fijo en la parte inferior
+
+    Parámetros:
+      page: objeto ft.Page
+      content_controls: lista de controles (Column, Text, Dropdown, etc.)
+      current_path: diccionario con información del módulo actual
+      bgcolor: color de fondo principal
+      footer_bg: color del fondo del footer
+      padding_v, padding_h: márgenes verticales y horizontales del contenido
+      spacing: espacio entre elementos del cuerpo
+    """
+
+    # --- COLUMNA PRINCIPAL (contenido central con scroll) ---
+    contenido = ft.Column(
+        content_controls,
+        alignment=ft.MainAxisAlignment.START,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=spacing,
+        expand=True,
+        scroll=ft.ScrollMode.AUTO,
+    )
+
+    # --- CONTENEDOR PRINCIPAL (ocupa todo el alto disponible) ---
+    body_container = ft.Container(
+        content=contenido,
+        expand=True,
+        padding=ft.padding.symmetric(vertical=padding_v, horizontal=padding_h),
+        bgcolor=bgcolor,
+        alignment=ft.alignment.top_center,
+    )
+
+    # --- FOOTER FIJO (generado con tu función existente) ---
+    footer_container = generateFooter( page=page, current_path=current_path, dispatches=dispatches )
+
+    # --- LAYOUT FINAL ---
+    layout = ft.Stack(
+        [
+            body_container,  # cuerpo ocupa todo el espacio
+            footer_container  # footer fijo al fondo
+        ],
+        expand=True,
+    )
+
+    return layout
+
+
+
+# ABOUT MACHINE LEARNING
+def fit_model(page:ft.Page, combobox:ft.Dropdown, data_frame:pd.DataFrame , period_date:ft.TextField, output_message: ft.Text, chart: ft.Image ):
+        try:
+            accion = combobox.value
+            dias = int(period_date.value)
+
+            if not accion:
+                output_message.value = "⚠️ Choose an option before continuing"
+                page.update()
+                return
+
+            output_message.value = f"Predicting company actions from {accion}..."
+            chart.visible = False
+            page.update()
+
+            # --- Filter data ---
+            data = data_frame[data_frame["Name"] == accion][["date", "close"]].copy()
+            data.rename(columns={"date": "ds", "close": "y"}, inplace=True)
+            data["ds"] = pd.to_datetime(data["ds"])
+
+            # --- Prophet Model ---
+            model = Prophet(
+                yearly_seasonality=True,
+                weekly_seasonality=False,
+                daily_seasonality=False,
+                seasonality_mode="multiplicative"
+            )
+            model.fit(data)
+
+            # --- Forward forecast ---
+            future = model.make_future_dataframe(periods=dias)
+            forecast = model.predict(future)
+            forecast["is_future"] = forecast["ds"] > data["ds"].max()
+
+            # --- Chartting ---
+            fig, ax = plt.subplots(figsize=(8, 4))
+            ax.plot(data["ds"], data["y"], label="Real data", color="#1f77b4", linewidth=1.8)
+            ax.plot(
+                forecast.loc[forecast["is_future"], "ds"],
+                forecast.loc[forecast["is_future"], "yhat"],
+                label="Forward forecast",
+                color="#ff7f0e",
+                linewidth=1.2
+            )
+            ax.fill_between(
+                forecast["ds"],
+                forecast["yhat_lower"],
+                forecast["yhat_upper"],
+                color="gray",
+                alpha=0.2,
+                label="Confidence interval"
+            )
+
+            ax.set_title(f"Close foreacast - {accion}", fontsize=14)
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Close price")
+            ax.legend()
+            plt.tight_layout()
+
+            buf = io.BytesIO()
+            plt.savefig(buf, format="png", bbox_inches="tight")
+            plt.close(fig)
+            buf.seek(0)
+            img_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+
+            chart.src_base64 = img_base64
+            chart.visible = True
+            output_message.value = f"✅ Predicted to {accion} for ({dias} days)."
+            page.update()
+
+        except Exception as ex:
+            output_message.value = f"❌ Error: {ex}"
+            page.update()
+
+def use_currency_conversor():
+    pass

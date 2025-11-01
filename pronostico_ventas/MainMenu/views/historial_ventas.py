@@ -1,7 +1,6 @@
 import os
 import io
 import base64
-from dotenv import load_dotenv
 import flet as ft
 import pandas as pd
 import numpy as np
@@ -10,17 +9,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from helpers.utils import addElementsPage, log_error
-from footer_navegation.navegation import footer_navbar
+from helpers.utils import addElementsPage, log_error, generateFooter, init_window, create_layout
+from MainMenu.views.scripts_views import init_metadata  # common scripts which return metadata at the same root
 
-# === CARGA ENTORNO ===
-load_dotenv()
-
-current_path = {
-    "path": os.path.abspath(__file__),
-    "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
-    "file": os.path.basename(__file__),
-}
+current_path = init_metadata()
 
 # === CARGAR DATASET LOCAL ===
 DATASET_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "all_stocks_5yr.csv")
@@ -75,20 +67,16 @@ def get_local_rate(base_currency: str, target_currency: str, year: int = None) -
 
 
 def historial_ventas(page: ft.Page):
+
     global current_currency, rate_currency
 
-    page.title = "Actions log"
-    page.window_width = 600
-    page.window_height = 850
-    page.bgcolor = "#F6F4FB"
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    init_window( page=page, title="Actions log", size={"width": 600, "height": 850}, bg_color="#F6F4FB", alignment={"horizontal": ft.CrossAxisAlignment.CENTER,"vertical": ft.MainAxisAlignment.CENTER})
 
     page_size = 50
     current_page = 1
     filtrado_global = df.copy()
 
-    grafico_img = ft.Image(width=500, height=250, visible=False)
+    grafico_img = ft.Image(width=500, height=300, visible=False)
     tabla = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text("Date")),
@@ -106,12 +94,12 @@ def historial_ventas(page: ft.Page):
 
     # === FUNCIONES DE TABLA ===
     def actualizar_tabla(df_filtrado):
-        nonlocal filtrado_global
+        global filtrado_global
         filtrado_global = df_filtrado
         actualizar_pagina(1)
 
     def actualizar_pagina(pagina):
-        nonlocal current_page
+        global current_page
         total_filas = len(filtrado_global)
         total_paginas = max(1, (total_filas + page_size - 1) // page_size)
         current_page = max(1, min(pagina, total_paginas))
@@ -254,8 +242,11 @@ def historial_ventas(page: ft.Page):
         spacing=10,
     )
 
-    contenido = ft.Column(
-        [
+    layout = create_layout(
+        page=page,
+        current_path=current_path,
+        dispatches={},
+        content_controls=[
             titulo,
             combo_accion,
             currencies,
@@ -268,19 +259,7 @@ def historial_ventas(page: ft.Page):
             botones_paginacion,
             ft.Container(height=70),
         ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        scroll=ft.ScrollMode.AUTO,
-        expand=True,
-    )
-
-    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
-    layout = ft.Stack(
-        [
-            ft.Container(content=contenido, expand=True),
-            ft.Container(content=footer, bottom=0, left=0, right=0, bgcolor="#F6F4FB",
-                         shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "#CCCCCC"))),
-        ],
-        expand=True,
+        bgcolor="black"
     )
 
     filtrado_inicial = df[(df["Name"] == DEFAULT_NAME) & (df["date"] >= min_date) & (df["date"] <= max_date)]
