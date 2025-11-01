@@ -77,7 +77,7 @@ def get_local_rate(base_currency: str, target_currency: str, year: int = None) -
 def historial_ventas(page: ft.Page):
     global current_currency, rate_currency
 
-    page.title = "Historial de Acciones"
+    page.title = "Actions log"
     page.window_width = 600
     page.window_height = 850
     page.bgcolor = "#F6F4FB"
@@ -91,11 +91,11 @@ def historial_ventas(page: ft.Page):
     grafico_img = ft.Image(width=500, height=250, visible=False)
     tabla = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("Fecha")),
-            ft.DataColumn(ft.Text("Acción")),
-            ft.DataColumn(ft.Text("Apertura")),
-            ft.DataColumn(ft.Text("Cierre")),
-            ft.DataColumn(ft.Text("Volumen")),
+            ft.DataColumn(ft.Text("Date")),
+            ft.DataColumn(ft.Text("Action")),
+            ft.DataColumn(ft.Text("Departure")),
+            ft.DataColumn(ft.Text("Close")),
+            ft.DataColumn(ft.Text("Volume")),
         ],
         rows=[],
         column_spacing=10,
@@ -136,7 +136,7 @@ def historial_ventas(page: ft.Page):
                 )
             )
 
-        lbl_paginacion.value = f"Página {current_page} de {total_paginas} ({total_filas} registros)"
+        lbl_paginacion.value = f"Page {current_page} of {total_paginas} ({total_filas} records)"
         page.update()
 
     def siguiente_pagina(e): actualizar_pagina(current_page + 1)
@@ -144,9 +144,9 @@ def historial_ventas(page: ft.Page):
 
     botones_paginacion = ft.Row(
         [
-            ft.ElevatedButton("⬅️ Anterior", on_click=anterior_pagina, width=120, bgcolor="#5A2D9C", color="white"),
+            ft.ElevatedButton("⬅️ Previous", on_click=anterior_pagina, width=120, bgcolor="#5A2D9C", color="white"),
             lbl_paginacion,
-            ft.ElevatedButton("Siguiente ➡️", on_click=siguiente_pagina, width=120, bgcolor="#5A2D9C", color="white"),
+            ft.ElevatedButton("Next ➡️", on_click=siguiente_pagina, width=120, bgcolor="#5A2D9C", color="white"),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
     )
@@ -159,7 +159,7 @@ def historial_ventas(page: ft.Page):
             return
         fig, ax = plt.subplots(figsize=(6, 3))
         ax.plot(df_filtrado["date"], df_filtrado["close"] * rate_currency, color="#5A2D9C", linewidth=2)
-        ax.set_title(f"Tendencia del Precio de Cierre - {filters['accion']} ({current_currency})", fontsize=11)
+        ax.set_title(f"Close price tendence - {filters['accion']} ({current_currency})", fontsize=11)
         ax.set_xlabel("Fecha")
         ax.set_ylabel(f"Precio ({current_currency})")
         ax.grid(True, linestyle="--", alpha=0.4)
@@ -191,13 +191,13 @@ def historial_ventas(page: ft.Page):
     page.overlay.append(picker_inicio)
     page.overlay.append(picker_fin)
 
-    btn_inicio = ft.ElevatedButton("📅 Desde", on_click=lambda e: picker_inicio.pick_date(), bgcolor="#5A2D9C", color="white")
-    btn_fin = ft.ElevatedButton("📅 Hasta", on_click=lambda e: picker_fin.pick_date(), bgcolor="#5A2D9C", color="white")
+    btn_inicio = ft.ElevatedButton("📅 From date", on_click=lambda e: picker_inicio.pick_date(), bgcolor="#5A2D9C", color="white")
+    btn_fin = ft.ElevatedButton("📅 To date", on_click=lambda e: picker_fin.pick_date(), bgcolor="#5A2D9C", color="white")
 
     # === FILTRO POR ACCIÓN ===
     acciones = sorted(df["Name"].unique().tolist())
     combo_accion = ft.Dropdown(
-        label="Acción (empresa)",
+        label="Action (company)",
         options=[ft.dropdown.Option(a) for a in acciones],
         value=DEFAULT_NAME,
         width=350,
@@ -207,7 +207,7 @@ def historial_ventas(page: ft.Page):
 
     # === SELECTOR DE MONEDA LOCAL ===
     currencies = ft.Dropdown(
-        label="Moneda",
+        label="Currency",
         options=[ft.dropdown.Option(c) for c in available_currencies],
         value=DEFAULT_CURRENCY,
         width=150,
@@ -218,7 +218,7 @@ def historial_ventas(page: ft.Page):
         global rate_currency, current_currency
         new_currency = currencies.value
 
-        snackbar = ft.SnackBar(ft.Text(f"💱 Convirtiendo valores a {new_currency}..."), bgcolor="#5A2D9C")
+        snackbar = ft.SnackBar(ft.Text(f"💱 Turning values into a {new_currency}..."), bgcolor="#5A2D9C")
         page.snack_bar = snackbar
         snackbar.open = True
         page.update()
@@ -244,10 +244,10 @@ def historial_ventas(page: ft.Page):
         actualizar_grafico(filtrado)
 
     # === UI ===
-    titulo = ft.Text("📊 Historial de Acciones", size=26, weight=ft.FontWeight.BOLD, color="#CCCCCC")
+    titulo = ft.Text("📊 Actions log", size=26, weight=ft.FontWeight.BOLD, color="#CCCCCC")
     filtros = ft.Column(
         [
-            ft.Text("📅 Rango de Fechas", size=18, weight=ft.FontWeight.BOLD),
+            ft.Text("📅 Range of dates", size=18, weight=ft.FontWeight.BOLD),
             ft.Row([ft.Column([btn_inicio, fecha_inicio_val]), ft.Column([btn_fin, fecha_fin_val])], alignment=ft.MainAxisAlignment.CENTER, spacing=25),
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
