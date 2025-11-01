@@ -173,8 +173,8 @@ def historial_ventas(page: ft.Page):
         page.update()
 
     # === FECHAS ===
-    fecha_inicio_val = ft.Text(filters["fecha_inicio"], color="black")
-    fecha_fin_val = ft.Text(filters["fecha_fin"], color="black")
+    fecha_inicio_val = ft.Text(filters["fecha_inicio"], color="#CCCCCC")
+    fecha_fin_val = ft.Text(filters["fecha_fin"], color="#CCCCCC")
 
     def on_inicio_change(e):
         fecha_inicio_val.value = e.control.value.strftime("%Y-%m-%d")
@@ -244,7 +244,7 @@ def historial_ventas(page: ft.Page):
         actualizar_grafico(filtrado)
 
     # === UI ===
-    titulo = ft.Text("📊 Historial de Acciones", size=26, weight=ft.FontWeight.BOLD, color="#1E1E1E")
+    titulo = ft.Text("📊 Historial de Acciones", size=26, weight=ft.FontWeight.BOLD, color="#CCCCCC")
     filtros = ft.Column(
         [
             ft.Text("📅 Rango de Fechas", size=18, weight=ft.FontWeight.BOLD),
@@ -278,7 +278,7 @@ def historial_ventas(page: ft.Page):
         [
             ft.Container(content=contenido, expand=True),
             ft.Container(content=footer, bottom=0, left=0, right=0, bgcolor="#F6F4FB",
-                         shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black"))),
+                         shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "#CCCCCC"))),
         ],
         expand=True,
     )
