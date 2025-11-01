@@ -388,3 +388,86 @@ def fit_model(page:ft.Page, combobox:ft.Dropdown, data_frame:pd.DataFrame , peri
 
 def use_currency_conversor():
     pass
+
+
+# ------------------------------
+# MONEDAS Y CONVERSIONES LOCALES
+# ------------------------------
+def get_local_rate(rates_df: pd.DataFrame, base_currency: str, target_currency: str, year: int = None) -> float:
+    """Busca la tasa base→target en el JSON local de divisas."""
+    if base_currency == target_currency:
+        return 1.0
+
+    try:
+        if year is None:
+            year = rates_df["year"].max()
+        base_row = rates_df[(rates_df["currency"] == base_currency) & (rates_df["year"] == year)]
+        target_row = rates_df[(rates_df["currency"] == target_currency) & (rates_df["year"] == year)]
+
+        if base_row.empty or target_row.empty:
+            return 1.0
+
+        base_rate = base_row["rate"].values[0]
+        target_rate = target_row["rate"].values[0]
+        return target_rate / base_rate
+    except Exception as e:
+        log_error("get_local_rate", e)
+        return 1.0
+
+
+# ------------------------------
+# TABLAS Y GRÁFICOS REUTILIZABLES
+# ------------------------------
+def paginate_table(df: pd.DataFrame, page_size: int, current_page: int):
+    """Devuelve el subconjunto de datos correspondiente a la página actual."""
+    total_filas = len(df)
+    total_paginas = max(1, (total_filas + page_size - 1) // page_size)
+    current_page = max(1, min(current_page, total_paginas))
+    start = (current_page - 1) * page_size
+    end = start + page_size
+    return df.iloc[start:end], total_paginas
+
+
+def update_table(table: ft.DataTable, df_subset: pd.DataFrame, currency: str, rate: float):
+    """Actualiza el contenido de una tabla con datos filtrados."""
+    table.rows.clear()
+    for _, fila in df_subset.iterrows():
+        date_ = fila["date"].strftime("%Y-%m-%d")
+        open_ = fila["open"] * rate
+        close_ = fila["close"] * rate
+        table.rows.append(
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(date_)),
+                    ft.DataCell(ft.Text(fila["Name"])),
+                    ft.DataCell(ft.Text(f"{open_:.2f} {currency}")),
+                    ft.DataCell(ft.Text(f"{close_:.2f} {currency}")),
+                    ft.DataCell(ft.Text(f"{fila['volume']}")),
+                ]
+            )
+        )
+
+
+def update_chart(page: ft.Page, chart_img: ft.Image, df: pd.DataFrame, rate: float, title: str, currency: str):
+    """Genera un gráfico en base64 desde un DataFrame filtrado."""
+    if df.empty:
+        chart_img.visible = False
+        page.update()
+        return
+
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(df["date"], df["close"] * rate, color="#5A2D9C", linewidth=2)
+    ax.set_title(f"{title} ({currency})", fontsize=11)
+    ax.set_xlabel("Date")
+    ax.set_ylabel(f"Price ({currency})")
+    ax.grid(True, linestyle="--", alpha=0.4)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.close(fig)
+    buf.seek(0)
+
+    chart_img.src_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+    chart_img.visible = True
+    page.update()
