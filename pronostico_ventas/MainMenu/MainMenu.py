@@ -116,7 +116,13 @@ def list_menu_items(page: ft.Page):
                 ft.Row(
                     [
                         menu_button(ICONS.get("log", ""), "Sales log", "/historial_ventas", size=35),
-                        menu_button(ICONS.get("mind_stat", ""), "Sales overcasting", "/prediccion_ventas", size=35)
+                        menu_button(ICONS.get("mind_stat", ""), "Sales forecasting", "/prediccion_ventas", size=35)
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                ),
+                ft.Row(
+                    [
+                        menu_button(ICONS.get("dashboard", ""), "Dashboard stats", "/dashboard", size=35),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                 )

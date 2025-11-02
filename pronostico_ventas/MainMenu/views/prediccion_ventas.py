@@ -65,8 +65,7 @@ def prediccion_ventas(page: ft.Page):
         width=350,
         border_color="#5A2D9C",
         color="white",
-        read_only=True,
-        visible=False
+        read_only=True
     )
 
 

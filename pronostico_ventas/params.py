@@ -7,6 +7,7 @@ HEADERS = { 'Content-Type': 'application/json'}
 ICONS = {
     "log": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log.png",
     "mind_stat": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/mind_stat.png",
+    "dashboard": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/dashboard.png",
 }
 WALLPAPERS = {
     "login":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
