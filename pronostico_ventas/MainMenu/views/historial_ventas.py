@@ -15,6 +15,7 @@ from helpers.utils import (
     paginate_table,
 )
 from MainMenu.views.scripts_views import init_metadata
+from MainMenu.views.components.DatePicker import init_date_picker
 
 # === METADATA Y RUTAS ===
 current_path = init_metadata()
@@ -32,8 +33,8 @@ rates_df = pd.read_json(RATES_PATH)
 available_currencies = sorted(rates_df["currency"].unique().tolist())
 min_date_ts, max_date_ts = df["date"].min(), df["date"].max()
 # ✅ convertir a date nativo para DatePicker
-MIN_DATE = min_date_ts.date()
-MAX_DATE = max_date_ts.date()
+MIN_DATE = min_date_ts
+MAX_DATE = max_date_ts
 
 DEFAULT_NAME = "AAL" if "AAL" in df["Name"].unique() else df["Name"].unique()[0]
 DEFAULT_CURRENCY = "USD"
@@ -41,6 +42,10 @@ previous_currency = DEFAULT_CURRENCY
 current_currency = DEFAULT_CURRENCY
 new_currency = current_currency
 rate_currency = 1.0
+
+txt_current = ft.Text(DEFAULT_CURRENCY, color="#CCCCCC")
+txt_arrow = ft.Text("→", color="#CCCCCC")
+txt_new = ft.Text(new_currency, color="#CCCCCC")
 
 
 # === INTERFAZ PRINCIPAL ===
@@ -141,66 +146,14 @@ def historial_ventas(page: ft.Page):
     )
 
     # Texts visibles con el rango actual
-    fecha_inicio_val = ft.Text(str(MIN_DATE), color="#CCCCCC")
-    fecha_fin_val = ft.Text(str(MAX_DATE), color="#CCCCCC")
-
-    # ✅ DatePickers con límites correctos
-    def on_inicio_change(e: ft.ControlEvent):
-        if e.control.value:
-            picked = e.control.value
-            # clamp por si acaso
-            if picked < MIN_DATE:
-                picked = MIN_DATE
-            if picked > MAX_DATE:
-                picked = MAX_DATE
-            fecha_inicio_val.value = picked.strftime("%Y-%m-%d")
-            filtrar_dataset()
-            page.update()
-
-    def on_fin_change(e: ft.ControlEvent):
-        if e.control.value:
-            picked = e.control.value
-            # clamp por si acaso
-            if picked < MIN_DATE:
-                picked = MIN_DATE
-            if picked > MAX_DATE:
-                picked = MAX_DATE
-            fecha_fin_val.value = picked.strftime("%Y-%m-%d")
-            filtrar_dataset()
-            page.update()
-
-    picker_inicio = ft.DatePicker(
-        on_change=on_inicio_change,
-        first_date=MIN_DATE,
-        last_date=MAX_DATE,
-        date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY,
-    )
-    picker_fin = ft.DatePicker(
-        on_change=on_fin_change,
-        first_date=MIN_DATE,
-        last_date=MAX_DATE,
-        date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY,
-    )
-    page.overlay.extend([picker_inicio, picker_fin])
-
-    btn_inicio = ft.ElevatedButton(
-        "📅 From date",
-        on_click=lambda e: picker_inicio.pick_date(),
-        bgcolor="#5A2D9C",
-        color="white",
-    )
-    btn_fin = ft.ElevatedButton(
-        "📅 To date",
-        on_click=lambda e: picker_fin.pick_date(),
-        bgcolor="#5A2D9C",
-        color="white",
-    )
+    fecha_inicio_val = ft.Text(MIN_DATE.strftime("%Y-%m-%d"), color="#CCCCCC")
+    fecha_fin_val = ft.Text(MAX_DATE.strftime("%Y-%m-%d"), color="#CCCCCC")
 
     # --- FILTROS GENERALES ---
     def filtrar_dataset(e=None):
         accion = combo_accion.value or DEFAULT_NAME
-        start = pd.to_datetime(fecha_inicio_val.value)
-        end = pd.to_datetime(fecha_fin_val.value)
+        start = pd.to_datetime(fecha_inicio_val.value, format="%Y-%m-%d")
+        end = pd.to_datetime(fecha_fin_val.value, format="%Y-%m-%d")
 
         # asegurar coherencia de rango (start <= end)
         if start > end:
@@ -212,11 +165,30 @@ def historial_ventas(page: ft.Page):
         actualizar_tabla(filtrado)
         update_chart(page, grafico_img, filtrado, rate_currency, f"Close trend - {accion}", current_currency)
 
+    date_picker = init_date_picker(
+        page,
+        filtrar_dataset,
+        fecha_inicio_val,
+        fecha_fin_val,
+        MIN_DATE,
+        MAX_DATE,
+        df
+    )
+
+    rango_fechas = date_picker["component"]
+    btn_inicio = date_picker["btn_inicio"]
+    fecha_inicio_val = date_picker["fecha_inicio_val"]
+    btn_fin = date_picker["btn_fin"]
+    fecha_fin_val = date_picker["fecha_fin_val"]
+
     def on_currency_change(e):
         global rate_currency, current_currency, new_currency
         new_currency = currencies.value
         rate_currency = get_local_rate(rates_df, current_currency, new_currency)
         current_currency = DEFAULT_CURRENCY
+        txt_new.value = new_currency
+        txt_current.value = DEFAULT_CURRENCY
+        page.update()
         filtrar_dataset()
 
     currencies.on_change = on_currency_change
@@ -224,23 +196,17 @@ def historial_ventas(page: ft.Page):
 
     # --- UI ---
     titulo = ft.Text("📊 Actions log", size=26, weight=ft.FontWeight.BOLD, color="#CCCCCC")
+    print( new_currency )
     filtros = ft.Column(
         [
             ft.Text("📅 Date range", size=18, weight=ft.FontWeight.BOLD),
-            ft.Row(
-                [
-                    ft.Column([btn_inicio, fecha_inicio_val]),
-                    ft.Column([btn_fin, fecha_fin_val]),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                spacing=25,
-            ),
+            rango_fechas,
             ft.Text("💰 Currency state", size=18, weight=ft.FontWeight.BOLD),
             ft.Row(
                 [
-                    ft.Text(DEFAULT_CURRENCY, color="#CCCCCC"),
-                    ft.Text("→", color="#CCCCCC"),
-                    ft.Text(new_currency, color="#CCCCCC")
+                    txt_current,
+                    txt_arrow,
+                    txt_new,
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
                 spacing=25,
@@ -276,6 +242,7 @@ def historial_ventas(page: ft.Page):
         (df["date"] >= min_date_ts) &
         (df["date"] <= max_date_ts)
     ]
+
     actualizar_tabla(filtrado_inicial)
     update_chart(page, grafico_img, filtrado_inicial, rate_currency, f"Close trend - {DEFAULT_NAME}", current_currency)
 

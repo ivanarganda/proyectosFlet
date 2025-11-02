@@ -100,11 +100,13 @@ def setInputField(
     label: str = "",
     placeholder: str = "",
     value: str = "",
+    color: str = "white",
     bg_color: str = "#F5F5F5",
     border_color: str = "#E0E0E0",
     focused_border_color: str = "#808080",
     options=None,
-    width: int = 350
+    width: int = 350,
+    read_only: bool = False
 ):
     """
     Crea un campo de entrada genérico en Flet.
@@ -129,11 +131,13 @@ def setInputField(
             keyboard_type=ft.KeyboardType.TEXT,
             border_radius=5,
             border_color=border_color,
+            color=color,
             focused_border_color=focused_border_color,
             border_width=1,
             prefix_icon=ft.icons.SEARCH,
             hint_text=placeholder,
             width=width,
+            read_only=read_only
         ),
         "text": ft.TextField(
             label=label,
@@ -142,8 +146,10 @@ def setInputField(
             bgcolor=bg_color,
             border_radius=5,
             border_color=border_color,
+            color=color,
             hint_text=placeholder,
             width=width,
+            read_only=read_only
         ),
         "password": ft.TextField(
             label=label,
@@ -152,18 +158,22 @@ def setInputField(
             bgcolor=bg_color,
             border_radius=5,
             border_color=border_color,
+            color=color,
             password=True,
             can_reveal_password=True,
             hint_text=placeholder,
             width=width,
+            read_only=read_only
         ),
         "dropdown": ft.Dropdown(
             label=label,
             bgcolor=bg_color,
+            color=color,
             border_radius=5,
             options=options,
             width=width,
             border_color=border_color,
+            disabled=read_only
         ),
     }
 
@@ -316,7 +326,7 @@ def create_layout(
 def fit_model(page:ft.Page, combobox:ft.Dropdown, data_frame:pd.DataFrame , period_date:ft.TextField, output_message: ft.Text, chart: ft.Image ):
         try:
             accion = combobox.value
-            dias = int(period_date.value)
+            dias = int(period_date)
 
             if not accion:
                 output_message.value = "⚠️ Choose an option before continuing"
