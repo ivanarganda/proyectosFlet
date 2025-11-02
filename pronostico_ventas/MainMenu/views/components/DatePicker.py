@@ -16,6 +16,10 @@ def init_date_picker(
     Sincroniza automáticamente con `input_periodo` si se proporciona.
     Devuelve un diccionario con todos los controles y la diferencia en días.
     """
+    type_ = ""
+
+    if not input_periodo is None:
+        type_ = "predict"
 
     # === Función auxiliar para mantener formato y sincronización ===
     def update_input_period():
@@ -39,7 +43,7 @@ def init_date_picker(
             picked = max(MIN_DATE, min(picked, MAX_DATE))
             fecha_inicio_val.value = picked.strftime("%Y-%m-%d")
             update_input_period()
-            if filtrar_dataset:
+            if filtrar_dataset and type_=="":
                 filtrar_dataset()
             page.update()
 
@@ -50,9 +54,11 @@ def init_date_picker(
             if isinstance(picked, datetime.date) and not isinstance(picked, datetime.datetime):
                 picked = datetime.datetime.combine(picked, datetime.time.min)
             picked = max(MIN_DATE, min(picked, MAX_DATE))
+            if fecha_fin_val.value < fecha_inicio_val.value:
+                fecha_fin_val.value = fecha_inicio_val
             fecha_fin_val.value = picked.strftime("%Y-%m-%d")
             update_input_period()
-            if filtrar_dataset:
+            if filtrar_dataset and type_=="":
                 filtrar_dataset()
             page.update()
 
@@ -60,7 +66,7 @@ def init_date_picker(
     picker_inicio = ft.DatePicker(
         on_change=on_inicio_change,
         first_date=MIN_DATE,
-        last_date=MAX_DATE,
+        last_date=MAX_DATE if type_!="predict" else MIN_DATE,
         date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY,
     )
     picker_fin = ft.DatePicker(

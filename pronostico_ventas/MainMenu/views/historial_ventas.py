@@ -196,7 +196,6 @@ def historial_ventas(page: ft.Page):
 
     # --- UI ---
     titulo = ft.Text("📊 Actions log", size=26, weight=ft.FontWeight.BOLD, color="#CCCCCC")
-    print( new_currency )
     filtros = ft.Column(
         [
             ft.Text("📅 Date range", size=18, weight=ft.FontWeight.BOLD),

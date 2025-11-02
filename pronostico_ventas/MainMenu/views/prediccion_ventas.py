@@ -49,7 +49,7 @@ def prediccion_ventas(page: ft.Page):
     acciones = sorted(df["Name"].unique().tolist())
     combo_accion = setInputField(
         type_="dropdown",
-        label="Choose an option",
+        label="Choose an action",
         bg_color="#5A2D9C",
         border_color="#5A2D9C",
         width=350,
@@ -66,6 +66,7 @@ def prediccion_ventas(page: ft.Page):
         border_color="#5A2D9C",
         color="white",
         read_only=True,
+        visible=False
     )
 
 
@@ -111,16 +112,14 @@ def prediccion_ventas(page: ft.Page):
         fecha_fin_val,
         MIN_DATE,
         MAX_DATE,
-        df
+        df,
+        input_periodo
     )
 
     rango_fechas = date_picker["component"]
     fecha_inicio_val = date_picker["fecha_inicio_val"]
     fecha_fin_val = date_picker["fecha_fin_val"]
     days = date_picker["diff"]["days"]
-
-    # # Inicializar gráfico con rango completo
-    # filtrar_dataset()
 
     # === BOTÓN DE PRONÓSTICO ===
     boton = ft.ElevatedButton(
