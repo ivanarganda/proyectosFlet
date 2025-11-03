@@ -1,7 +1,7 @@
 import os
 import flet as ft
 from params import ICONS
-from helpers.utils import addElementsPage, getSession, handle_logout, log_error
+from helpers.utils import addElementsPage, log_error
 from footer_navegation.navegation import footer_navbar
 
 current_path = {
@@ -10,52 +10,122 @@ current_path = {
     "file": __file__.split("\\")[-1]
 }
 
+footer = None
+
+
 def list_menu_items(page: ft.Page):
+
     try:
-        sidebar = ft.Container(
-            bgcolor="#FFFFFF",
-            width=180,
-            height=200,
-            padding=15,
-            visible=False,
-            content=ft.Column(
-                [
-                    ft.Row(
-                        [
-                            ft.IconButton(
-                                icon=ft.icons.CLOSE,
-                                icon_size=20,
-                                icon_color="black",
-                                on_click=lambda _: toggle_sidebar(page, sidebar),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.START,
-                    ),
-                    ft.TextButton("🚪 Logout", on_click=lambda e: handle_logout(page)),
-                ],
-                spacing=10,
-                alignment=ft.MainAxisAlignment.START,
+        # === BOTÓN LOG OUT =====================================================
+        btn_log_out = ft.ElevatedButton(
+            text="Log out",
+            width=131,
+            height=46,
+            content=ft.Image(
+                src=ICONS.get("log_out",""),  # ruta a tu icono
+                width=42,
+                height=42,
+                fit=ft.ImageFit.CONTAIN,
             ),
-            border_radius=ft.border_radius.all(20),
-            shadow=ft.BoxShadow(blur_radius=15, color=ft.colors.GREY_300),
-            animate=ft.Animation(200, "easeInOut"),
-            margin=ft.margin.only(top=90, right=20),
-            alignment=ft.alignment.top_right
+            style=ft.ButtonStyle(
+                bgcolor="#667eea",
+                color="#ffffff",
+                elevation=3,
+                shape=ft.RoundedRectangleBorder(radius=12),
+                overlay_color=ft.colors.with_opacity(0.1, "white"),
+            ),
         )
 
+        # === AVATAR + USUARIO ===================================================
+        avatar = ft.CircleAvatar(
+            content=ft.Image(
+                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                fit=ft.ImageFit.COVER,
+            ),
+            height=60,
+            width=60,
+            radius=100,
+        )
+
+        # Bloque central con avatar, texto y menú
+        menu_section = ft.Column(
+            [
+                ft.Container(
+                    content=avatar,
+                    alignment=ft.alignment.center,
+                    padding=ft.padding.only(left=20, top=20)
+                ),
+                ft.Text("Ivan_arganda", color="#FFFFFF", size=18, weight=ft.FontWeight.W_600),
+                ft.Text("Data Analyst", color="#EAEAEA", size=13),
+                ft.Divider(height=25, color=ft.colors.with_opacity(0.3, "white")),
+                ft.TextButton(
+                    "📘 Sales log",
+                    style=_menu_style(),
+                    on_click=lambda _: safe_route(page, "/historial_ventas"),
+                ),
+                ft.TextButton(
+                    "🧠 Sales forecasting",
+                    style=_menu_style(),
+                    on_click=lambda _: safe_route(page, "/prediccion_ventas"),
+                ),
+                ft.TextButton(
+                    "📊 Dashboard stats",
+                    style=_menu_style(),
+                    on_click=lambda _: safe_route(page, "/dashboard"),
+                ),
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.START,  # 🔹 Centra verticalmente el bloque
+        )
+
+        # === SIDEBAR ===========================================================
+        sidebar = ft.Container(
+            content=ft.Column(
+                [
+                    # --- SECCIÓN SUPERIOR: AVATAR + NOMBRE ---
+                    ft.Container(
+                        content=menu_section,
+                        padding=ft.padding.only(top=10)
+                    ),
+                    # --- SECCIÓN INFERIOR: BOTÓN LOGOUT ---
+                    ft.Container(
+                        content=btn_log_out,
+                        alignment=ft.alignment.bottom_center,
+                        padding=ft.padding.only(bottom=10)
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            width=230,
+            height=page.window_height - ( footer.height + 40 ),
+            padding=20,
+            border_radius=20,
+            gradient=ft.LinearGradient(
+                begin=ft.alignment.top_left,
+                end=ft.alignment.bottom_right,
+                colors=["#667EEA", "#6E64F9", "#764BA2"],
+            ),
+            shadow=ft.BoxShadow(
+                spread_radius=1,
+                blur_radius=20,
+                color=ft.colors.with_opacity(0.25, "#000000"),
+                offset=ft.Offset(0, 4),
+            ),
+            animate_offset=ft.Animation(350, "ease_in_out"),
+            offset=ft.Offset(-1, 0),
+            left=0,
+            top=0,
+            expand=True
+        )
+
+
+
+        # === HEADER ORIGINAL (sin tocar) ======================================
         header = ft.Row(
             [
                 ft.Container(
-                    content=ft.CircleAvatar(
-                        content=ft.Image(
-                            src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
-                            width=50,
-                            height=50,
-                            border_radius=100,
-                            fit=ft.ImageFit.COVER
-                        ),
-                        radius=25
-                    ),
+                    content=avatar,
                     alignment=ft.alignment.top_left,
                     padding=ft.padding.only(left=20, top=20),
                 ),
@@ -85,110 +155,127 @@ def list_menu_items(page: ft.Page):
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.START,
-                spacing=0,
             ),
             padding=ft.padding.only(left=25, top=20),
         )
 
-        def menu_button(icon_url: str, label: str, route: str, size: int = 40):
-            try:
-                return ft.Column(
-                    [
-                        ft.Container(
-                            width=size + 40,
-                            height=size + 40,
-                            bgcolor="#F7F7F7",
-                            border_radius=40,
-                            content=ft.Image(src=icon_url, width=size + 30, height=size + 30),
-                            alignment=ft.alignment.center,
-                            on_click=lambda _: safe_route(page, route),
-                        ),
-                        ft.Text(label, size=20, color="#636363"),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                )
-            except Exception as e:
-                log_error(f"menu_button({label})", e)
-                return ft.Text(f"⚠️ Error en {label}")
-
+        # === GRID DE MENÚ ======================================================
         menu_grid = ft.Column(
             [
                 ft.Row(
                     [
-                        menu_button(ICONS.get("log", ""), "Sales log", "/historial_ventas", size=35),
-                        menu_button(ICONS.get("mind_stat", ""), "Sales forecasting", "/prediccion_ventas", size=35)
+                        _menu_button(page,ICONS.get("log", ""), "Sales log", "/historial_ventas"),
+                        _menu_button(page,ICONS.get("mind_stat", ""), "Sales forecasting", "/prediccion_ventas"),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                 ),
                 ft.Row(
                     [
-                        menu_button(ICONS.get("dashboard", ""), "Dashboard stats", "/dashboard", size=35),
+                        _menu_button(page,ICONS.get("dashboard", ""), "Dashboard stats", "/dashboard"),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
-                )
+                ),
             ],
             spacing=25,
             alignment=ft.MainAxisAlignment.CENTER,
         )
 
-        arrow_down = ft.Container(
-            content=ft.Icon(
-                name=ft.icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=32, color="black"
+        # === TARJETA PRINCIPAL =================================================
+        # Reemplaza SOLO la parte del "white_card" dentro de tu código actual por esto:
+
+        white_card = ft.Container(
+            bgcolor="white",
+            width=360,
+            height=740,
+            border_radius=ft.border_radius.all(50),
+            alignment=ft.alignment.center,
+            content=ft.Column(
+                [
+                    header,  # parte superior (avatar + icono apps)
+                    ft.Container(expand=2),  # 🔹 espacio superior (más pequeño)
+                    ft.Column(
+                        [
+                            title,
+                            ft.Container(height=25),
+                            menu_grid,
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=25,
+                    ),
+                    ft.Container(expand=3),  # 🔹 espacio inferior (más grande, empuja el bloque hacia arriba)
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             ),
-            alignment=ft.alignment.bottom_center,
-            padding=ft.padding.only(bottom=20),
+            shadow=ft.BoxShadow(blur_radius=20, color="#E0E0E0"),
         )
 
-        white_card = ft.Stack(
+
+
+
+        # === LAYOUT GENERAL ====================================================
+        layout = ft.Stack(
             [
                 ft.Container(
-                    bgcolor="white",
-                    width=360,
-                    height=740,
-                    border_radius=ft.border_radius.all(50),
-                    padding=0,
-                    alignment=ft.alignment.top_center,
-                    content=ft.Column(
-                        [
-                            header,
-                            ft.Container(height=10),
-                            title,
-                            ft.Container(height=30),
-                            menu_grid,
-                            ft.Container(expand=True),
-                            arrow_down,
-                        ],
-                        alignment=ft.MainAxisAlignment.START,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    ),
-                    shadow=ft.BoxShadow(blur_radius=20, color="#E0E0E0"),
+                    expand=True,
+                    bgcolor="#F6F4FB",
+                    alignment=ft.alignment.center,
+                    content=white_card,
                 ),
-                sidebar
+                sidebar,
             ],
-            expand=True
+            expand=True,
         )
 
-        background = [
-            ft.Container(
-                expand=True,
-                bgcolor="#F6F4FB",
-                alignment=ft.alignment.center,
-                content=white_card,
-            )
-        ]
-
-        return background
+        return [layout]
 
     except Exception as e:
         log_error("list_menu_items", e)
         return [ft.Text("❌ Error cargando menú principal")]
 
 
-def safe_route(page, route):
-    """Protege el cambio de ruta para evitar errores de navegación."""
+# === FUNCIONES AUXILIARES =====================================================
+def _menu_style(bg="#6E64F9"):
+    return ft.ButtonStyle(
+        color="#FFFFFF",
+        bgcolor=ft.colors.with_opacity(0.25, bg),
+        padding=ft.padding.symmetric(vertical=10, horizontal=15),
+        shape=ft.RoundedRectangleBorder(radius=12),
+        overlay_color=ft.colors.with_opacity(0.15, "white"),
+        elevation=1,
+    )
+
+
+def _menu_button(page:ft.Page,icon_url: str, label: str, route: str, size: int = 35):
+    return ft.Column(
+        [
+            ft.Container(
+                width=size + 40,
+                height=size + 40,
+                bgcolor="#F7F7F7",
+                border_radius=40,
+                content=ft.Image(src=icon_url, width=size + 20, height=size + 20),
+                alignment=ft.alignment.center,
+                shadow=ft.BoxShadow(blur_radius=10, color="#EAEAEA"),
+                on_click=lambda _: safe_route(page, route),
+            ),
+            ft.Text(label, size=16, color="#636363"),
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    )
+
+
+def toggle_sidebar(page, sidebar):
     try:
-        if not route.startswith("/"):
-            raise ValueError(f"Ruta inválida: {route}")
+        sidebar.offset = ft.Offset(0, 0) if sidebar.offset.x < 0 else ft.Offset(-1, 0)
+        page.update()
+    except Exception as e:
+        log_error("toggle_sidebar", e)
+
+
+def safe_route(page, route):
+    try:
         page.go(route)
     except Exception as e:
         log_error("safe_route", e)
@@ -196,16 +283,9 @@ def safe_route(page, route):
         page.update()
 
 
-def toggle_sidebar(page, sidebar):
-    try:
-        sidebar.visible = not sidebar.visible
-        page.update()
-    except Exception as e:
-        log_error("toggle_sidebar", e)
-
-
 def renderMainMenu(page: ft.Page):
 
+    global footer
     page.title = "Main Menu"
     page.window_width = 500
     page.window_height = 800
@@ -217,15 +297,18 @@ def renderMainMenu(page: ft.Page):
     footer = footer_navbar(page=page, current_path=current_path, dispatches={})
 
     stack = ft.Stack(
-        [*list_menu_items(page), ft.Container(
+        [
+            *list_menu_items(page),
+            ft.Container(
                 content=footer,
                 bottom=0,
                 left=0,
                 right=0,
                 bgcolor="#F6F4FB",
-                shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black"))
-            )],
-        expand=True
+                shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.15, "black")),
+            ),
+        ],
+        expand=True,
     )
 
     return addElementsPage(page, [stack])

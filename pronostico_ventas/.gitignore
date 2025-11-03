@@ -1,0 +1,17 @@
+# Ignorar carpetas de caché de Python
+__pycache__/
+**/__pycache__/
+
+# Ignorar archivos de entorno
+.env
+**/.env
+
+# Opcional: otros archivos comunes que también puedes ignorar
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.db
+*.DS_Store
+.env.*

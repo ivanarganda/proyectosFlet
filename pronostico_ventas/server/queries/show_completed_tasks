@@ -1,0 +1,17 @@
+SELECT
+    Q1.id_category,
+    Q1.title,
+    Q1.description,
+    COALESCE(CONCAT( 
+        (SELECT COUNT(*) FROM tasks WHERE id_category = Q1.id_category AND state = 1 ), 
+        ' of ', 
+        (SELECT COUNT(*) FROM tasks WHERE id_category = Q1.id_category)),0) 
+    as completed_tasks
+FROM (
+    SELECT
+        t.id_category,
+        t.title,
+        t.description
+    FROM tasks t
+    GROUP BY t.id_category, t.title, t.description
+) AS Q1

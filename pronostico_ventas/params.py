@@ -8,6 +8,7 @@ ICONS = {
     "log": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log.png",
     "mind_stat": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/mind_stat.png",
     "dashboard": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/dashboard.png",
+    "log_out": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log_out.png",
 }
 WALLPAPERS = {
     "login":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
