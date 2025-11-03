@@ -1,40 +1,25 @@
-import os, io, base64, datetime
+import os
+import base64
+import datetime
+import asyncio
 import flet as ft
 import pandas as pd
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+import webbrowser
 
 from helpers.utils import addElementsPage, create_layout
 from MainMenu.views.scripts_views import init_metadata
 
-# === METADATA Y RUTAS ===
+
+# === METADATA Y RUTAS ==========================================================
 current_path = init_metadata()
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "..")
 DATASET_PATH = os.path.join(BASE_DIR, "all_stocks_5yr.csv")
 
-# === FUNCIONES AUXILIARES =====================================================
-def fig_to_base64(fig):
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png", bbox_inches="tight", dpi=150, transparent=True)
-    buf.seek(0)
-    img_b64 = base64.b64encode(buf.read()).decode("utf-8")
-    plt.close(fig)
-    return img_b64
 
-
-def style_chart(ax, title):
-    """Aplica estilo UI-X minimalista."""
-    ax.set_facecolor("#0f172a")
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    ax.grid(alpha=0.15, color="#64748b")
-    ax.tick_params(colors="#e2e8f0", labelsize=9)
-    ax.set_title(title, color="#e2e8f0", fontsize=12, pad=8, weight="bold")
-
-
+# === FUNCIONES AUXILIARES ======================================================
 def create_kpi_card(title, value, icon, color="#00e5ff"):
     return ft.Container(
         content=ft.Column(
@@ -54,23 +39,62 @@ def create_kpi_card(title, value, icon, color="#00e5ff"):
     )
 
 
-def create_chart_container(title, chart):
-    return ft.Container(
-        content=ft.Column(
-            [ft.Text(title, color="#94a3b8", size=15, weight="bold"), chart],
-            spacing=10,
-        ),
-        bgcolor="#1e293bcc",
-        border_radius=18,
-        padding=20,
-        expand=True,
-        shadow=ft.BoxShadow(blur_radius=12, color="#00000033"),
-    )
+def open_dashboard_in_browser(figs, filename="dashboard.html"):
+    """Combine various Plotly figures in one single interactive HTML and it is opened by the browser."""
+    temp_dir = os.path.join(os.getcwd(), "temp_charts")
+    os.makedirs(temp_dir, exist_ok=True)
+    file_path = os.path.join(temp_dir, filename)
+
+    html_parts = []
+    for i, fig in enumerate(figs, start=1):
+        html = fig.to_html(include_plotlyjs=("cdn" if i == 1 else False),
+                           full_html=False,
+                           config={"displayModeBar": False})
+        html_parts.append(f"<div style='flex:1; min-width:45%; margin:10px;'>{html}</div>")
+
+    html_template = f"""
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Cotizations about company actions</title>
+        <style>
+            body {{
+                background-color: #0f172a;
+                color: #e2e8f0;
+                font-family: 'Segoe UI', sans-serif;
+                margin: 0;
+                padding: 20px;
+            }}
+            h1 {{
+                color: #00e5ff;
+                text-align: center;
+            }}
+            .grid {{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <h1>💹 Cotizations about company actions dashboard</h1>
+        <div class="grid">
+            {''.join(html_parts)}
+        </div>
+    </body>
+    </html>
+    """
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(html_template)
+
+    webbrowser.open_new_tab(f"file://{file_path}")
+    return ft.Text(f"🌐 Opened complete dashboard in the browser", color="#00e5ff", size=13)
 
 
-# === DASHBOARD ================================================================
+# === DASHBOARD PRINCIPAL =======================================================
 def render_dashboard(page: ft.Page):
-    page.title = "💹 Dashboard Financiero – UI-X Premium"
+    page.title = "💹 Cotizations about company actions dashboard"
     page.bgcolor = "#0f172a"
     page.padding = 25
     page.scroll = "auto"
@@ -86,7 +110,7 @@ def render_dashboard(page: ft.Page):
     acciones = sorted(df["Name"].unique())
     MIN_DATE, MAX_DATE = df["date"].min().date(), df["date"].max().date()
 
-    # === FILTROS ==============================================================
+    # === FILTROS ===============================================================
     picker_inicio = ft.DatePicker(value=MIN_DATE, first_date=MIN_DATE, last_date=MAX_DATE)
     picker_fin = ft.DatePicker(value=MAX_DATE, first_date=MIN_DATE, last_date=MAX_DATE)
     page.overlay.extend([picker_inicio, picker_fin])
@@ -106,14 +130,14 @@ def render_dashboard(page: ft.Page):
     )
 
     filtro_estado = ft.Text(
-        f"Del {MIN_DATE} al {MAX_DATE} | Acción: {acciones[0]}",
+        f"From {MIN_DATE} to {MAX_DATE} | Action: {acciones[0]}",
         color="#94a3b8",
         size=13,
         italic=True,
     )
 
     btn_filtrar = ft.ElevatedButton(
-        "Actualizar",
+        "Update",
         icon=ft.Icons.REFRESH,
         bgcolor="#00e5ff",
         color="black",
@@ -145,16 +169,7 @@ def render_dashboard(page: ft.Page):
         shadow=ft.BoxShadow(blur_radius=10, color="#00000055"),
     )
 
-    # === PLACEHOLDER IMÁGENES =================================================
-    transparent = (
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO0t7e5HgAFGwJ/lQ8m"
-        "1QAAAABJRU5ErkJggg=="
-    )
-    def placeholder_chart():
-        return ft.Image(src_base64=transparent, fit=ft.ImageFit.CONTAIN, expand=True)
-    charts = [placeholder_chart() for _ in range(8)]
-
-    # === KPIs ================================================================
+    # === KPI CONTAINER (antes del layout) ======================================
     kpi_container = ft.Container(
         content=ft.ResponsiveRow(
             [
@@ -171,8 +186,37 @@ def render_dashboard(page: ft.Page):
         padding=10,
     )
 
-    # === FUNCIÓN ACTUALIZAR ====================================================
+    grid = ft.ResponsiveRow([], alignment="center", spacing=25, run_spacing=25)
+
+    # === ACTUALIZAR DASHBOARD ==================================================
     def actualizar_dashboard(e=None):
+        async def run_async():
+            loading = ft.Container(
+                content=ft.Column(
+                    [
+                        ft.ProgressRing(width=60, height=60, color="#00e5ff"),
+                        ft.Text("Generating dashboard charts...", color="#00e5ff", size=16),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+                alignment=ft.alignment.center,
+                expand=True,
+                bgcolor="#0f172acc",
+            )
+            page.overlay.append(loading)
+            page.update()
+
+            loop = asyncio.get_running_loop()
+            await loop.run_in_executor(None, generar_graficos)
+
+            page.overlay.remove(loading)
+            page.update()
+
+        asyncio.run(run_async())
+
+    # === FUNCIÓN GENERAR GRÁFICOS =============================================
+    def generar_graficos():
         accion_sel = combo_accion.value
         if not picker_inicio.value or not picker_fin.value:
             return
@@ -183,9 +227,8 @@ def render_dashboard(page: ft.Page):
             inicio, fin = fin, inicio
 
         dff = df[(df["Name"] == accion_sel) & (df["date"].between(inicio, fin))].copy()
-
         if dff.empty:
-            filtro_estado.value = f"⚠️ Sin datos entre {inicio.date()} y {fin.date()}"
+            filtro_estado.value = f"⚠️ No data between {inicio.date()} and {fin.date()}"
             filtro_estado.color = "#fbbf24"
             filtro_estado.update()
             return
@@ -194,13 +237,13 @@ def render_dashboard(page: ft.Page):
         filtro_estado.color = "#94a3b8"
         filtro_estado.update()
 
+        # === KPIs ==============================================================
         prom_open = dff["open"].mean()
         prom_close = dff["close"].mean()
         dispersion = dff["dispersion_pct"].mean()
         avg_growth = dff["growth_rate"].mean()
         max_close, min_close = dff["close"].max(), dff["close"].min()
 
-        # KPIs actualizados
         kpi_container.content = ft.ResponsiveRow(
             [
                 create_kpi_card("Prom. Open", f"${prom_open:,.2f}", ft.Icons.TRENDING_UP),
@@ -213,92 +256,61 @@ def render_dashboard(page: ft.Page):
             alignment="center",
             spacing=12,
         )
-        kpi_container.update()
 
-        # === GRÁFICOS PRINCIPALES =============================================
-        # 1. Evolución temporal
-        fig, ax = plt.subplots(figsize=(9, 4))
-        ax.plot(dff["date"], dff["close"], color="#00e5ff", linewidth=1.8, label="Close")
-        ax.plot(dff["date"], dff["open"], color="#7e57c2", linewidth=1.2, alpha=0.7, label="Open")
-        style_chart(ax, f"Evolución temporal de {accion_sel}")
-        ax.legend(facecolor="#1e293b", edgecolor="none", labelcolor="#cbd5e1", fontsize=8)
-        charts[0].src_base64 = fig_to_base64(fig)
+        # === GRÁFICOS ==========================================================
+        figs = []
 
-        # 2. Dispersión diaria
-        fig, ax = plt.subplots(figsize=(9, 4))
-        sns.boxplot(y=dff["dispersion_pct"], color="#00e5ff55", ax=ax)
-        style_chart(ax, "Dispersión intradía (%)")
-        charts[1].src_base64 = fig_to_base64(fig)
+        fig1 = go.Figure()
+        fig1.add_trace(go.Scatter(x=dff["date"], y=dff["close"], mode="lines", name="Close", line=dict(color="#00e5ff")))
+        fig1.add_trace(go.Scatter(x=dff["date"], y=dff["open"], mode="lines", name="Open", line=dict(color="#7e57c2")))
+        fig1.update_layout(title=f"Evolución temporal de {accion_sel}", template="plotly_dark")
+        figs.append(fig1)
 
-        # 3. Promedio móvil
+        fig2 = px.box(dff, y="dispersion_pct", color_discrete_sequence=["#00e5ff"])
+        fig2.update_layout(title="Dispersion (%)", template="plotly_dark")
+        figs.append(fig2)
+
         dff["rolling"] = dff["close"].rolling(window=10).mean()
-        fig, ax = plt.subplots(figsize=(9, 4))
-        ax.plot(dff["date"], dff["close"], color="#00e5ff", alpha=0.7, linewidth=1.2)
-        ax.plot(dff["date"], dff["rolling"], color="#4caf50", linewidth=2)
-        style_chart(ax, "Promedio móvil (10 días)")
-        charts[2].src_base64 = fig_to_base64(fig)
+        fig3 = go.Figure()
+        fig3.add_trace(go.Scatter(x=dff["date"], y=dff["close"], mode="lines", name="Close", line=dict(color="#00e5ff")))
+        fig3.add_trace(go.Scatter(x=dff["date"], y=dff["rolling"], mode="lines", name="Media 10d", line=dict(color="#4caf50")))
+        fig3.update_layout(title="Move average (10 days)", template="plotly_dark")
+        figs.append(fig3)
 
-        # 4. Top 5 volumen global
-        top5 = df.groupby("Name")["volume"].sum().sort_values(ascending=False).head(5).reset_index()
-        fig, ax = plt.subplots(figsize=(9, 4))
-        sns.barplot(x="Name", y="volume", data=top5, hue="Name", legend=False, palette="cool", ax=ax)
-        style_chart(ax, "Top 5 acciones por volumen total")
+        top5 = df.groupby("Name")["volume"].sum().nlargest(5).reset_index()
+        fig4 = px.bar(top5, x="Name", y="volume", color="Name", title="Top 5 actions by total volume", template="plotly_dark")
+        figs.append(fig4)
 
-        charts[3].src_base64 = fig_to_base64(fig)
+        avg_vol = df.groupby("Name")["volume"].mean().nlargest(10).reset_index()
+        fig5 = px.bar(avg_vol, x="Name", y="volume", color="Name", title="Daily average volume (Top 10)", template="plotly_dark")
+        figs.append(fig5)
 
-        # 5. Volumen medio diario por acción (nuevo)
-        avg_vol = df.groupby("Name")["volume"].mean().sort_values(ascending=False).head(10).reset_index()
-        fig, ax = plt.subplots(figsize=(9, 4))
-        sns.barplot(x="Name", y="volume", data=avg_vol, hue="Name", legend=False, palette="mako", ax=ax)
-        style_chart(ax, "Volumen medio diario (Top 10)")
-        charts[4].src_base64 = fig_to_base64(fig)
-
-        # 6. Dispersión mensual promedio
         dff["month"] = dff["date"].dt.to_period("M")
         disp_month = dff.groupby("month")["dispersion_pct"].mean().reset_index()
-        fig, ax = plt.subplots(figsize=(9, 4))
-        ax.plot(disp_month["month"].astype(str), disp_month["dispersion_pct"], marker="o", color="#ffb74d")
-        style_chart(ax, "Volatilidad promedio mensual (%)")
-        plt.xticks(rotation=45)
-        charts[5].src_base64 = fig_to_base64(fig)
+        disp_month["month"] = disp_month["month"].astype(str)
+        fig6 = px.line(disp_month, x="month", y="dispersion_pct", markers=True, title="Volatilidad promedio mensual (%)", template="plotly_dark")
+        figs.append(fig6)
 
-        # 7. Open vs Close scatter
-        fig, ax = plt.subplots(figsize=(9, 4))
-        ax.scatter(dff["open"], dff["close"], color="#00e5ff55", s=15)
-        style_chart(ax, "Relación Open vs Close")
-        charts[6].src_base64 = fig_to_base64(fig)
+        fig7 = px.scatter(dff, x="open", y="close", color="date", color_continuous_scale="Viridis", title="Relación Open vs Close", template="plotly_dark")
+        figs.append(fig7)
 
-        # 8. Heatmap de crecimiento mensual
         dff["year"] = dff["date"].dt.year
-        dff["month"] = dff["date"].dt.month
-        heat = dff.groupby(["year", "month"])["growth_rate"].mean().unstack()
-        fig, ax = plt.subplots(figsize=(9, 5))
-        sns.heatmap(heat, cmap="coolwarm", center=0, ax=ax)
-        style_chart(ax, "Mapa de calor de crecimiento promedio (%)")
-        charts[7].src_base64 = fig_to_base64(fig)
+        dff["month_num"] = dff["date"].dt.month
+        heat = dff.groupby(["year", "month_num"])["growth_rate"].mean().unstack()
+        fig8 = px.imshow(heat, color_continuous_scale="RdBu_r", title="Mapa de calor de crecimiento promedio (%)",
+                         labels=dict(x="Mes", y="Año", color="Crecimiento %"))
+        fig8.update_layout(template="plotly_dark")
+        figs.append(fig8)
 
-        for c in charts:
-            c.update()
+        msg = open_dashboard_in_browser(figs)
+        grid.controls.clear()
+        grid.controls.append(msg)
+        grid.update()
+        kpi_container.update()
 
     btn_filtrar.on_click = actualizar_dashboard
 
-    # === GRID ================================================================
-    grid = ft.ResponsiveRow(
-        [
-            ft.Container(create_chart_container("Evolución temporal", charts[0]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Dispersión intradía", charts[1]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Promedio móvil", charts[2]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Top 5 volumen", charts[3]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Volumen medio diario", charts[4]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Volatilidad mensual", charts[5]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Open vs Close", charts[6]), col={"xs": 12, "md": 6}),
-            ft.Container(create_chart_container("Mapa de calor crecimiento", charts[7]), col={"xs": 12, "md": 12}),
-        ],
-        alignment="center",
-        spacing=25,
-        run_spacing=25,
-    )
-
+    # === LAYOUT ================================================================
     layout = create_layout(
         page=page,
         current_path=current_path,

@@ -5,6 +5,7 @@ __pycache__/
 # Ignorar archivos de entorno
 .env
 **/.env
+temp_charts
 
 # Opcional: otros archivos comunes que también puedes ignorar
 *.pyc
