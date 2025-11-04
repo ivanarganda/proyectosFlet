@@ -376,3 +376,123 @@ def addElementsPage(page, elements):
         page.add(element)
     page.update()
     return ft.Stack(elements, expand=True)  # ✅ devuelve algo visible
+
+def animate_in(view: ft.Control, duration=400, offset=80):
+    view.opacity = 0
+    view.offset = ft.transform.Offset(0, 0.2)
+    view.animate_opacity = ft.animation.Animation(duration, ft.AnimationCurve.EASE_OUT)
+    view.animate_offset = ft.animation.Animation(duration, ft.AnimationCurve.EASE_OUT)
+    view.opacity = 1
+    view.offset = ft.transform.Offset(0, 0)
+    return view
+
+def animate_bounce(view: ft.Control, height=0.08, duration=250):
+    view.offset = ft.transform.Offset(0, height)
+    view.animate_offset = ft.animation.Animation(duration, ft.AnimationCurve.EASE_IN_OUT)
+    view.offset = ft.transform.Offset(0, 0)
+    return view
+
+def animate_fade(view: ft.Control, duration=400, fade_in=True):
+    view.opacity = 0 if fade_in else 1
+    view.animate_opacity = ft.animation.Animation(duration, ft.AnimationCurve.EASE_IN_OUT)
+    view.opacity = 1 if fade_in else 0
+    return view
+
+# --- Navegación y recarga ---
+def safe_go(page: ft.Page, route: str):
+    """Evita errores si la ruta no existe."""
+    try:
+        page.go(route)
+    except Exception as e:
+        log_error("safe_go", e)
+        loadSnackbar(page, f"⚠️ Ruta inválida: {route}", "red")
+
+def reload_page(page: ft.Page, delay_ms: int = 0):
+    """Recarga visualmente la página."""
+    async def do_reload():
+        await asyncio.sleep(delay_ms / 1000)
+        page.clean()
+        page.update()
+    asyncio.run(do_reload())
+
+# --- Guardar y cargar JSON local (para stats o configuración) ---
+def save_json(filepath: str, data: dict):
+    """Guarda un dict como JSON (crea directorio si no existe)."""
+    try:
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        return True
+    except Exception as e:
+        log_error("save_json", e)
+        return False
+
+def load_json(filepath: str, default: dict = {}):
+    """Carga un JSON si existe, o devuelve default."""
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return default
+    except Exception as e:
+        log_error("load_json", e)
+        return default
+
+# --- Tiempo y formato ---
+def get_timestamp() -> str:
+    """Devuelve la fecha/hora actual legible."""
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def get_day_name() -> str:
+    """Devuelve el día de la semana (Lunes, Martes...)."""
+    dias = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"]
+    return dias[datetime.now().weekday()]
+
+def get_time_diff(seconds: float) -> str:
+    """Convierte segundos en formato mm:ss."""
+    mins, secs = divmod(int(seconds), 60)
+    return f"{mins:02d}:{secs:02d}"
+
+# --- Notificaciones visuales con colores suaves ---
+def notify_success(page, msg="✅ Operación completada"):
+    loadSnackbar(page, msg, "#10b981")  # verde
+
+def notify_warning(page, msg="⚠️ Atención"):
+    loadSnackbar(page, msg, "#facc15")  # amarillo
+
+def notify_error(page, msg="❌ Error inesperado"):
+    loadSnackbar(page, msg, "#ef4444")  # rojo
+
+# --- Mini sonido o vibración (en móviles/tablets compatibles) ---
+def play_feedback(page: ft.Page, type_: str = "success"):
+    """Muestra retroalimentación táctil/visual rápida."""
+    icon_map = {
+        "success": ft.Icons.CHECK_CIRCLE,
+        "error": ft.Icons.ERROR_OUTLINE,
+        "info": ft.Icons.INFO,
+    }
+    color_map = {
+        "success": "#10b981",
+        "error": "#ef4444",
+        "info": "#3b82f6",
+    }
+    snack = ft.SnackBar(
+        content=ft.Row([
+            ft.Icon(icon_map.get(type_, ft.Icons.INFO), color=color_map.get(type_, "#3b82f6")),
+            ft.Text({"success":"Done!","error":"Error!","info":"Info"}[type_])
+        ]),
+        bgcolor=color_map.get(type_, "#3b82f6"),
+        duration=800
+    )
+    page.snack_bar = snack
+    snack.open = True
+    page.update()
+
+# --- Ejecutor seguro universal (para callbacks, saves, etc.) ---
+def safe_exec(func, context="operation"):
+    """Ejecuta una función con control de error y log."""
+    try:
+        return func()
+    except Exception as e:
+        log_error(context, e)
+        return None
