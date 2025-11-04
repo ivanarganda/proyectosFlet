@@ -36,6 +36,10 @@ HEADERS = {
 
 sns.set(style="whitegrid")
 
+combo_year = None
+year_selected = None
+log = ft.Text(value="", size=12, selectable=True)
+
 # ===============================================================
 # FUNCIONES AUXILIARES
 # ===============================================================
@@ -61,22 +65,31 @@ def get_num_pages(url):
         return 1
 
 
+def load_dates():
+    """Obtiene todos los enlaces de semanas históricas"""
+    r = requests.get(BASE_URL, headers=HEADERS, timeout=15)
+    soup = BeautifulSoup(r.text, "html.parser")
+    links = soup.find_all("a", href=re.compile(r"^/historical/[0-9]+/?$"))
+    # Extraer las fechas (YYYYMMDD)
+    fechas = sorted(set(re.findall(r"\d{8}", " ".join([a["href"] for a in links]))))
+    return fechas
+
+
 # ===============================================================
-# FUNCIÓN SINCRÓNICA DE SCRAPING (EJECUTADA EN THREAD)
+# FUNCIÓN PRINCIPAL DE SCRAPING
 # ===============================================================
 def do_scraping(q, stop_flag):
     try:
-        r = requests.get(BASE_URL, headers=HEADERS)
-        soup = BeautifulSoup(r.text, "html.parser")
-        links = soup.find_all("a", href=re.compile(r"/historical/\d{8}/"))
-        fechas = sorted(set(re.findall(r"\d{8}", " ".join([a["href"] for a in links]))))
+
+        fechas = load_dates()
+
+        fechas = [f for f in fechas if f.startswith(year_selected)]
 
         if not fechas:
             q.put(("log", "❌ No se encontraron fechas.\n"))
             return
 
         q.put(("log", f"✅ Fechas encontradas ({len(fechas)})...\n"))
-        fechas = fechas[:5]
         total = len(fechas)
 
         for i, fecha in enumerate(fechas, start=1):
@@ -95,9 +108,9 @@ def do_scraping(q, stop_flag):
                 if stop_flag["value"]:
                     return
                 url = f"{fecha_url}?page={page_num}"
-                r = requests.get(url, headers=HEADERS, timeout=10)
-                html = r.text
                 try:
+                    r = requests.get(url, headers=HEADERS, timeout=10)
+                    html = r.text
                     tables = pd.read_html(StringIO(html))
                     for t in tables:
                         if not t.empty:
@@ -116,7 +129,7 @@ def do_scraping(q, stop_flag):
                 df[col] = df[col].map(lambda x: x.strip() if isinstance(x, str) else x)
             df = df.dropna(how="all").reset_index(drop=True)
 
-            csv_path = os.path.join(OUTPUT_DIR, f"coinmarketcap_{fecha}.csv")
+            csv_path = os.path.join(OUTPUT_DIR, f"{fecha}_coinmarketcap.csv")
             df.to_csv(csv_path, index=False, encoding="utf-8-sig")
 
             q.put(("log", f"💾 Guardada semana {fecha}: {len(df)} filas\n"))
@@ -140,11 +153,16 @@ def do_scraping(q, stop_flag):
 # APLICACIÓN FLET
 # ===============================================================
 def main(page: ft.Page):
+
+    global combo_year
+
+    fechas = set(date.replace("/historical/","").replace("/","")[:4] for date in load_dates())
+
     page.title = "CoinMarketCap Scraper UIX"
     page.theme_mode = ft.ThemeMode.DARK
     page.scroll = ft.ScrollMode.ALWAYS
 
-    log = ft.Text(value="", size=12, selectable=True)
+    
     progress_bar = ft.ProgressBar(width=400, value=0)
     img_chart = ft.Image(width=650, height=320, visible=False)
 
@@ -179,14 +197,20 @@ def main(page: ft.Page):
             await asyncio.sleep(0.2)
 
     # === BOTONES ==============================================================
+
     async def run_scraping(e):
+
+        if year_selected is None:
+            log.value = "❌ Debes de seleccionar un año\n"
+            page.update()
+            return 
+
         log.value = "📅 Iniciando scraping en segundo plano...\n"
         progress_bar.value = 0
         stop_flag["value"] = False
         page.update()
 
         loop = asyncio.get_running_loop()
-        # Se lanza el scraping en un hilo separado
         loop.run_in_executor(None, do_scraping, q, stop_flag)
 
     def stop_scraping(e):
@@ -194,7 +218,25 @@ def main(page: ft.Page):
         log.value += "\n🛑 Solicitud de parada enviada...\n"
         page.update()
 
-    # === UI PRINCIPAL =========================================================
+    def on_change_year(e: ft.ControlEvent):
+        global year_selected
+        year_selected = e.data
+        page.update()
+
+    combo_year = ft.Dropdown(
+        label="Seleccionar año",
+        bgcolor="#5A2D9C",
+        color="#CCCCCC",
+        border_radius=5,
+        options=[ft.dropdown.Option(a) for a in fechas],
+        width=350,
+        border_color="#5A2D9C",
+        disabled=False
+    )
+
+    combo_year.on_change = on_change_year
+
+    # === UI PRINCIPAL ==========================================================
     page.add(
         ft.AppBar(title=ft.Text("CoinMarketCap Scraper UIX"), bgcolor="#141a29", color="white"),
         ft.Column(
@@ -202,13 +244,14 @@ def main(page: ft.Page):
                 ft.Text("Scraping histórico de CoinMarketCap", size=18, weight="bold"),
                 ft.Row(
                     [
+                        combo_year,
                         ft.ElevatedButton("Iniciar scraping", on_click=run_scraping, bgcolor="#00bcd4", color="white"),
                         ft.ElevatedButton("Detener scraping", on_click=stop_scraping, bgcolor="#e91e63", color="white"),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                 ),
                 progress_bar,
-                img_chart,
+                # img_chart,
                 ft.Container(
                     height=400,
                     width=650,
@@ -224,7 +267,6 @@ def main(page: ft.Page):
 
     # Lanza el actualizador continuo en segundo plano
     page.run_task(periodic_updater)
-
 
 # ===============================================================
 # LANZAR APP
