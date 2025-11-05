@@ -1,3 +1,5 @@
+# TODO averiguar el modal game sobre el nivel de capa y permitir iteraccion entre los demas componentes
+
 import os
 import flet as ft
 from params import ICONS
@@ -5,71 +7,189 @@ from helpers.utils import addElementsPage, getSession, handle_logout, log_error
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
 
-username = None
-id_user = None
-email = None
-role = None
-expired = None
-token = None
+# Variables globales de sesión
+username = id_user = email = role = expired = token = None
+footer = modal_games = None
 
 current_path = {
     "path": os.path.abspath(__file__),
     "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
-    "file": __file__.split("\\")[-1]
+    "file": __file__.split("\\")[-1],
 }
 
-def list_menu_items(page: ft.Page):
-    try:
-        sidebar = ft.Container(
-            bgcolor="#FFFFFF",
-            width=180,
-            height=200,
-            padding=15,
-            visible=False,
-            content=ft.Column(
-                [
-                    ft.Row(
-                        [
-                            ft.IconButton(
-                                icon=ft.icons.CLOSE,
-                                icon_size=20,
-                                icon_color="black",
-                                on_click=lambda _: toggle_sidebar(page, sidebar),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.START,
-                    ),
-                    ft.TextButton("🚪 Logout", on_click=lambda e: handle_logout(page)),
-                ],
-                spacing=10,
-                alignment=ft.MainAxisAlignment.START,
-            ),
-            border_radius=ft.border_radius.all(20),
-            shadow=ft.BoxShadow(blur_radius=15, color=ft.colors.GREY_300),
-            animate=ft.Animation(200, "easeInOut"),
-            margin=ft.margin.only(top=90, right=20),
-            alignment=ft.alignment.top_right
-        )
 
-        header = ft.Row(
+# ===========================================================
+# MENÚ: BOTONES PRINCIPALES
+# ===========================================================
+def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, size: int = 40):
+    try:
+
+        callbacks = {
+            "modal": swipper_games_modal(page)
+        }
+
+        return ft.Column(
             [
                 ft.Container(
-                    content=ft.CircleAvatar(
-                        content=ft.Image(
-                            src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
-                            width=50,
-                            height=50,
-                            border_radius=100,
-                            fit=ft.ImageFit.COVER
-                        ),
-                        radius=25
-                    ),
-                    alignment=ft.alignment.top_left,
-                    padding=ft.padding.only(left=20, top=20),
+                    width=size + 40,
+                    height=size + 40,
+                    bgcolor="#F7F7F7",
+                    border_radius=40,
+                    content=ft.Image(src=icon_url, width=size + 30, height=size + 30),
+                    alignment=ft.alignment.center,
+                    on_click=lambda _: safe_route(page, route) if route != "" else callbacks.get(on_callback, False)
                 ),
+                ft.Text(label, size=20, color="#636363"),
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        )
+    except Exception as e:
+        log_error(f"menu_button({label})", e)
+        return ft.Text(f"⚠️ Error en {label}")
+
+
+# ===========================================================
+# MENÚ: CONTENIDO PRINCIPAL
+# ===========================================================
+def list_menu_items(page: ft.Page):
+    try:
+        # === BOTÓN LOGOUT =======================================================
+        btn_log_out = ft.ElevatedButton(
+            text="Log out",
+            width=131,
+            height=46,
+            content=ft.Image(
+                src=ICONS.get("log_out", ""),
+                width=42,
+                height=42,
+                fit=ft.ImageFit.CONTAIN,
+            ),
+            style=ft.ButtonStyle(
+                bgcolor="#667eea",
+                color="#ffffff",
+                elevation=3,
+                shape=ft.RoundedRectangleBorder(radius=12),
+                overlay_color=ft.Colors.with_opacity(0.1, "white"),
+            ),
+            on_click=lambda _: handle_logout(page),
+        )
+
+        # === AVATAR + INFO ======================================================
+        avatar = ft.CircleAvatar(
+            content=ft.Image(
+                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                fit=ft.ImageFit.COVER,
+            ),
+            height=60,
+            width=60,
+            radius=100,
+        )
+
+        menu_section = ft.Column(
+            [
+                ft.Container(content=avatar, alignment=ft.alignment.center, padding=ft.padding.only(left=20, top=20)),
+                ft.Text(username or "Guest", color="black", size=18, weight=ft.FontWeight.W_600),
+                ft.Text("Data Analyst", color="#888888", size=13),
+                ft.Divider(height=25, color=ft.Colors.with_opacity(0.3, "white")),
+                ft.TextButton("📘 Tasks", on_click=lambda _: page.go("/tasks")),
+                ft.TextButton("🧠 Games", on_click=lambda _: swipper_games_modal(page)),
+                ft.TextButton("📊 Data management", on_click=lambda _: page.go("/dataMind")),
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.START,
+        )
+
+        # === SIDEBAR ============================================================
+        # === SIDEBAR ============================================================
+        sidebar = ft.Container(
+            width=200,
+            height=page.window_height - (footer.height + 60),
+            bgcolor=ft.colors.with_opacity(0.85, "#FFFFFF"),
+            border_radius=ft.border_radius.only(top_right=30, bottom_right=30),
+            shadow=ft.BoxShadow(
+                spread_radius=1,
+                blur_radius=25,
+                color=ft.colors.with_opacity(0.25, "#000000"),
+                offset=ft.Offset(0, 4),
+            ),
+            padding=ft.padding.symmetric(horizontal=16, vertical=25),
+            content=ft.Column(
+                [
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Container(
+                                    content=avatar,
+                                    alignment=ft.alignment.center,
+                                    padding=ft.padding.only(bottom=10),
+                                ),
+                                ft.Text(
+                                    username or "Guest",
+                                    color="#222222",
+                                    size=18,
+                                    weight=ft.FontWeight.W_600,
+                                    text_align=ft.TextAlign.CENTER,
+                                ),
+                                ft.Text(
+                                    "Data Analyst",
+                                    color="#7D7D7D",
+                                    size=13,
+                                    text_align=ft.TextAlign.CENTER,
+                                ),
+                                ft.Divider(height=30, color=ft.colors.with_opacity(0.2, "#000000")),
+                                ft.TextButton("📘 Tasks", on_click=lambda _: page.go("/tasks")),
+                                ft.TextButton("🧠 Games", on_click=lambda _: swipper_games_modal(page)),
+                                ft.TextButton("📊 Data management", on_click=lambda _: page.go("/dataMind")),
+                                ft.TextButton("📈 Stats foro", on_click=lambda _: page.go("/foro")),
+                            ],
+                            spacing=8,
+                            alignment=ft.MainAxisAlignment.START,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        ),
+                    ),
+                    ft.Container(expand=True),
+                    ft.Container(
+                        width=150,
+                        height=46,
+                        border_radius=ft.border_radius.all(12),
+                        gradient=ft.LinearGradient(
+                            begin=ft.Alignment(-1, 0),
+                            end=ft.Alignment(1, 0),
+                            colors=["#667eea", "#764ba2"],
+                        ),
+                        content=ft.Row(
+                            [
+                                ft.Icon(ft.Icons.LOGOUT_ROUNDED, color="white", size=22),
+                                ft.Text("Log out", color="white", size=15, weight=ft.FontWeight.W_500),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=8,
+                        ),
+                        on_click=lambda _: handle_logout(page),
+                        shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.2, "#000000")),
+                        alignment=ft.alignment.center,
+                        animate_scale=ft.Animation(200, "ease_in_out"),
+                        on_hover=lambda e: e.control.scale(1.05) if e.data == "true" else e.control.scale(1),
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            animate_offset=ft.Animation(350, "ease_in_out"),
+            offset=ft.Offset(-1, 0),
+            left=0,
+            top=0,
+            visible=False
+        )
+
+
+        # === HEADER =============================================================
+        header = ft.Row(
+            [
+                ft.Container(content=avatar, alignment=ft.alignment.top_left, padding=ft.padding.only(left=20, top=20)),
                 ft.Container(
                     content=ft.IconButton(
-                        icon=ft.icons.APPS,
+                        icon=ft.Icons.APPS,
                         icon_size=28,
                         icon_color="black",
                         on_click=lambda _: toggle_sidebar(page, sidebar),
@@ -82,17 +202,13 @@ def list_menu_items(page: ft.Page):
             expand=True,
         )
 
+        # === TITULAR ============================================================
         title = ft.Container(
             content=ft.Column(
                 [
                     ft.Text("Welcome back,", size=28, color="black"),
                     ft.Text(f"{username or 'Guest'}", size=28, color="black"),
-                    ft.Text(
-                        "Let's Play & Joy!",
-                        size=34,
-                        weight=ft.FontWeight.BOLD,
-                        color="black",
-                    ),
+                    ft.Text("Let's Play & Joy!", size=34, weight=ft.FontWeight.BOLD, color="black"),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.START,
                 spacing=0,
@@ -100,40 +216,20 @@ def list_menu_items(page: ft.Page):
             padding=ft.padding.only(left=25, top=20),
         )
 
-        def menu_button(icon_url: str, label: str, route: str, size: int = 40):
-            try:
-                return ft.Column(
-                    [
-                        ft.Container(
-                            width=size + 40,
-                            height=size + 40,
-                            bgcolor="#F7F7F7",
-                            border_radius=40,
-                            content=ft.Image(src=icon_url, width=size + 30, height=size + 30),
-                            alignment=ft.alignment.center,
-                            on_click=lambda _: safe_route(page, route),
-                        ),
-                        ft.Text(label, size=20, color="#636363"),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                )
-            except Exception as e:
-                log_error(f"menu_button({label})", e)
-                return ft.Text(f"⚠️ Error en {label}")
-
+        # === BOTONES DE MENÚ ====================================================
         menu_grid = ft.Column(
             [
                 ft.Row(
                     [
-                        menu_button(ICONS.get("tasks", ""), "Tasks", "/tasks", size=35),
-                        menu_button(ICONS.get("games", ""), "Games", "/games", size=35),
+                        menu_button(page, ICONS.get("tasks", ""), "Tasks", "/tasks", size=35),
+                        menu_button(page, ICONS.get("games", ""), "Games", "", on_callback='modal', size=35),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                 ),
                 ft.Row(
                     [
-                        menu_button(ICONS.get("dataMind", ""), "Data management", "/dataMind"),
-                        menu_button(ICONS.get("foro", ""), "Stats foro", "/foro"),
+                        menu_button(page, ICONS.get("dataMind", ""), "Data management", "/dataMind"),
+                        menu_button(page, ICONS.get("foro", ""), "Stats foro", "/foro"),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                 ),
@@ -143,9 +239,7 @@ def list_menu_items(page: ft.Page):
         )
 
         arrow_down = ft.Container(
-            content=ft.Icon(
-                name=ft.icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=32, color="black"
-            ),
+            content=ft.Icon(name=ft.Icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=32, color="black"),
             alignment=ft.alignment.bottom_center,
             padding=ft.padding.only(bottom=20),
         )
@@ -157,7 +251,6 @@ def list_menu_items(page: ft.Page):
                     width=360,
                     height=740,
                     border_radius=ft.border_radius.all(50),
-                    padding=0,
                     alignment=ft.alignment.top_center,
                     content=ft.Column(
                         [
@@ -174,12 +267,12 @@ def list_menu_items(page: ft.Page):
                     ),
                     shadow=ft.BoxShadow(blur_radius=20, color="#E0E0E0"),
                 ),
-                sidebar
+                sidebar,
             ],
-            expand=True
+            expand=True,
         )
 
-        background = [
+        return [
             ft.Container(
                 expand=True,
                 bgcolor="#F6F4FB",
@@ -188,11 +281,19 @@ def list_menu_items(page: ft.Page):
             )
         ]
 
-        return background
-
     except Exception as e:
         log_error("list_menu_items", e)
         return [ft.Text("❌ Error cargando menú principal")]
+
+
+# ===========================================================
+# FUNCIONES AUXILIARES
+# ===========================================================
+def swipper_games_modal(page):
+    global modal_games
+    if modal_games:
+        modal_games.visible = not modal_games.visible
+        page.update()
 
 
 def safe_route(page, route):
@@ -203,48 +304,142 @@ def safe_route(page, route):
         page.go(route)
     except Exception as e:
         log_error("safe_route", e)
-        ft.SnackBar(ft.Text(f"Error al ir a {route}")).open = True
+        sb = ft.SnackBar(ft.Text(f"Error al ir a {route}"))
+        page.overlay.append(sb)
+        sb.open = True
         page.update()
 
 
 def toggle_sidebar(page, sidebar):
     try:
         sidebar.visible = not sidebar.visible
+        sidebar.offset = ft.Offset(0, 0) if sidebar.offset.x < 0 else ft.Offset(-1, 0)
         page.update()
     except Exception as e:
         log_error("toggle_sidebar", e)
 
 
+# ===========================================================
+# FUNCIÓN PRINCIPAL DEL MENÚ
+# ===========================================================
 def renderMainMenu(page: ft.Page):
-    global username, id_user, role, expired, email, token
+    global username, id_user, role, expired, email, token, footer, modal_games
 
     try:
         session = middleware_auth(page)
-        if not isinstance(session, dict):
-            raise TypeError("middleware_auth no devolvió un diccionario")
+        if not session or not isinstance(session, dict):
+            log_error("renderMainMenu", TypeError("middleware_auth devolvió None o tipo no dict"))
+            session = {}
 
-        user = session.get("session", {})
+        user = session.get("session", {}) or {}
         token = session.get("token")
 
         username = user.get("username", "Guest")
         id_user = int(user.get("id", 0))
-        role = user.get("role", None)
-        expired = user.get("exp", None)
-        email = user.get("email", None)
+        role = user.get("role")
+        expired = user.get("exp")
+        email = user.get("email")
 
         page.title = "Main Menu"
-        page.window_width = 500
+        page.window_width = 420
         page.window_height = 800
-        page.resizable = False
+        page.window_resizable = False
         page.bgcolor = "#F6F4FB"
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
+        modal_games = ft.Stack([
+            # === CONTENEDOR PRINCIPAL ===
+            ft.Container(
+                width=340,
+                height=420,
+                bgcolor="#ffffff",
+                border_radius=25,
+                shadow=ft.BoxShadow(
+                    spread_radius=1,
+                    blur_radius=25,
+                    color=ft.colors.with_opacity(0.25, "#000000"),
+                    offset=ft.Offset(0, 5),
+                ),
+                content=ft.Column(
+                    [
+                        # === TÍTULO DEL MODAL ===
+                        ft.Text(
+                            "🎮 Choose your game",
+                            size=16,
+                            color="#cccccc",
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Divider(height=10, color="transparent"),
+
+                        # === BOTONES DE JUEGOS ===
+                        ft.Row(
+                            [
+                                menu_button(page, ICONS.get("gameRandomNumber", ""), "Random number", "/games/random_number"),
+                                menu_button(page, ICONS.get("tetris", ""), "Tetris", "/games/tetris"),
+                                menu_button(page, ICONS.get("chess", ""), "Chess", "/games/chess"),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                            spacing=15,
+                            wrap=True,
+                        ),
+
+                        ft.Divider(height=20, color="transparent"),
+                        ft.Text(
+                            "Tap an icon to start playing!",
+                            size=14,
+                            color="#777777",
+                            italic=True,
+                            text_align=ft.TextAlign.CENTER,
+                        )
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=15,
+                ),
+                alignment=ft.alignment.center,
+                padding=ft.padding.symmetric(horizontal=20, vertical=25),
+            ),
+
+            # === BOTÓN DE CIERRE (X) ===
+            ft.Container(
+                width=48,
+                height=48,
+                right=10,
+                top=10,
+                bgcolor="#f5f5f5",
+                border_radius=30,
+                shadow=ft.BoxShadow(
+                    blur_radius=10,
+                    color=ft.colors.with_opacity(0.2, "#000000")
+                ),
+                content=ft.Icon(
+                    ft.Icons.CLOSE,
+                    size=28,
+                    color="#333333"
+                ),
+                alignment=ft.alignment.center,
+                on_click=lambda _: swipper_games_modal(page),
+                ink=True,
+            )
+        ],visible=False)
+
+        
+
         footer = footer_navbar(page=page, current_path=current_path, dispatches={})
 
         stack = ft.Stack(
-            [*list_menu_items(page), footer],
-            expand=True
+            [
+                *list_menu_items(page),
+                footer,
+                ft.Container(
+                    content=modal_games,
+                    alignment=ft.alignment.center,  # ✅ centra el modal dentro del Stack
+                    expand=True,
+                )
+            ],
+            expand=True,
         )
 
         return addElementsPage(page, [stack])

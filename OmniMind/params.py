@@ -8,7 +8,10 @@ ICONS = {
     "tasks": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_tasks.png",
     "games":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_game.png",
     "dataMind":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/dataMind.png",
-    "foro":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/foro.png"
+    "foro":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/foro.png",
+    "gameRandomNumber":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/gameRandomNumber.png",
+    "tetris":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/tetris.png",
+    "chess":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/chess.png"
 }
 WALLPAPERS = {
     "login":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
