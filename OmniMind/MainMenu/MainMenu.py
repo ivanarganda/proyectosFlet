@@ -9,7 +9,8 @@ from middlewares.auth import middleware_auth
 
 # Variables globales de sesión
 username = id_user = email = role = expired = token = None
-footer = modal_games = None
+footer = None
+modal_games = None
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -17,17 +18,90 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
+def create_modal_games(page):
+    return ft.Container(
+        content=ft.Stack(
+            [
+                ft.Container(
+                    width=340,
+                    height=420,
+                    bgcolor="#ffffff",
+                    border_radius=25,
+                    shadow=ft.BoxShadow(
+                        spread_radius=1,
+                        blur_radius=25,
+                        color=ft.colors.with_opacity(0.25, "#000000"),
+                        offset=ft.Offset(0, 5),
+                    ),
+                    content=ft.Column(
+                        [
+                            ft.Text(
+                                "🎮 Choose your game",
+                                size=20,
+                                weight=ft.FontWeight.BOLD,
+                                color="#333333",
+                                text_align=ft.TextAlign.CENTER,
+                            ),
+                            ft.Divider(height=10, color="transparent"),
+                            ft.Row(
+                                [
+                                    menu_button(page, ICONS.get("gameRandomNumber", ""), "Random number", "/games/random_number"),
+                                    menu_button(page, ICONS.get("tetris", ""), "Tetris", "/games/tetris"),
+                                    menu_button(page, ICONS.get("chess", ""), "Chess", "/games/chess"),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=15,
+                                wrap=True,
+                            ),
+                            ft.Divider(height=20, color="transparent"),
+                            ft.Text(
+                                "Tap an icon to start playing!",
+                                size=14,
+                                color="#777777",
+                                italic=True,
+                                text_align=ft.TextAlign.CENTER,
+                            )
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=15,
+                    ),
+                    alignment=ft.alignment.center,
+                    padding=ft.padding.symmetric(horizontal=20, vertical=25),
+                ),
+                ft.Container(
+                    width=48,
+                    height=48,
+                    right=10,
+                    top=10,
+                    bgcolor="#f5f5f5",
+                    border_radius=30,
+                    shadow=ft.BoxShadow(
+                        blur_radius=10,
+                        color=ft.colors.with_opacity(0.2, "#000000")
+                    ),
+                    content=ft.Icon(ft.Icons.CLOSE, size=28, color="#333333"),
+                    alignment=ft.alignment.center,
+                    on_click=lambda _: swipper_games_modal(page),
+                    ink=True,
+                )
+            ]
+        ),
+        alignment=ft.alignment.center,
+        bgcolor=ft.colors.with_opacity(0.4, "#000000"),  # fondo translúcido
+        padding=ft.padding.all(20),
+        border_radius=ft.border_radius.all(20),
+        visible=False,  # lo mantenemos en el stack, pero invisible hasta que se muestre
+        expand=True,
+    )
+
 
 # ===========================================================
 # MENÚ: BOTONES PRINCIPALES
 # ===========================================================
 def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, size: int = 40):
     try:
-
-        callbacks = {
-            "modal": swipper_games_modal(page)
-        }
-
         return ft.Column(
             [
                 ft.Container(
@@ -37,7 +111,13 @@ def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callbac
                     border_radius=40,
                     content=ft.Image(src=icon_url, width=size + 30, height=size + 30),
                     alignment=ft.alignment.center,
-                    on_click=lambda _: safe_route(page, route) if route != "" else callbacks.get(on_callback, False)
+                    on_click=lambda _: (
+                        safe_route(page, route)
+                        if route != ""
+                        else swipper_games_modal(page)
+                        if on_callback == "modal"
+                        else None
+                    ),
                 ),
                 ft.Text(label, size=20, color="#636363"),
             ],
@@ -48,10 +128,12 @@ def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callbac
         return ft.Text(f"⚠️ Error en {label}")
 
 
+
 # ===========================================================
 # MENÚ: CONTENIDO PRINCIPAL
 # ===========================================================
 def list_menu_items(page: ft.Page):
+    
     try:
         # === BOTÓN LOGOUT =======================================================
         btn_log_out = ft.ElevatedButton(
@@ -95,11 +177,10 @@ def list_menu_items(page: ft.Page):
                 ft.TextButton("🧠 Games", on_click=lambda _: swipper_games_modal(page)),
                 ft.TextButton("📊 Data management", on_click=lambda _: page.go("/dataMind")),
             ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
             alignment=ft.MainAxisAlignment.START,
         )
 
-        # === SIDEBAR ============================================================
         # === SIDEBAR ============================================================
         sidebar = ft.Container(
             width=200,
@@ -116,36 +197,7 @@ def list_menu_items(page: ft.Page):
             content=ft.Column(
                 [
                     ft.Container(
-                        content=ft.Column(
-                            [
-                                ft.Container(
-                                    content=avatar,
-                                    alignment=ft.alignment.center,
-                                    padding=ft.padding.only(bottom=10),
-                                ),
-                                ft.Text(
-                                    username or "Guest",
-                                    color="#222222",
-                                    size=18,
-                                    weight=ft.FontWeight.W_600,
-                                    text_align=ft.TextAlign.CENTER,
-                                ),
-                                ft.Text(
-                                    "Data Analyst",
-                                    color="#7D7D7D",
-                                    size=13,
-                                    text_align=ft.TextAlign.CENTER,
-                                ),
-                                ft.Divider(height=30, color=ft.colors.with_opacity(0.2, "#000000")),
-                                ft.TextButton("📘 Tasks", on_click=lambda _: page.go("/tasks")),
-                                ft.TextButton("🧠 Games", on_click=lambda _: swipper_games_modal(page)),
-                                ft.TextButton("📊 Data management", on_click=lambda _: page.go("/dataMind")),
-                                ft.TextButton("📈 Stats foro", on_click=lambda _: page.go("/foro")),
-                            ],
-                            spacing=8,
-                            alignment=ft.MainAxisAlignment.START,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        ),
+                        content=menu_section,
                     ),
                     ft.Container(expand=True),
                     ft.Container(
@@ -267,7 +319,7 @@ def list_menu_items(page: ft.Page):
                     ),
                     shadow=ft.BoxShadow(blur_radius=20, color="#E0E0E0"),
                 ),
-                sidebar,
+                sidebar
             ],
             expand=True,
         )
@@ -291,9 +343,8 @@ def list_menu_items(page: ft.Page):
 # ===========================================================
 def swipper_games_modal(page):
     global modal_games
-    if modal_games:
-        modal_games.visible = not modal_games.visible
-        page.update()
+    modal_games.visible = not modal_games.visible
+    page.update()
 
 
 def safe_route(page, route):
@@ -340,6 +391,7 @@ def renderMainMenu(page: ft.Page):
         expired = user.get("exp")
         email = user.get("email")
 
+        # === CONFIGURACIÓN DE LA PÁGINA ===
         page.title = "Main Menu"
         page.window_width = 420
         page.window_height = 800
@@ -348,96 +400,21 @@ def renderMainMenu(page: ft.Page):
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-        modal_games = ft.Stack([
-            # === CONTENEDOR PRINCIPAL ===
-            ft.Container(
-                width=340,
-                height=420,
-                bgcolor="#ffffff",
-                border_radius=25,
-                shadow=ft.BoxShadow(
-                    spread_radius=1,
-                    blur_radius=25,
-                    color=ft.colors.with_opacity(0.25, "#000000"),
-                    offset=ft.Offset(0, 5),
-                ),
-                content=ft.Column(
-                    [
-                        # === TÍTULO DEL MODAL ===
-                        ft.Text(
-                            "🎮 Choose your game",
-                            size=16,
-                            color="#cccccc",
-                            text_align=ft.TextAlign.CENTER,
-                        ),
-                        ft.Divider(height=10, color="transparent"),
-
-                        # === BOTONES DE JUEGOS ===
-                        ft.Row(
-                            [
-                                menu_button(page, ICONS.get("gameRandomNumber", ""), "Random number", "/games/random_number"),
-                                menu_button(page, ICONS.get("tetris", ""), "Tetris", "/games/tetris"),
-                                menu_button(page, ICONS.get("chess", ""), "Chess", "/games/chess"),
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                            spacing=15,
-                            wrap=True,
-                        ),
-
-                        ft.Divider(height=20, color="transparent"),
-                        ft.Text(
-                            "Tap an icon to start playing!",
-                            size=14,
-                            color="#777777",
-                            italic=True,
-                            text_align=ft.TextAlign.CENTER,
-                        )
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    spacing=15,
-                ),
-                alignment=ft.alignment.center,
-                padding=ft.padding.symmetric(horizontal=20, vertical=25),
-            ),
-
-            # === BOTÓN DE CIERRE (X) ===
-            ft.Container(
-                width=48,
-                height=48,
-                right=10,
-                top=10,
-                bgcolor="#f5f5f5",
-                border_radius=30,
-                shadow=ft.BoxShadow(
-                    blur_radius=10,
-                    color=ft.colors.with_opacity(0.2, "#000000")
-                ),
-                content=ft.Icon(
-                    ft.Icons.CLOSE,
-                    size=28,
-                    color="#333333"
-                ),
-                alignment=ft.alignment.center,
-                on_click=lambda _: swipper_games_modal(page),
-                ink=True,
-            )
-        ],visible=False)
-
-        
-
+        # === CREACIÓN DE MODAL Y FOOTER ===
+        modal_games = create_modal_games(page)
         footer = footer_navbar(page=page, current_path=current_path, dispatches={})
 
+        page.update()
+
+        # === CONTENIDO PRINCIPAL ===
+        main_content = list_menu_items(page)
+
+        # === STACK GLOBAL ===
         stack = ft.Stack(
             [
-                *list_menu_items(page),
-                footer,
-                ft.Container(
-                    content=modal_games,
-                    alignment=ft.alignment.center,  # ✅ centra el modal dentro del Stack
-                    expand=True,
-                )
+                *main_content,  # menú principal
+                footer,         # footer al fondo
+                modal_games,    # 🔥 modal encima de todo
             ],
             expand=True,
         )
@@ -448,3 +425,4 @@ def renderMainMenu(page: ft.Page):
         log_error("renderMainMenu", e)
         page.go("/")
         return addElementsPage(page, [ft.Text("❌ Error cargando menú principal")])
+

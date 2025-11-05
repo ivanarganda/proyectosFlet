@@ -1,8 +1,6 @@
 import os
 import flet as ft
 import random, time, threading
-import datetime
-from datetime import datetime
 from helpers.utils import (
     addElementsPage,
     loadSnackbar,
@@ -20,6 +18,7 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
+
 def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
     try:
         page.title = "🎯 Random Number Battle"
@@ -30,7 +29,7 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
         page.padding = 0
         page.scroll = "adaptive"
 
-        # === VARIABLES DEL JUEGO ===
+        # === VARIABLES DE JUEGO ===
         total_rounds = 5
         round_num = 1
         score = 0
@@ -39,8 +38,9 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
         start_time = time.time()
         time_limit = 60
         game_running = True
+        stop_thread = False
 
-        # === ELEMENTOS UI ===
+        # === ELEMENTOS DE INTERFAZ ===
         title = ft.Text("Logic Battle", size=16, color="#94a3b8")
         headline = ft.Text("Random Number Battle 🤖", size=30, weight="bold", color="#f1f5f9")
         subtitle = ft.Text(
@@ -70,10 +70,10 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
 
         # === FUNCIONES ===
         def update_timer():
-            """Usa threading para simular un cronómetro sin async ni Timer"""
+            """Actualiza el cronómetro sin bloquear el hilo principal."""
             def tick():
-                nonlocal game_running
-                while game_running:
+                nonlocal game_running, stop_thread
+                while game_running and not stop_thread:
                     elapsed = time.time() - start_time
                     remaining = max(0, time_limit - elapsed)
                     mins, secs = divmod(int(remaining), 60)
@@ -94,10 +94,10 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
             ai_guess = random.randint(1, 10)
             if ai_guess == target:
                 ai_score += 1
-                txt_feedback.value = f"🤖 AI guessed {ai_guess}! (+1 point)"
+                txt_feedback.value = f"🤖 AI guessed correctly! (+1 point)"
                 notify_error(page, "AI scored a point!")
             else:
-                txt_feedback.value = f"🤖 AI tried {ai_guess}... failed."
+                txt_feedback.value = f"🤖 AI missed this round."
             txt_score.value = f"🧍 You: {score} | 🤖 AI: {ai_score}"
             page.update()
 
@@ -113,12 +113,36 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
             input_guess.value = ""
             page.update()
 
+        def reset_game(e=None):
+            """Reinicia el juego sin recargar la página completa."""
+            nonlocal round_num, score, ai_score, target, start_time, game_running, stop_thread
+            stop_thread = True  # Detenemos el cronómetro anterior
+            round_num = 1
+            score = 0
+            ai_score = 0
+            target = random.randint(1, 10)
+            start_time = time.time()
+            game_running = True
+            stop_thread = False
+
+            txt_round.value = f"Round {round_num}/{total_rounds}"
+            txt_feedback.value = ""
+            txt_score.value = f"🧍 You: {score} | 🤖 AI: {ai_score}"
+            progress.value = 0
+            input_guess.value = ""
+
+            page.dialog.open = False
+            page.update()
+            update_timer()
+
         def end_game():
-            nonlocal game_running
+            nonlocal game_running, stop_thread
             game_running = False
+            stop_thread = True
+
             elapsed = round(time.time() - start_time, 2)
             result_text = (
-                f"Game Over!\n\n🧍 You: {score}\n🤖 AI: {ai_score}\n\n⏱️ Duration: {elapsed}s"
+                f"🏁 Game Over!\n\n🧍 You: {score}\n🤖 AI: {ai_score}\n\n⏱️ Duration: {elapsed}s"
             )
             result = {
                 "game": "random_number",
@@ -132,16 +156,23 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
 
             dlg = ft.AlertDialog(
                 modal=True,
-                title=ft.Text("🏁 Final Results", weight="bold"),
+                title=ft.Text("Final Results", weight="bold"),
                 content=ft.Text(result_text, size=16),
                 actions=[
-                    ft.TextButton("🔁 Play Again", on_click=lambda e: page.go("/games/random")),
-                    ft.TextButton("🏠 Menu", on_click=lambda e: page.go("/games_menu")),
+                    ft.TextButton("🔁 Play Again", on_click=reset_game),
+                    ft.TextButton("🏠 Menu", on_click=lambda e: go_to_menu_safe(e)),
                 ],
             )
             page.dialog = dlg
             dlg.open = True
             page.update()
+
+        def go_to_menu_safe(e=None):
+            """Evita volver al menú si el juego está activo."""
+            if game_running:
+                loadSnackbar(page, "⚠️ You can’t leave while playing!", "orange")
+                return
+            page.go("/menu")
 
         def check_guess(e):
             nonlocal score, target
@@ -166,7 +197,7 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
                 notify_success(page, "Correct! 🎉")
                 animate_bounce(txt_feedback)
             else:
-                txt_feedback.value = f"❌ Wrong! It was {target}."
+                txt_feedback.value = "❌ Wrong number!"
                 notify_error(page, "Missed! 😢")
 
             txt_score.value = f"🧍 You: {score} | 🤖 AI: {ai_score}"
@@ -227,12 +258,13 @@ def renderGameRandomNumber(page: ft.Page, on_end_callback=None):
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
         )
 
+        # Footer con navegación bloqueada
         footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+        footer.disabled = True  # desactiva interacción mientras se juega
+
         stack = ft.Stack([layout, footer], expand=True)
 
-        # Iniciar cronómetro (modo threading)
-        update_timer()
-
+        update_timer()  # iniciar el cronómetro
         return addElementsPage(page, [stack])
 
     except Exception as e:
