@@ -8,6 +8,7 @@ from Tasks.views.details_category import loadDetailsCategory
 from Tasks.views.AddCategoryTasksForm import AddCategoryTasksForm
 from Tasks.views.AddTaskForm import AddTaskForm
 from Games.RandomNumber import renderGameRandomNumber
+from Games.Tetris import render_tetris
 
 def main(page: ft.Page):
     # handle session here    
@@ -32,6 +33,8 @@ def route_change(e: ft.RouteChangeEvent):
         page.views.append(ft.View("/games", [renderGame(page)]))
     elif page.route == "/games/random_number":
         page.views.append(ft.View("/games/random_number", [renderGameRandomNumber(page)]))
+    elif page.route == "/games/tetris":
+        page.views.append(ft.View("/games/tetris", [render_tetris(page)]))
     elif page.route == "/tasks":
         page.views.append(ft.View("/tasks", [RenderTasks(page)]))
     elif page.route.startswith("/category/create"):
