@@ -1,5 +1,5 @@
 import flet as ft
-from helpers.utils import getSession
+from helpers.utils import getSession, get_hostname
 import json
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
@@ -9,8 +9,16 @@ from Tasks.views.AddCategoryTasksForm import AddCategoryTasksForm
 from Tasks.views.AddTaskForm import AddTaskForm
 from Games.RandomNumber import renderGameRandomNumber
 from Games.Tetris import render_tetris
+import request_async as requests
+
+async def get_game_scores():
+
+    response = await requests.get()
+
+
 
 def main(page: ft.Page):
+
     # handle session here    
     page.on_route_change = route_change
     

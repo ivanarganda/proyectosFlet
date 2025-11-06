@@ -4,6 +4,11 @@ import jwt  # PyJWT
 from jwt import InvalidTokenError
 import math
 from datetime import datetime
+import platform
+
+# ESPECIAL FUNCTIONS
+def get_hostname():
+    return platform.node()
 
 # --------------------------
 # Función auxiliar para logs

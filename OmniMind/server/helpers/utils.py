@@ -29,7 +29,7 @@ def get_queries():
                 )
             """,
             "init_user_admin_data": """
-                INSERT INTO users (username, email, password, role)
+                INSERT OR IGNORE INTO users (username, email, password, role)
                     SELECT ?, ?, ?, 1
                     WHERE NOT EXISTS (
                         SELECT 1 FROM users WHERE email = 'ivanartista96@gmail.com'
@@ -54,7 +54,21 @@ def get_queries():
                     FOREIGN KEY (id_category) REFERENCES tasks_categories(id) ON DELETE CASCADE,
                     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
                 )
-            """
+            """,
+            "create_games_table": """
+                create table if not exists games
+                (
+                    id  INTEGER  primary key autoincrement not null,
+                    name VARCHAR(50) not null
+                )
+            """,
+            "init_games_data": """
+                    INSERT OR IGNORE INTO games (name )
+                    VALUES
+                        ('RandomNumber'),
+                        ('Tetris'),
+                        ('Chess');
+                    """
         }
 
     except ( KeyError, TypeError ):

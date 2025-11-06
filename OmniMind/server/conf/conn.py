@@ -50,6 +50,12 @@ def init_tables( db ):
             if ( db.execute_query( get_queries()["create_tasks_table"] ) ):
                 print("✅ Created tasks table successfully")
 
+            if ( db.execute_query( get_queries()["create_games_table"] ) ):
+                print("✅ Created games table successfully")
+            
+            if ( db.execute_query( get_queries()["init_games_data"] ) ):
+                print("✅ Init dumped game data from games successfully")
+
             print(f"✅ Connected to {db.db_path} successfully")
 
             return True

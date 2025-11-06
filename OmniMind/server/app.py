@@ -170,6 +170,33 @@ def register():
             ( username , email, password , 2 , None )
         )
 
+        time.sleep(0.2)
+
+        db.execute_query(
+            """ 
+                SELECT * from users where username = ? and email = ?
+            """,
+            ( username, email )
+        )
+
+        result = db.fetch_all()
+
+        id_user = result[0]["id"]
+
+        id_games = [ 1, 2, 3 ]
+        score = data.get("score", 0)
+        level = data.get("level", 1)
+        lines = data.get("lines_cleared", 0)
+        duration = data.get("duration_seconds", 0)
+        difficulty = data.get("difficulty", "normal")
+        device = data.get("device", "desktop")
+
+        for id_ in id_games: 
+            db.execute_query("""
+                INSERT OR IGNORE INTO game_scores (user_id, game_id, score, level, lines_cleared, duration_seconds, difficulty, device)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+            """, (id_user, id_, score, level, lines, duration, difficulty, device))
+
         logging.debug(db.get_query())
 
         db.close_connection()
@@ -555,6 +582,37 @@ def tasks():
     except Exception as e:
         return parse_json_response(str(e), 400)
 
+@app.route("/games/scores", methods=["GET", "PUT"])
+def scores():
+    try:
+        if not init_connection(db):
+            raise Exception("Database connection failed")
+
+        authorized = check_authorization(request.headers)
+        if not authorized:
+            return parse_json_response("Unauthorized", 401)
+
+        # obtener id_user desde token
+        token = request.headers.get("Authorization").split(" ")[1]
+        db.execute_query("SELECT id FROM users WHERE token = ?", (token,))
+        user = db.fetch_all()
+        if not user:
+            raise Exception("User not found")
+        id_user = user[0]["id"] 
+
+        # GET → obtener todas las tareas del usuario
+        if request.method == "GET":
+            game_id = request.get("id",0)
+            db.execute_query("SELECT * FROM game_scores WHERE user_id = ? and game_id = ?", (id_user,game_id))
+            scores = db.fetch_all()
+            return parse_json_response(scores, 201)
+
+        # PUT → actualizar tarea
+        if request.method == "PUT":
+            pass
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)
 if __name__ == "__main__":
     
     host = "0.0.0.0"
