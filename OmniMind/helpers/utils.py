@@ -10,6 +10,43 @@ import platform
 def get_hostname():
     return platform.node()
 
+def get_time_ago(date_str):
+    """
+    Devuelve el tiempo transcurrido desde 'date_str' en formato legible.
+    Ejemplo: '3 hours and 12 minutes ago'
+    """
+    if not date_str:
+        return "No registered"
+
+    # Parsear la fecha recibida
+    try:
+        start = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
+    except ValueError:
+        try:
+            start = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            return "Invalid format"
+
+    now = datetime.now()
+    diff = (now - start).total_seconds()
+
+    # Calcular unidades
+    days = int(diff // 86400)
+    hours = int((diff % 86400) // 3600)
+    minutes = int((diff % 3600) // 60)
+    seconds = int(diff % 60)
+
+    # Formatear en texto legible
+    if days > 0:
+        return f"{days} d and {hours}h ago"
+    elif hours > 0:
+        return f"{hours} h and {minutes} min ago"
+    elif minutes > 0:
+        return f"{minutes} min ago"
+    elif seconds >= 0:
+        return f"{seconds} secs ago"
+    else:
+        return "Now"
 # --------------------------
 # Función auxiliar para logs
 # --------------------------
@@ -313,6 +350,9 @@ def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" 
         ),
         "text": (
             ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color )
+        ),
+        "password": (
+            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, password=True, can_reveal_password=True, border_radius=5, border_color=border_color )
         )
     }.get(type_, defaultTextField )
 

@@ -1,11 +1,13 @@
-# TODO averiguar el modal game sobre el nivel de capa y permitir iteraccion entre los demas componentes
-
 import os
 import flet as ft
-from params import ICONS
-from helpers.utils import addElementsPage, getSession, handle_logout, log_error
+import json
+import asyncio
+from params import ICONS, REQUEST_URL, HEADERS
+from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
+import requests_async as request
+
 
 # Variables globales de sesión
 username = id_user = email = role = expired = token = None
@@ -18,12 +20,48 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
+headers = HEADERS
+
 def create_modal_games(page):
+
+    async def load_games():
+
+        response = await request.get( f"{REQUEST_URL}/games/scores" , headers=headers  )
+        return response.json()
+
+
+    data = asyncio.run( load_games() )
+
+    if data.get("status") == 401 and data.get("message") == "Unauthorized":
+        handle_logout(page)
+
+    games = []
+
+    for key, item in enumerate( data.get("message") ):
+        last_played = get_time_ago(item.get('last_played', ''))
+        games.append(
+            ft.Container(
+                content=ft.Column(
+                    [
+                        menu_button(page, ICONS.get(item.get("icon_name", ""), ""), item.get("alias", ""), item.get("path", ""), text_size=12),
+                        ft.Text(f"🏆 {item.get('score', 0)} pts", size=11, color="#94a3b8"),
+                        ft.Text(f"⚙️ Lv.{item.get('level', 1)}", size=11, color="#94a3b8"),
+                        ft.Text(f"⏱️ {item.get('duration', 0)} s", size=11, color="#94a3b8"),
+                        ft.Text(f"🔄 {last_played}", size=10, color="#64748b", text_align="center"),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                    spacing=2,
+                )
+            )
+        )
+
+    print( games )
+
     return ft.Container(
         content=ft.Stack(
             [
                 ft.Container(
-                    width=340,
+                    width=page.window_width - 40,
                     height=420,
                     bgcolor="#ffffff",
                     border_radius=25,
@@ -44,15 +82,10 @@ def create_modal_games(page):
                             ),
                             ft.Divider(height=10, color="transparent"),
                             ft.Row(
-                                [
-                                    menu_button(page, ICONS.get("gameRandomNumber", ""), "Random number", "/games/random_number"),
-                                    menu_button(page, ICONS.get("tetris", ""), "Tetris", "/games/tetris"),
-                                    menu_button(page, ICONS.get("chess", ""), "Chess", "/games/chess"),
-                                ],
-                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=games,
+                                alignment=ft.MainAxisAlignment.SPACE_EVENLY,
                                 vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                                spacing=15,
-                                wrap=True,
+                                spacing=10
                             ),
                             ft.Divider(height=20, color="transparent"),
                             ft.Text(
@@ -92,7 +125,7 @@ def create_modal_games(page):
         bgcolor=ft.colors.with_opacity(0.4, "#000000"),  # fondo translúcido
         padding=ft.padding.all(20),
         border_radius=ft.border_radius.all(20),
-        visible=False,  # lo mantenemos en el stack, pero invisible hasta que se muestre
+        visible=True,  # lo mantenemos en el stack, pero invisible hasta que se muestre  TODO desabilitar
         expand=True,
     )
 
@@ -100,7 +133,7 @@ def create_modal_games(page):
 # ===========================================================
 # MENÚ: BOTONES PRINCIPALES
 # ===========================================================
-def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, size: int = 40):
+def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, text_size: int= 20, size: int = 40):
     try:
         return ft.Column(
             [
@@ -119,7 +152,7 @@ def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callbac
                         else None
                     ),
                 ),
-                ft.Text(label, size=20, color="#636363"),
+                ft.Text(label, size=text_size, color="#636363"),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         )
@@ -374,7 +407,7 @@ def toggle_sidebar(page, sidebar):
 # FUNCIÓN PRINCIPAL DEL MENÚ
 # ===========================================================
 def renderMainMenu(page: ft.Page):
-    global username, id_user, role, expired, email, token, footer, modal_games
+    global username, id_user, role, expired, email, token, footer, modal_games, headers
 
     try:
         session = middleware_auth(page)
@@ -384,6 +417,7 @@ def renderMainMenu(page: ft.Page):
 
         user = session.get("session", {}) or {}
         token = session.get("token")
+        headers["Authorization"] = f"Bearer {token}"
 
         username = user.get("username", "Guest")
         id_user = int(user.get("id", 0))
@@ -393,7 +427,7 @@ def renderMainMenu(page: ft.Page):
 
         # === CONFIGURACIÓN DE LA PÁGINA ===
         page.title = "Main Menu"
-        page.window_width = 420
+        page.window_width = 550
         page.window_height = 800
         page.window_resizable = False
         page.bgcolor = "#F6F4FB"

@@ -16,8 +16,8 @@ from LoginRegisterForm.views.change_password_view import renderChangePasswordVie
 # -------------------------------
 username_field = setInputField("text", label="Username")
 email_field = setInputField("text", label="Email")
-password_field = setInputField("text", label="Password")
-password_field_confirm = setInputField("text", label="Confirm Password")
+password_field = setInputField("password", label="Password")
+password_field_confirm = setInputField("password", label="Confirm Password")
 
 login_view = None
 register_view = None
@@ -91,7 +91,7 @@ async def change_password( e, page: ft.Page ):
 # Registro
 # -------------------------------
 async def register(e, page: ft.Page):
-    global email_field, password_field, username_field, loader_overlay
+    global email_field, password_field, username_field, loader_overlay, toggle_view
 
     loader_overlay.visible = True
     page.update()
@@ -124,7 +124,7 @@ async def register(e, page: ft.Page):
 
         loadSnackbar(page, "✅ Account created successfully! Redirecting to login...", "green")
         await asyncio.sleep(2)
-        toogle_view(page, "login")
+        toggle_view(page, "login")
 
     except (asyncio.TimeoutError, OSError, ConnectionError):
         loadSnackbar(page, "⚠️ Network error or timeout. Please check your internet connection.", "red")
@@ -136,7 +136,6 @@ async def register(e, page: ft.Page):
     finally:
         loader_overlay.visible = False
         page.update()
-
 
 # -------------------------------
 # Login
@@ -229,7 +228,7 @@ def renderRegisterForm(page: ft.Page):
 def update_forgot_password_visibility(page: ft.Page):
     global forgot_password
     if forgot_password:
-        forgot_password.visible = attempts > 1
+        forgot_password.visible = attempts > 0
         page.update()
 
 def renderForgetPasswordInput(page: ft.Page):

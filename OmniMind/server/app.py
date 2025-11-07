@@ -184,12 +184,12 @@ def register():
         id_user = result[0]["id"]
 
         id_games = [ 1, 2, 3 ]
-        score = data.get("score", 0)
-        level = data.get("level", 1)
-        lines = data.get("lines_cleared", 0)
-        duration = data.get("duration_seconds", 0)
-        difficulty = data.get("difficulty", "normal")
-        device = data.get("device", "desktop")
+        score = 0
+        level = 1
+        lines = 0
+        duration = 0
+        difficulty = "normal"
+        device = "desktop"
 
         for id_ in id_games: 
             db.execute_query("""
@@ -602,8 +602,15 @@ def scores():
 
         # GET → obtener todas las tareas del usuario
         if request.method == "GET":
-            game_id = request.get("id",0)
-            db.execute_query("SELECT * FROM game_scores WHERE user_id = ? and game_id = ?", (id_user,game_id))
+
+            id_game = request.args.get("id", 0)
+
+            if id_game == 0:
+                db.execute_query("SELECT * from game_scores_view WHERE user_id = ?", (id_user,))
+            else:
+                db.execute_query("SELECT * from game_scores_view WHERE user_id = ? and game_id = ?", (id_user,id_game,))
+
+                
             scores = db.fetch_all()
             return parse_json_response(scores, 201)
 

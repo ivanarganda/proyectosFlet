@@ -9,20 +9,31 @@ from Tasks.views.AddCategoryTasksForm import AddCategoryTasksForm
 from Tasks.views.AddTaskForm import AddTaskForm
 from Games.RandomNumber import renderGameRandomNumber
 from Games.Tetris import render_tetris
-import request_async as requests
+from params import REQUEST_URL, HEADERS
+import requests_async as request
+import asyncio
+import threading
 
-async def get_game_scores():
+token = None
 
-    response = await requests.get()
+async def load_scores( game_id:int ):
 
+    headers = HEADERS
+    headers["Authorization"] = f"Bearer {token}"
 
+    response = await request.get( f"{REQUEST_URL}/games/scores?id={game_id}" , headers=headers  )
+    return response.json()
 
 def main(page: ft.Page):
+
+    global token
 
     # handle session here    
     page.on_route_change = route_change
     
     user_data = getSession(page.client_storage.get("user") or "{}")
+
+    token = user_data.get("token","")
 
     # Check if the user is logged in
     if not user_data or not user_data.get("is_logged_in"):
@@ -40,9 +51,11 @@ def route_change(e: ft.RouteChangeEvent):
     elif page.route == "/games":
         page.views.append(ft.View("/games", [renderGame(page)]))
     elif page.route == "/games/random_number":
-        page.views.append(ft.View("/games/random_number", [renderGameRandomNumber(page)]))
+        scores = asyncio.run( load_scores(1) )
+        page.views.append(ft.View("/games/random_number", [renderGameRandomNumber(page, scores)]))
     elif page.route == "/games/tetris":
-        page.views.append(ft.View("/games/tetris", [render_tetris(page)]))
+        scores = asyncio.run( load_scores(2) )
+        page.views.append(ft.View("/games/tetris", [render_tetris(page, scores )]))
     elif page.route == "/tasks":
         page.views.append(ft.View("/tasks", [RenderTasks(page)]))
     elif page.route.startswith("/category/create"):
