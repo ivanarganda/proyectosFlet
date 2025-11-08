@@ -14,9 +14,7 @@ import requests_async as request
 import asyncio
 import threading
 
-token = None
-
-async def load_scores( game_id:int ):
+async def load_scores( game_id:int, token ):
 
     headers = HEADERS
     headers["Authorization"] = f"Bearer {token}"
@@ -25,8 +23,6 @@ async def load_scores( game_id:int ):
     return response.json()
 
 def main(page: ft.Page):
-
-    global token
 
     # handle session here    
     page.on_route_change = route_change
@@ -42,6 +38,7 @@ def main(page: ft.Page):
         page.go("/menu")   # Go to main menu
 
 def route_change(e: ft.RouteChangeEvent):
+    token = getSession(page.client_storage.get("user") or "{}")["token"]
     page = e.page
     page.views.clear()
     if page.route == "/":
@@ -51,10 +48,10 @@ def route_change(e: ft.RouteChangeEvent):
     elif page.route == "/games":
         page.views.append(ft.View("/games", [renderGame(page)]))
     elif page.route == "/games/random_number":
-        scores = asyncio.run( load_scores(1) )
+        scores = asyncio.run( load_scores(1, token ))
         page.views.append(ft.View("/games/random_number", [renderGameRandomNumber(page, scores)]))
     elif page.route == "/games/tetris":
-        scores = asyncio.run( load_scores(2) )
+        scores = asyncio.run( load_scores(2, token) )
         page.views.append(ft.View("/games/tetris", [render_tetris(page, scores )]))
     elif page.route == "/tasks":
         page.views.append(ft.View("/tasks", [RenderTasks(page)]))
