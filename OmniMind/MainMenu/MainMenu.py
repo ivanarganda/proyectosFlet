@@ -254,7 +254,7 @@ def list_menu_items(page: ft.Page):
                         shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.2, "#000000")),
                         alignment=ft.alignment.center,
                         animate_scale=ft.Animation(200, "ease_in_out"),
-                        on_hover=lambda e: e.control.scale(1.05) if e.data == "true" else e.control.scale(1),
+                        on_hover=lambda e: setattr(e.control, "scale", 1.05 if e.data == "true" else 1),
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
