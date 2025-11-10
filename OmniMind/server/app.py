@@ -599,11 +599,10 @@ def scores():
         if not user:
             raise Exception("User not found")
         id_user = user[0]["id"] 
+        id_game = request.args.get("id", 0)
 
         # GET → obtener todas las tareas del usuario
         if request.method == "GET":
-
-            id_game = request.args.get("id", 0)
 
             if id_game == 0:
                 db.execute_query("SELECT * from game_scores_view WHERE user_id = ?", (id_user,))
@@ -616,7 +615,25 @@ def scores():
 
         # PUT → actualizar tarea
         if request.method == "PUT":
-            pass
+
+            data = request.json
+
+            print( data )
+
+            prestige = data.get("prestige")
+            level = data.get("level")
+            lines_cleared = data.get("lines_cleared")
+            score = data.get("score")
+
+            print( prestige, level, lines_cleared, score )
+
+            print("🎮 Game:", id_game, "👤 User:", id_user)
+
+            db.execute_query("UPDATE game_scores SET prestige = ?, level = ?, lines_cleared = ?, score = ? WHERE game_id = ? and user_id = ?",
+                ( prestige, level ,lines_cleared, score, id_game, id_user )
+            )
+
+            return parse_json_response("Progress saved", 201)
 
     except Exception as e:
         return parse_json_response(str(e), 400)

@@ -4,7 +4,8 @@ import time
 import threading
 from helpers.utils import addElementsPage, notify_error, notify_success
 from middlewares.auth import middleware_auth
-
+from Games.bin.__bin_tetris import get_player_status
+from params import HEADERS, REQUEST_URL
 
 GRID_WIDTH = 13
 GRID_HEIGHT = 20
@@ -22,12 +23,13 @@ SHAPES = [
 ]
 
 
-def render_tetris(page: ft.Page, scores):
+def render_tetris(page: ft.Page, scores, load_scores):
     try:
         if scores.get("status") == 401 and scores.get("message") == "Unauthorized":
             handle_logout(page)
 
-        middleware_auth(page)
+        session = middleware_auth(page)
+        token = session.get("token",None)
 
         page.title = "🧩 Tetris Modern"
         page.bgcolor = "#0f172a"
@@ -48,6 +50,8 @@ def render_tetris(page: ft.Page, scores):
 
         score = data.get("score")
         level = data.get("level")
+        prestige = data.get("prestige")
+
         lines_cleared = data.get("lines_cleared")
 
         running = False
@@ -110,15 +114,41 @@ def render_tetris(page: ft.Page, scores):
                         grid[current_pos[0] + y][current_pos[1] + x] = color
 
         def clear_lines():
-            nonlocal grid, score, lines_cleared, level, fall_speed
+            nonlocal grid, score, lines_cleared, level, fall_speed, prestige
             full_rows = [i for i, row in enumerate(grid) if all(row)]
             for i in full_rows:
                 del grid[i]
                 grid.insert(0, [0 for _ in range(GRID_WIDTH)])
             if full_rows:
                 lines = len(full_rows)
-                lines_cleared += len(full_rows)
-                score += 100 * len(full_rows)
+                lines_cleared += lines
+                score += 100 * lines
+
+                try:
+                    if prestige is None or not isinstance(prestige, int):
+                        prestige = 1
+                    level_data = get_player_status(
+                        prestige=prestige,                # el prestigio actual del jugador
+                        score=score,               # puntuación total acumulada
+                        file="tetris_levels.json"  # tu archivo de configuración
+                    )
+
+                    level, prestige_temp, low, high, score_local, progress_level, progress_global, global_score, title = level_data
+                    prestige = prestige_temp  # ✅ actualiza el valor global
+
+                    # mostrar progreso visual o debug
+                    print(f"[DEBUG] Prestige {prestige} | Level {level} | {score_local}/{high} ({progress_level}%)")
+
+                    txt_prestige.value = f"🏅 Prestige {prestige}"
+                    txt_level.value = f"⚙️ Level {level} ({progress_level}%)"
+                    txt_score.value = f"🏆 {score_local} / {high} pts"
+                    txt_global.value = f"🌐 Global {progress_global}%"
+                    progress_bar.value = progress_level / 100.0
+
+
+                except Exception as ex:
+                    print(f"[ERROR LEVEL SYSTEM] {ex}")
+                
                 if lines_cleared // 5 >= level:
                     level += 1
                     fall_speed = max(0.05, fall_speed - 0.02)
@@ -135,23 +165,102 @@ def render_tetris(page: ft.Page, scores):
                 spawn_new_shape()
 
         def reset_game():
-            nonlocal grid, score, level, lines_cleared, fall_speed
+            import asyncio
+            nonlocal grid, score, level, lines_cleared, fall_speed, data, prestige, token
+
             grid = [[0 for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
-            score = 0
-            level = 1
-            lines_cleared = 0
+
+            try:
+                data = asyncio.run(load_scores(2, token, page))
+                if not data or data.get("error"):
+                    notify_error(page, "❌ Error loading scores, starting new game.")
+                    data = {"score": 0, "level": 1, "prestige": 1, "lines_cleared": 0}
+            except Exception as ex:
+                print(f"[RESET ERROR] {ex}")
+                data = {"score": 0, "level": 1, "prestige": 1, "lines_cleared": 0}
+
+            [data] = scores.get("message", None)
+
+            score = data.get("score", 0)
+            level = data.get("level", 1)
+            prestige = data.get("prestige", 1)
+            lines_cleared = data.get("lines_cleared", 0)
             fall_speed = 0.3
+
             update_labels()
             refresh_grid()
 
         def save_scores():
-            print(score, level, lines_cleared)
-            notify_success(page, "Scores saved! 💾")
+            import asyncio, requests_async
+
+            async def s_score():
+                nonlocal token
+                headers = HEADERS.copy()
+
+                if not token:
+                    notify_error(page, "⚠️ No hay sesión válida. Inicia sesión nuevamente.")
+                    return {"status": 401, "message": "Unauthorized"}
+
+                headers["Authorization"] = f"Bearer {token}"        
+
+                json_data = {
+                    "prestige": prestige,
+                    "level": level,
+                    "score": score,
+                    "lines_cleared": lines_cleared,
+                }
+
+                try:
+                    response = await requests_async.put(
+                        f"{REQUEST_URL}/games/scores?id=2",
+                        headers=headers,
+                        json=json_data,
+                        timeout=10  # evita bloqueos si el servidor no responde
+                    )
+
+                    # si el servidor responde sin JSON (error HTML)
+                    try:
+                        return response.json()
+                    except Exception:
+                        return {"status": response.status_code, "message": response.text}
+
+                except Exception as ex:
+                    return {"status": 500, "message": f"Network error: {ex}"}
+
+            res = asyncio.run(s_score())
+
+            if res.get("status") == 201:
+                notify_success(page, res.get("message", "Progress saved") + " 💾")
+                time.sleep(1)
+                page.go('/menu')
+            else:
+                msg = res.get("message", "Unable to save progress! ❌")
+                notify_error(page, f"{msg} (status {res.get('status')})")
+
+
 
         def update_labels():
-            txt_score.value = f"🏆 Pts. {score}"
-            txt_level.value = f"⚙️ Lvl. {level}"
-            txt_lines.value = f"📏 Lns. {lines_cleared}"
+            """Actualiza los labels con datos reales del jugador"""
+            nonlocal prestige
+            print( prestige )
+            try:
+                level_data = get_player_status(
+                    prestige=prestige, score=score, file="tetris_levels.json"
+                )
+                level, prestige, low, high, score_local, progress_level, progress_global, global_score, title = level_data
+
+                # Textos principales
+                txt_prestige.value = f"🏅 Prestige {prestige}"
+                txt_level.value = f"⚙️ Level {level} ({progress_level}%)"
+                txt_score.value = f"🏆 {score_local} / {high} pts"
+                txt_global.value = f"🌐 Global {progress_global}%"
+
+                # Barra de progreso
+                progress_bar.value = progress_level / 100.0
+
+            except Exception as ex:
+                print(f"[HUD ERROR] {ex}")
+
             page.update()
 
         def show_game_over(e=None):
@@ -384,10 +493,26 @@ def render_tetris(page: ft.Page, scores):
         hidden_input = ft.TextField(visible=False, autofocus=True, on_blur=lambda e: e.control.focus())
         page.overlay.append(hidden_input)
 
+
         txt_title = ft.Text("🧩 TETRIS MODERN", size=28, weight="bold", color="#38bdf8")
-        txt_score = ft.Text(f"🏆 Pts. {score}", size=16, color="#e2e8f0")
-        txt_level = ft.Text(f"⚙️ Lvl. {level}", size=16, color="#e2e8f0")
-        txt_lines = ft.Text(f"📏 Lns. {lines_cleared}", size=16, color="#e2e8f0")
+
+        level_data = get_player_status(
+            prestige=prestige,                # el prestigio actual del jugador
+            score=score,               # puntuación total acumulada
+            file="tetris_levels.json"  # tu archivo de configuración
+        )
+
+        level, prestige_temp, low, high, score_local, progress_level, progress_global, global_score, title = level_data
+
+        # Barra de progreso visual para el nivel
+        progress_bar = ft.ProgressBar(
+            value=0,            # 0 a 1
+            bar_height=6,
+            bgcolor="#1e293b",
+            color="#38bdf8",
+            border_radius=ft.border_radius.all(10),
+            expand=True,
+        )
 
         btn_start = ft.ElevatedButton(
             "▶️ START GAME",
@@ -416,16 +541,27 @@ def render_tetris(page: ft.Page, scores):
             alignment=ft.MainAxisAlignment.CENTER,
         )
 
+        txt_prestige = ft.Text(f"🏅 Prestige {prestige}", size=15, weight="bold", color="#facc15")
+        txt_level = ft.Text(f"⚙️ Level {level} ({progress_level}%)", size=16, color="#e2e8f0")
+        txt_score = ft.Text(f"🏆 {score_local} / {high} pts", size=16, color="#e2e8f0")
+        txt_global = ft.Text(f"🌐 Global {progress_global}%", size=14, color="#94a3b8")
+
         stats_panel = ft.Container(
-            content=ft.Row(
-                [txt_score, txt_level, txt_lines],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                spacing=4,
+            content=ft.Column(
+                [
+                    ft.Row([txt_prestige, txt_level],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    progress_bar,
+                    ft.Row([txt_score, txt_global],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                ],
+                spacing=5,
+                alignment=ft.MainAxisAlignment.CENTER,
             ),
             bgcolor="#1e293b",
-            padding=10,
-            border_radius=12,
-            shadow=ft.BoxShadow(blur_radius=15, color="#000000"),
+            padding=12,
+            border_radius=15,
+            shadow=ft.BoxShadow(blur_radius=20, color="#000000"),
         )
 
         layout = ft.Column(
@@ -434,6 +570,9 @@ def render_tetris(page: ft.Page, scores):
             alignment=ft.MainAxisAlignment.START,
             spacing=10,
         )
+
+        # Barra de progreso
+        progress_bar.value = progress_level / 100.0
 
         container = ft.Container(
             expand=True,
@@ -456,4 +595,15 @@ def render_tetris(page: ft.Page, scores):
 
     except Exception as e:
         notify_error(page, f"Error loading Tetris: {e}")
-        page.go("/menu")
+        # ✅ Devolver un contenedor de error para evitar el NoneType
+        return addElementsPage( page,  ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("❌ Error loading Tetris", color="red", size=18),
+                    ft.Text(str(e), color="white", size=14),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            )
+        )
+        )

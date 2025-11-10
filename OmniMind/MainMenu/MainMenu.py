@@ -409,54 +409,48 @@ def toggle_sidebar(page, sidebar):
 def renderMainMenu(page: ft.Page):
     global username, id_user, role, expired, email, token, footer, modal_games, headers
 
-    try:
-        session = middleware_auth(page)
-        if not session or not isinstance(session, dict):
-            log_error("renderMainMenu", TypeError("middleware_auth devolvió None o tipo no dict"))
-            session = {}
+    session = middleware_auth(page)
+    if not session or not isinstance(session, dict):
+        log_error("renderMainMenu", TypeError("middleware_auth devolvió None o tipo no dict"))
+        session = {}
 
-        user = session.get("session", {}) or {}
-        token = session.get("token")
-        headers["Authorization"] = f"Bearer {token}"
+    user = session.get("session", {}) or {}
+    token = session.get("token")
+    headers["Authorization"] = f"Bearer {token}"
 
-        username = user.get("username", "Guest")
-        id_user = int(user.get("id", 0))
-        role = user.get("role")
-        expired = user.get("exp")
-        email = user.get("email")
+    username = user.get("username", "Guest")
+    id_user = int(user.get("id", 0))
+    role = user.get("role")
+    expired = user.get("exp")
+    email = user.get("email")
 
-        # === CONFIGURACIÓN DE LA PÁGINA ===
-        page.title = "Main Menu"
-        page.window_width = 550
-        page.window_height = 800
-        page.window_resizable = False
-        page.bgcolor = "#F6F4FB"
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    # === CONFIGURACIÓN DE LA PÁGINA ===
+    page.title = "Main Menu"
+    page.window_width = 550
+    page.window_height = 800
+    page.window_resizable = False
+    page.bgcolor = "#F6F4FB"
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-        # === CREACIÓN DE MODAL Y FOOTER ===
-        modal_games = create_modal_games(page)
-        footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+    # === CREACIÓN DE MODAL Y FOOTER ===
+    modal_games = create_modal_games(page)
+    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
 
-        page.update()
+    page.update()
 
-        # === CONTENIDO PRINCIPAL ===
-        main_content = list_menu_items(page)
+    # === CONTENIDO PRINCIPAL ===
+    main_content = list_menu_items(page)
 
-        # === STACK GLOBAL ===
-        stack = ft.Stack(
-            [
-                *main_content,  # menú principal
-                footer,         # footer al fondo
-                modal_games,    # 🔥 modal encima de todo
-            ],
-            expand=True,
-        )
+    # === STACK GLOBAL ===
+    stack = ft.Stack(
+        [
+            *main_content,  # menú principal
+            footer,         # footer al fondo
+            modal_games,    # 🔥 modal encima de todo
+        ],
+        expand=True,
+    )
 
-        return addElementsPage(page, [stack])
-
-    except Exception as e:
-        log_error("renderMainMenu", e)
-        page.go("/")
-        return addElementsPage(page, [ft.Text("❌ Error cargando menú principal")])
+    return addElementsPage(page, [stack])
 

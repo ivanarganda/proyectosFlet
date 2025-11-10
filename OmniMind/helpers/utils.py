@@ -96,7 +96,7 @@ def setGradient( color ):
             center=ft.alignment.center,
             start_angle=0.0,
             end_angle=math.pi * 4,
-            colors=[
+            Colors=[
                 "0x00084F",
                 "0x00084F",
                 "0x2B2A2A",
@@ -195,7 +195,7 @@ def build_color_dialog(title: str, initial_hex: str, on_pick):
         ft.Container(
             width=32, height=32, bgcolor=c, border_radius=16,
             on_click=lambda e, col=c: on_palette_click(col),
-            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.colors.GREY_300),
+            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.Colors.GREY_300),
         ) for c in palette
     ]
 
@@ -289,7 +289,7 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
                 [
                     ft.Container(
                         content=ft.IconButton(
-                            icon=ft.icons.ADD,
+                            icon=ft.Icons.ADD,
                             icon_size=28,
                             icon_color="gray",
                             on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
@@ -298,7 +298,7 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
                     ),
                     ft.Container(
                         content=ft.IconButton(
-                            icon=ft.icons.REMOVE_RED_EYE_OUTLINED,
+                            icon=ft.Icons.REMOVE_RED_EYE_OUTLINED,
                             icon_size=28,
                             icon_color="gray",
                             on_click=lambda _, category=f'{{"id": "{id_category_task}", "name": "{category_name}"}}': on_view_category(
@@ -323,7 +323,7 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
             bgcolor=bg_color,
             border_radius=20,
             padding=15,
-            shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
+            shadow=ft.BoxShadow(blur_radius=8, color=ft.Colors.GREY_300),
             content=ft.Column(
                 parts,
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -346,7 +346,7 @@ def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" 
     defaultTextField = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
     return {
         "search": (
-            ft.TextField(keyboard_type=ft.KeyboardType.TEXT, border_radius=5, border_color=border_color, focused_border_color=focused_border_color, border_width=1, prefix_icon=ft.icons.SEARCH , hint_text=placeholder)
+            ft.TextField(keyboard_type=ft.KeyboardType.TEXT, border_radius=5, border_color=border_color, focused_border_color=focused_border_color, border_width=1, prefix_icon=ft.Icons.SEARCH , hint_text=placeholder)
         ),
         "text": (
             ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color )
@@ -391,7 +391,7 @@ def loadLoader():
     return ft.Stack(
         [
             # Fondo semitransparente
-            ft.Container(expand=True, bgcolor=ft.colors.with_opacity(0.5, "black")),
+            ft.Container(expand=True, bgcolor=ft.Colors.with_opacity(0.5, "black")),
             # Loader centrado
             ft.Container(
                 content=ft.ProgressRing(
