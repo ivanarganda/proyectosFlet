@@ -624,13 +624,15 @@ def scores():
             level = data.get("level")
             lines_cleared = data.get("lines_cleared")
             score = data.get("score")
+            time_elapsed = data.get("playtime")
+            last_played = datetime.datetime.utcnow().isoformat()
 
             print( prestige, level, lines_cleared, score )
 
             print("🎮 Game:", id_game, "👤 User:", id_user)
 
-            db.execute_query("UPDATE game_scores SET prestige = ?, level = ?, lines_cleared = ?, score = ? WHERE game_id = ? and user_id = ?",
-                ( prestige, level ,lines_cleared, score, id_game, id_user )
+            db.execute_query("UPDATE game_scores SET prestige = ?, level = ?, lines_cleared = ?, duration_seconds = ? score = ?, played_at = ? WHERE game_id = ? and user_id = ?",
+                ( prestige, level ,lines_cleared, time_elapsed, score, last_played, id_game, id_user )
             )
 
             return parse_json_response("Progress saved", 201)

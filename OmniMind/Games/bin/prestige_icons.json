@@ -1,0 +1,84 @@
+{
+  "prestiges": [
+    {
+      "id": 1,
+      "name": "Prestige I",
+      "icon": "🥉",
+      "color": "#cd7f32",
+      "title": "Bronze Initiate",
+      "description": "Your journey has just begun — the bronze dawn."
+    },
+    {
+      "id": 2,
+      "name": "Prestige II",
+      "icon": "🥈",
+      "color": "#c0c0c0",
+      "title": "Silver Apprentice",
+      "description": "Your skill starts to shine like polished silver."
+    },
+    {
+      "id": 3,
+      "name": "Prestige III",
+      "icon": "🥇",
+      "color": "#ffd700",
+      "title": "Golden Veteran",
+      "description": "Gold flows through your veins. A proven warrior."
+    },
+    {
+      "id": 4,
+      "name": "Prestige IV",
+      "icon": "💎",
+      "color": "#00bfff",
+      "title": "Crystal Guardian",
+      "description": "Unbreakable focus — a champion forged in ice."
+    },
+    {
+      "id": 5,
+      "name": "Prestige V",
+      "icon": "🔥",
+      "color": "#ff4500",
+      "title": "Infernal Hero",
+      "description": "You burn brighter than all who came before."
+    },
+    {
+      "id": 6,
+      "name": "Prestige VI",
+      "icon": "⚡",
+      "color": "#facc15",
+      "title": "Thunder Master",
+      "description": "Speed, power, and precision strike in harmony."
+    },
+    {
+      "id": 7,
+      "name": "Prestige VII",
+      "icon": "🌌",
+      "color": "#6b21a8",
+      "title": "Cosmic Conqueror",
+      "description": "Your presence bends the stars to your will."
+    },
+    {
+      "id": 8,
+      "name": "Prestige VIII",
+      "icon": "👑",
+      "color": "#eab308",
+      "title": "Crowned Overlord",
+      "description": "A ruler of realms, unmatched and untouchable."
+    },
+    {
+      "id": 9,
+      "name": "Prestige IX",
+      "icon": "🪽",
+      "color": "#93c5fd",
+      "title": "Divine Ascendant",
+      "description": "You’ve ascended beyond the mortal battlefield."
+    },
+    {
+      "id": 10,
+      "name": "Prestige X",
+      "icon": "🌠",
+      "color": "#a855f7",
+      "title": "Celestial Legend",
+      "description": "You are eternal. Legends whisper your name among the stars."
+    }
+  ]
+}

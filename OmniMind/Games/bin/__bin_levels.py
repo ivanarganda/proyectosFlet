@@ -2,6 +2,60 @@ import math
 import json
 import os
 
+class ArgumentError(Exception):pass
+class EncodingError(Exception):pass
+class NotFoundFile(Exception):pass
+
+def load_json_data( file_path: str, type_:str, encoding_:str = "utf-8")->dict:
+    import os
+
+    print( file_path )
+    
+    encoding_types = ["utf-8", "latin-1", "ascii", "cp1252", "utf-16", "gbk"]
+    try:
+        if not isinstance(file_path,str): raise ArgumentError("Error: passing file_path as argument to load_json_data expected string")
+        if not os.path.exists(file_path): raise NotFoundFile(f"Error: not found file {file_path}")
+        if type_ != "" and not isinstance(type_,str): raise ArgumentError("Error: passing type_ as argument to load_json_data expected string")
+        if encoding_ != "" and not isinstance(encoding_,str): raise ArgumentError("Error: passing encoding_ as argument to load_json_data expected string")
+        if encoding_ not in encoding_types: raise EncodingError(f"Error: unexpected {encoding_}")
+        with open(file_path, "r", encoding=encoding_) as f:
+            data = json.load(f)
+        try:
+            return {
+                "content_json":data[type_],
+                "type": type_
+            }
+        except TypeError:
+            return {
+                "content_json":data,
+                "type": "Not found"
+            }
+    except ValueError:
+        print("Error: not ype data allowed")
+    except ArgumentError as e:
+        print(e)
+    except EncodingError as e:
+        print(e)
+
+
+def get_prestige_details( prestige: int ):
+
+    try:
+
+        BASE_DIR = os.path.dirname(__file__)
+        JSON_PATH = os.path.join(BASE_DIR, "prestige_icons.json")
+
+        prestiges = load_json_data(JSON_PATH,"prestiges")
+
+        [content_json] = [x for x in prestiges["content_json"] if x["id"] == prestige]
+
+        return content_json,  prestiges["type"]
+    
+    except NotFoundFile:
+
+        return 'No path found'
+
+
 def get_player_status(prestige: int, score: int, file: str):
     """
     Devuelve:

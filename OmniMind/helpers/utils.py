@@ -3,42 +3,62 @@ import json
 import jwt  # PyJWT
 from jwt import InvalidTokenError
 import math
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import platform
 
 # ESPECIAL FUNCTIONS
 def get_hostname():
     return platform.node()
 
+def convert_seconds(seconds: float) -> dict:
+    units = [
+        ("years", 31556952),  # promedio (365.24 días)
+        ("months", 2629746),  # promedio (30.44 días)
+        ("days", 86400),
+        ("hours", 3600),
+        ("minutes", 60),
+        ("seconds", 1),
+    ]
+
+    for name, factor in units:
+        if seconds >= factor:
+            value = seconds / factor
+            return f"{value:.2f} {name}"
+    
+    return f"{seconds:.2f} seconds"  # por si acaso
+
 def get_time_ago(date_str):
     """
-    Devuelve el tiempo transcurrido desde 'date_str' en formato legible.
-    Ejemplo: '3 hours and 12 minutes ago'
+    Devuelve tiempo transcurrido en formato legible.
+    Admite fechas con o sin milisegundos y evita errores si date_str es None.
     """
-    if not date_str:
+    if not date_str or date_str.lower() == "none":
         return "No registered"
 
-    # Parsear la fecha recibida
     try:
-        start = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
+        # intentar con milisegundos
+        start = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%f")
     except ValueError:
         try:
-            start = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            # intentar sin milisegundos
+            start = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
         except Exception:
-            return "Invalid format"
+            return "Invalid date"
 
-    now = datetime.now()
+    # Convertir UTC a hora local (España = UTC+1 invierno / +2 verano)
+    start = start.replace(tzinfo=timezone.utc).astimezone(timezone(timedelta(hours=1)))
+
+    now = datetime.now(timezone(timedelta(hours=1)))
     diff = (now - start).total_seconds()
 
-    # Calcular unidades
     days = int(diff // 86400)
     hours = int((diff % 86400) // 3600)
     minutes = int((diff % 3600) // 60)
     seconds = int(diff % 60)
 
-    # Formatear en texto legible
+    # Formato legible
     if days > 0:
-        return f"{days} d and {hours}h ago"
+        return f"{days} d and {hours} h ago"
     elif hours > 0:
         return f"{hours} h and {minutes} min ago"
     elif minutes > 0:
@@ -47,6 +67,7 @@ def get_time_ago(date_str):
         return f"{seconds} secs ago"
     else:
         return "Now"
+
 # --------------------------
 # Función auxiliar para logs
 # --------------------------
@@ -89,14 +110,14 @@ def is_light_color(hex_color: str) -> bool:
     except Exception:
         return False
 
-# Colors
+# colors
 def setGradient( color ):
     return {
         'black-blue':ft.SweepGradient(
             center=ft.alignment.center,
             start_angle=0.0,
             end_angle=math.pi * 4,
-            Colors=[
+            colors=[
                 "0x00084F",
                 "0x00084F",
                 "0x2B2A2A",
@@ -195,7 +216,7 @@ def build_color_dialog(title: str, initial_hex: str, on_pick):
         ft.Container(
             width=32, height=32, bgcolor=c, border_radius=16,
             on_click=lambda e, col=c: on_palette_click(col),
-            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.Colors.GREY_300),
+            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.colors.GREY_300),
         ) for c in palette
     ]
 
@@ -323,7 +344,7 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
             bgcolor=bg_color,
             border_radius=20,
             padding=15,
-            shadow=ft.BoxShadow(blur_radius=8, color=ft.Colors.GREY_300),
+            shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
             content=ft.Column(
                 parts,
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -391,7 +412,7 @@ def loadLoader():
     return ft.Stack(
         [
             # Fondo semitransparente
-            ft.Container(expand=True, bgcolor=ft.Colors.with_opacity(0.5, "black")),
+            ft.Container(expand=True, bgcolor=ft.colors.with_opacity(0.5, "black")),
             # Loader centrado
             ft.Container(
                 content=ft.ProgressRing(

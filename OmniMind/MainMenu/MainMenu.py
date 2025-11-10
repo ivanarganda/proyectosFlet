@@ -3,10 +3,12 @@ import flet as ft
 import json
 import asyncio
 from params import ICONS, REQUEST_URL, HEADERS
-from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago
+from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago, convert_seconds
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
 import requests_async as request
+
+from Games.bin.__bin_levels import get_prestige_details, get_player_status
 
 
 # Variables globales de sesión
@@ -24,38 +26,111 @@ headers = HEADERS
 
 def create_modal_games(page):
 
-    async def load_games():
+    async def render_games():
 
-        response = await request.get( f"{REQUEST_URL}/games/scores" , headers=headers  )
-        return response.json()
+        async def load_games():
 
+            response = await request.get( f"{REQUEST_URL}/games/scores" , headers=headers  )
+            return response.json()
 
-    data = asyncio.run( load_games() )
+        games = []
 
-    if data.get("status") == 401 and data.get("message") == "Unauthorized":
-        handle_logout(page)
+        game_data = asyncio.create_task( load_games() )
 
-    games = []
+        data = await game_data 
 
-    for key, item in enumerate( data.get("message") ):
-        last_played = get_time_ago(item.get('last_played', ''))
-        games.append(
-            ft.Container(
-                content=ft.Column(
-                    [
-                        menu_button(page, ICONS.get(item.get("icon_name", ""), ""), item.get("alias", ""), item.get("path", ""), text_size=12),
-                        ft.Text(f"🏆 {item.get('score', 0)} pts", size=11, color="#94a3b8"),
-                        ft.Text(f"⚙️ Lv.{item.get('level', 1)}", size=11, color="#94a3b8"),
-                        ft.Text(f"⏱️ {item.get('duration', 0)} s", size=11, color="#94a3b8"),
-                        ft.Text(f"🔄 {last_played}", size=10, color="#64748b", text_align="center"),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.START,
-                    spacing=2,
+        if data.get("status") == 401 and data.get("message") == "Unauthorized":
+            handle_logout(page)
+
+        for key, item in enumerate( data.get("message") ):
+            last_played = get_time_ago(item.get('last_played', ''))
+            duration = convert_seconds(item.get('duration', 0))
+            score = item.get('score', 0)
+            prestige = item.get("prestige",0)
+            level = item.get('level', 1)
+            prestige_icons, type_ = get_prestige_details(prestige)
+
+            details_prestige = {
+                "icon": prestige_icons.get("icon"),
+                "color": prestige_icons.get("color"),
+                "title": prestige_icons.get("title"),
+                "name": prestige_icons.get("name")
+            }
+
+            _, _,low,high, _, progress_level, progress_global, global_score, _ = get_player_status( prestige, score , "tetris_levels.json" )
+
+            progress = 1.0 if high <= low else max(0.0, min((score - low) / (high - low), 1.0))
+
+            circular_with_labels = ft.Column(
+                [
+                    ft.Text(f"{low}–{high}", size=9, color="#64748b"),
+                    ft.Stack(
+                        [
+                            ft.ProgressRing(
+                                value=progress,
+                                width=70,
+                                height=70,
+                                stroke_width=6,
+                                color="blue",
+                                bgcolor="#1e293b",
+                                tooltip=f"{round(progress*100,1)}% ({low}-{high})",
+                            ),
+                            ft.Column(
+                                [
+                                    ft.Text(f"Lv.{level}", size=10, weight=ft.FontWeight.BOLD, color="black"),
+                                    ft.Text(f"{round(progress*100)}%", size=9, color="#94a3b8"),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=0,
+                            ),
+                        ],
+                        alignment=ft.alignment.center,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            )
+
+            games.append(
+                ft.Container(
+                    width=140,
+                    height=320,
+                    bgcolor=ft.colors.with_opacity(0.12, ft.colors.WHITE),
+                    border_radius=20,
+                    animate=ft.animation.Animation(300, ft.AnimationCurve.EASE_OUT),
+                    content=ft.Column(
+                        [
+                            menu_button(page, ICONS.get(item.get("icon_name", ""), ""), item.get("alias", ""), item.get("path", ""), text_size=12),
+                            ft.Text(f"🏆 {score} pts", size=11, color="#94a3b8"),
+                            ft.Container(
+                                content=ft.Column(
+                                    [
+                                        ft.Text(f"{details_prestige.get("icon")} {details_prestige.get("title")}", size=11, color=f"{details_prestige.get("color")}"),
+                                        ft.Text(f"({details_prestige.get("name")}) Lv.{level}", size=11, color=f"black")
+                                    ],
+                                    expand=False,
+                                    spacing=0,
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                ),
+                                expand=False
+                            ),
+                            ft.Text(f"⏱️ {duration}", size=11, color="#94a3b8"),
+                            ft.Text(f"🔄 {last_played}", size=10, color="#64748b", text_align="center"),
+                            ft.Divider(height=10, color="transparent"),
+                            ft.Container(content=circular_with_labels, alignment=ft.alignment.center)
+                            
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=2,
+                    )
                 )
             )
-        )
 
-    print( games )
+        return games
+
+    games = asyncio.run(render_games())
 
     return ft.Container(
         content=ft.Stack(

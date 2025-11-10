@@ -94,6 +94,7 @@ def route_change(e: ft.RouteChangeEvent):
         # === MENU PRINCIPAL ===
         elif route == "/menu":
             if not is_logged_in:
+                page.views.append(ft.View("/menu", [ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
                 page.views.append(ft.View("/menu", [renderMainMenu(page)]))
@@ -101,14 +102,39 @@ def route_change(e: ft.RouteChangeEvent):
         # === TASKS ===
         elif route == "/tasks":
             if not is_logged_in:
+                page.views.append(ft.View("/tasks", [ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
                 page.views.append(ft.View("/tasks", [RenderTasks(page)]))
+
+        elif page.route.startswith("/category/create"):
+            if not is_logged_in:
+                page.views.append(ft.View("//category/create", [ft.Text("")]))
+                show_session_expired_dialog(page)
+            else: 
+                page.views.append(ft.View("/category/create", [AddCategoryTasksForm(page)]))
+
+        elif page.route.startswith("/tasks/create/"): 
+            id_category = page.route.split("/")[-1]
+            if not is_logged_in:
+                page.views.append(ft.View(f"/tasks/create/{id_category}", [ft.Text("")]))
+                show_session_expired_dialog(page)
+            else: 
+                page.views.append(ft.View(f"/tasks/create/{id_category}", [AddTaskForm(page, id_category)]))
+        
+        elif page.route.startswith("/category/details/"): 
+            category = page.route.split("/")[-1] 
+            if not is_logged_in:
+                page.views.append(ft.View(f"/category/details/{category}", [ft.Text("")]))
+                show_session_expired_dialog(page)
+            else:
+                page.views.append(ft.View(f"/category/details/{category}", [loadDetailsCategory(page, category)]))
 
         # === GAMES ===
         elif route == "/games/random_number":
 
             if not is_logged_in:
+                page.views.append(ft.View(f"/games/random_number", [ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
                 # Muestra una vista base vacía o con un mensaje
@@ -131,6 +157,7 @@ def route_change(e: ft.RouteChangeEvent):
         elif route == "/games/chess":
 
             if not is_logged_in:
+                page.views.append(ft.View(f"/games/chess", [ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
                 # Muestra una vista base vacía o con un mensaje
@@ -152,6 +179,7 @@ def route_change(e: ft.RouteChangeEvent):
 
         elif route == "/games/tetris":
             if not is_logged_in:
+                page.views.append(ft.View("/games/tetris", [ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
                 run_async_task(load_and_render_game(2, render_tetris ))

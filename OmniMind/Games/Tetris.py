@@ -4,7 +4,7 @@ import time
 import threading
 from helpers.utils import addElementsPage, notify_error, notify_success
 from middlewares.auth import middleware_auth
-from Games.bin.__bin_tetris import get_player_status
+from Games.bin.__bin_levels import get_player_status
 from params import HEADERS, REQUEST_URL
 
 GRID_WIDTH = 13
@@ -66,6 +66,10 @@ def render_tetris(page: ft.Page, scores, load_scores):
         thread_stop_event = threading.Event()
         game_thread = None
         dlg = None
+
+        start_time = None       # tiempo de inicio de la partida
+        pause_time = None       # momento en que se pausó
+        elapsed_playtime = 0.0  # acumulador total de segundos jugados
 
         # =========================
         # FUNCIONES AUXILIARES
@@ -194,7 +198,7 @@ def render_tetris(page: ft.Page, scores, load_scores):
             import asyncio, requests_async
 
             async def s_score():
-                nonlocal token
+                nonlocal token, elapsed_playtime
                 headers = HEADERS.copy()
 
                 if not token:
@@ -208,6 +212,7 @@ def render_tetris(page: ft.Page, scores, load_scores):
                     "level": level,
                     "score": score,
                     "lines_cleared": lines_cleared,
+                    "playtime": round(elapsed_playtime, 2),  # segundos jugados
                 }
 
                 try:
@@ -264,11 +269,21 @@ def render_tetris(page: ft.Page, scores, load_scores):
             page.update()
 
         def show_game_over(e=None):
+            nonlocal elapsed_playtime, start_time
             global dlg
+
+            if start_time:
+                elapsed_playtime += time.time() - start_time
+
+            minutes, seconds = divmod(int(elapsed_playtime), 60)
+            hours, minutes = divmod(minutes, 60)
+            playtime_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+
             content = ft.Column(
                 [
                     ft.Text("💀 GAME OVER", size=26, weight="bold", color="#f87171", text_align=ft.TextAlign.CENTER),
                     ft.Divider(height=10, color="transparent"),
+                    ft.Text(f"🕓 Time played: {playtime_str}", size=16, color="#94a3b8"),
                     ft.Text(f"🏆 Final Score: {score}", size=18, color="#e2e8f0"),
                     ft.Text(f"⚙️ Level Reached: {level}", size=16, color="#94a3b8"),
                     ft.Text(f"📏 Lines Cleared: {lines_cleared}", size=16, color="#94a3b8"),
@@ -443,10 +458,14 @@ def render_tetris(page: ft.Page, scores, load_scores):
                 notify_error(page, f"Error restarting: {ex}")
 
         def start_game(e=None):
-            nonlocal running, game_thread, paused
+            nonlocal running, game_thread, paused, start_time, elapsed_playtime
             paused = False
             thread_stop_event.clear()
             running = True
+
+            start_time = time.time()          # ⏱ iniciar cronómetro
+            elapsed_playtime = 0.0            # reiniciar contador
+
             reset_game()
             spawn_new_shape()
             notify_success(page, "Game started 🎮")
@@ -463,16 +482,20 @@ def render_tetris(page: ft.Page, scores, load_scores):
             page.update()
 
         def pause_game(e=None):
-            nonlocal paused
-            paused = True
-            show_game_over()
+            nonlocal paused, pause_time, elapsed_playtime, start_time
+            if not paused:
+                paused = True
+                pause_time = time.time()
+                elapsed_playtime += pause_time - start_time   # acumular segundos jugados
+                show_game_over()
 
         def resume_game(e=None):
-            nonlocal paused, running
+            nonlocal paused, running, start_time
             if not running:
                 return
             paused = False
             running = True
+            start_time = time.time()  # reiniciar cronómetro desde el punto actual
             if page.dialog and page.dialog.open:
                 page.dialog.open = False
                 page.update()
