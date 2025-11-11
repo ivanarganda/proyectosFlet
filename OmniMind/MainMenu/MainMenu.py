@@ -207,7 +207,7 @@ def create_modal_games(page):
         bgcolor=ft.colors.with_opacity(0.4, "#000000"),  # fondo translúcido
         padding=ft.padding.all(20),
         border_radius=ft.border_radius.all(20),
-        visible=True,  # lo mantenemos en el stack, pero invisible hasta que se muestre  TODO desabilitar
+        visible=False, 
         expand=True,
     )
     return modal_games

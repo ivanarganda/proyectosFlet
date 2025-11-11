@@ -513,7 +513,7 @@ def tasks():
                     """SELECT *
                        FROM list_tasks lt
                        WHERE lt.id_user = ?
-                       --AND date(lt.created_at) = date('now','localtime')
+                       AND date(lt.created_at) = date('now','localtime')
                        ORDER BY lt.created_at DESC
                        LIMIT 3""",
                     (id_user,),

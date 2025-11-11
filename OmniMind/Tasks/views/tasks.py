@@ -1,7 +1,36 @@
 import flet as ft
 from helpers.utils import log_error
+import asyncio
+import requests_async as request
+import json
+from params import HEADERS, REQUEST_URL
+from middlewares.auth import middleware_auth 
+
+tasks_data = []
+headers = HEADERS
+token = None
+
+async def render_today_tasks(): # TODO pending to develop
+    global tasks_data
+    tasks_data.clear()
+    async def load_today_tasks():
+        global headers, token
+        headers = HEADERS.copy()
+        headers["Authorization"] = f"Bearer {token}"
+
+        response = await request.get(f"{REQUEST_URL}/tasks", headers=headers )
+        return response
+    tasks_data = asyncio.create_task( load_today_tasks() )
+    
+    if data.get("status") == 200:
+        for key, item in enumerate( data.get("message")):
+            pass
+
 
 def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True):
+    global tasks_data
+    session = middleware_auth(page)
+    token = session.get("token","")
     """
     Muestra la lista de tareas.
     Si t == "TodayTasks": muestra solo datos básicos (icono, título, completadas...).
