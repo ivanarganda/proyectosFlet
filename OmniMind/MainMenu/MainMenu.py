@@ -15,6 +15,7 @@ from Games.bin.__bin_levels import get_prestige_details, get_player_status
 username = id_user = email = role = expired = token = None
 footer = None
 modal_games = None
+games = []
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -24,18 +25,18 @@ current_path = {
 
 headers = HEADERS
 
-def create_modal_games(page):
+async def render_games(page: ft.Page):
+    global games
+    games.clear()
 
-    async def render_games():
+    async def load_games():
 
-        async def load_games():
+        response = await request.get( f"{REQUEST_URL}/games/scores" , headers=headers  )
+        return response.json()
 
-            response = await request.get( f"{REQUEST_URL}/games/scores" , headers=headers  )
-            return response.json()
+    game_data = asyncio.create_task( load_games() )
 
-        games = []
-
-        game_data = asyncio.create_task( load_games() )
+    try:
 
         data = await game_data 
 
@@ -129,10 +130,16 @@ def create_modal_games(page):
             )
 
         return games
+    except Exception as e:
+        log_error("Render_games",e)
+        return []
 
-    games = asyncio.run(render_games())
+def create_modal_games(page):
+    global modal_games
 
-    return ft.Container(
+    games = asyncio.run(render_games(page))
+
+    modal_games= ft.Container(
         content=ft.Stack(
             [
                 ft.Container(
@@ -203,6 +210,7 @@ def create_modal_games(page):
         visible=True,  # lo mantenemos en el stack, pero invisible hasta que se muestre  TODO desabilitar
         expand=True,
     )
+    return modal_games
 
 
 # ===========================================================
@@ -451,8 +459,36 @@ def list_menu_items(page: ft.Page):
 # ===========================================================
 def swipper_games_modal(page):
     global modal_games
+
     modal_games.visible = not modal_games.visible
-    page.update()
+
+    if modal_games.visible:
+        # 🔁 recargar juegos al abrir el modal
+        new_games = asyncio.run(render_games(page))
+
+        # Buscar el Column dentro del modal
+        stack = modal_games.content  # Stack
+        if not isinstance(stack, ft.Stack):
+            return
+
+        # Buscar el Container principal dentro del Stack
+        container_main = None
+        for ctrl in stack.controls:
+            if isinstance(ctrl, ft.Container) and isinstance(ctrl.content, ft.Column):
+                container_main = ctrl
+                break
+
+        if container_main:
+            column_main = container_main.content
+            # Buscar el Row donde están los juegos
+            for ctrl in column_main.controls:
+                if isinstance(ctrl, ft.Row):
+                    ctrl.controls = new_games
+                    break
+
+        page.update()
+    else:
+        page.update()
 
 
 def safe_route(page, route):

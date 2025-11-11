@@ -631,7 +631,7 @@ def scores():
 
             print("🎮 Game:", id_game, "👤 User:", id_user)
 
-            db.execute_query("UPDATE game_scores SET prestige = ?, level = ?, lines_cleared = ?, duration_seconds = ? score = ?, played_at = ? WHERE game_id = ? and user_id = ?",
+            db.execute_query("UPDATE game_scores SET prestige = ?, level = ?, lines_cleared = ?, duration_seconds = ?, score = ?, played_at = ? WHERE game_id = ? and user_id = ?",
                 ( prestige, level ,lines_cleared, time_elapsed, score, last_played, id_game, id_user )
             )
 

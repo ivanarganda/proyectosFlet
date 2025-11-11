@@ -152,7 +152,7 @@ def get_player_status(prestige: int, score: int, file: str):
 # ========================================
 if __name__ == "__main__":
     level, prestige, low, high, score_local, progress_level, progress_global, global_score, title = get_player_status(
-        1, 900, "tetris_levels.json"
+        1, 7200, "tetris_levels.json"
     )
 
     print(f"""
