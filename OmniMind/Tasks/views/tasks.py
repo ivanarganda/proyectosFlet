@@ -1,57 +1,30 @@
 import flet as ft
+import requests
 from helpers.utils import log_error
-import asyncio
-import requests_async as request
-import json
 from params import HEADERS, REQUEST_URL
-from middlewares.auth import middleware_auth
+import threading
 
 # ==========================================================
-# VARIABLES GLOBALES
+# CARGA SINCRÓNICA DESDE LA API
 # ==========================================================
-tasks_data = []
-headers = HEADERS
-token = None
-
-
-# ==========================================================
-# CARGA DE TAREAS DESDE LA API
-# ==========================================================
-async def render_today_tasks():
-    """Obtiene las tareas de hoy desde la API"""
-    global headers, token
-
-    print( token )
-
-    headers = HEADERS.copy()
-
-    headers["Authorization"] = f"Bearer {token}"
-
+def render_tasks_sync(token, id_category = None):
+    """Devuelve las tareas de hoy en modo síncrono."""
     try:
-        response = await request.get(f"{REQUEST_URL}/tasks", headers=headers)
+        headers = HEADERS.copy()
+        headers["Authorization"] = f"Bearer {token}"
 
-        print( response.json() )
+        category = "" if id_category is None else f"?id={id_category}"
 
-        if response.get("status") == 200:
-            return response.json()
+        response = requests.get(f"{REQUEST_URL}/tasks{category}", headers=headers)
 
-        return {"status": response.get("status"), "message": None}
+        if response.status_code == 200:
+            return response.json()  # { status, message }
+
+        return {"status": response.status_code, "message": None}
 
     except Exception as e:
-        print(f"❌ Error en render_today_tasks: {e}")
+        print(f"❌ Error en render_tasks_sync: {e}")
         return {"status": 500, "message": str(e)}
-
-
-async def get_tasks_data():
-    """Devuelve las tareas desde la API o tareas de ejemplo si falla."""
-    data = await render_today_tasks()
-
-    if data.get("status") == 200 and data.get("message"):
-        return data.get("message")
-
-    # 🔄 MOCK si falla
-    print("⚠️ No hay datos")
-    return []
 
 
 # ==========================================================
@@ -59,15 +32,13 @@ async def get_tasks_data():
 # ==========================================================
 def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, session={}):
 
-    global token
-
-    token = session.get("token") or None
-
-    # Columna inicial
+    token = session.get("token")
     task_container = ft.Column([ft.Text("Cargando tareas...", color="#64748b")])
 
+    print( token )
+
     # ======================================================
-    # COMPONENTE VISUAL: TASK ITEM (DEBE IR *ANTES* DE USARSE)
+    # COMPONENTE VISUAL: TASK ITEM
     # ======================================================
     def task_item(icon, title, completed, color, number_color, number_value,
                   description=None, date=None, author=None):
@@ -81,8 +52,10 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, sessi
             else:
                 expanded.current.height = 0
                 expanded.current.opacity = 0
+
             e.page.update()
 
+        # Mostrar detalles solo en AllTasks
         extra_details = None
         if t == "AllTasks":
             extra_details = ft.Container(
@@ -161,20 +134,51 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, sessi
         )
 
     # ======================================================
-    # FUNCIÓN ASÍNCRONA  (AHORA task_item YA EXISTE)
+    # CARGA DE TAREAS (SINCRÓNICO en hilo)
     # ======================================================
-    async def load_and_render_tasks():
-        data = await get_tasks_data()
-        print("📋 Datos recibidos de la API:", data)
+    def load_and_render_tasks_sync():
+        data = render_tasks_sync(token, id_category=category if t == "TodayTasks" else None)
+        print("📋 Datos recibidos:", data)
 
         task_container.controls.clear()
 
-        if not data:
+        if not data.get("message"):
             task_container.controls.append(
-                ft.Text("⚠️ No hay tareas para hoy.", color="#ef4444")
+                ft.Container(
+                    padding=30,
+                    border_radius=18,
+                    bgcolor="white",
+                    alignment=ft.alignment.center,
+                    shadow=ft.BoxShadow(
+                        blur_radius=25, spread_radius=-10, color="#00000020"
+                    ),
+                    content=ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=12,
+                        controls=[
+                            ft.Icon(
+                                ft.icons.INBOX_OUTLINED,
+                                size=64,
+                                color="#94a3b8"
+                            ),
+                            ft.Text(
+                                "No hay tareas para hoy",
+                                size=18,
+                                weight="bold",
+                                color="#475569"
+                            ),
+                            ft.Text(
+                                "Disfruta el día mientras tanto 😎",
+                                size=14,
+                                color="#64748b",
+                                text_align="center"
+                            ),
+                        ],
+                    ),
+                )
             )
         else:
-            for task in data:
+            for task in data["message"]:
                 task_container.controls.append(
                     task_item(
                         ft.icons.CHECK_CIRCLE_OUTLINED,
@@ -188,13 +192,20 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, sessi
                         task.get("author"),
                     )
                 )
-        task_container.update()
+            pass
+
+    # ======================================================
+    # EJECUTAR CARGA TRAS PRIMER FRAME (NO BLOQUEA UI)
+    # ======================================================
+    load_and_render_tasks_sync()
+
+    # ESTE MÉTODO SIEMPRE EXISTE
     
     # ======================================================
-    # ENCABEZADO Y CONTENEDOR FINAL
+    # CABECERA Y CONTENEDOR FINAL
     # ======================================================
     title_text = (
-        "Today's Task"
+        "Last 3 tasks"
         if t == "TodayTasks"
         else f"All Tasks of the Category {category.get('name', '')}"
     )
@@ -222,8 +233,41 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, sessi
         height=450 if absolute else page.height - 50,
         padding=25,
         shadow=ft.BoxShadow(blur_radius=25, color="#00000033"),
-        content=ft.Column(
-            [title, ft.AnimatedSwitcher(content=task_container)]
+        content=(
+            # ============================================
+            # TODAY TASKS → CON SCROLL
+            # ============================================
+            ft.Column(
+                [
+                    title,
+                    ft.Column(
+                        [ft.AnimatedSwitcher(content=task_container)],
+                        scroll=ft.ScrollMode.AUTO,   # ✔ scroll aquí
+                        expand=True
+                    ),
+                    ft.Divider(height=40)
+                ],
+                expand=True
+            )
+            if t == "TodayTasks"
+            else
+            # ============================================
+            # ALL TASKS → SIN SCROLL
+            # ============================================
+            ft.Column(
+                [
+                    title,
+                    ft.Column([
+                        ft.AnimatedSwitcher(content=task_container, expand=True)
+                    ],
+                    scroll=ft.ScrollMode.AUTO
+                    )
+                    
+                ],
+                expand=True
+            )
         ),
         **pos_props
     )
+
+

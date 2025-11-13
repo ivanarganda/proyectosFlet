@@ -45,23 +45,12 @@ def loadDetailsCategory(page: ft.Page, category):
         page.vertical_alignment = ft.MainAxisAlignment.START
 
         # --- Lista de tareas ---
-        tasks_section = ft.Container(
-            bgcolor="white",
-            border_radius=25,
-            padding=ft.padding.all(20),
-            margin=ft.margin.symmetric(horizontal=15),
-            shadow=ft.BoxShadow(blur_radius=20, spread_radius=-5, color="#00000015"),
-            content=ft.Column(
-                [
-                    ListTasks(
-                        page=page,
-                        t="AllTasks",
-                        category=category,
-                        absolute=False,
-                    ),
-                ],
-                spacing=15,
-            ),
+        tasks_section = ListTasks(
+            page=page,
+            t="AllTasks",
+            category=category,
+            session={"username": user_session, "token": token_session},
+            absolute=False,
         )
 
         # --- Footer fijo ---
@@ -78,8 +67,6 @@ def loadDetailsCategory(page: ft.Page, category):
                             ft.Container(
                                 expand=True,
                                 content=ft.ListView(
-                                    spacing=20,
-                                    padding=ft.padding.only(bottom=100),
                                     controls=[tasks_section],
                                 ),
                             ),
