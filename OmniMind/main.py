@@ -210,7 +210,7 @@ def main(page: ft.Page):
 
     if is_logged_in:
         print("✅ Sesión activa. Cargando menú principal...")
-        page.go("/menu")
+        page.go("/tasks")
     else:
         print("⚠️ No hay sesión activa. Redirigiendo al login...")
         page.go("/")

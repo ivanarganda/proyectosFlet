@@ -94,7 +94,7 @@ def InitTasksCategories(page: ft.Page):
         ),
     )
 
-    content_area = ListTasks(page=ft.Page)  # List tasks
+    content_area = ListTasks(page=ft.Page, session={ "username":user_session, "token": token_session })  # List tasks
 
     background = [backwallpaper, content_area, header]
     return background

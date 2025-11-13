@@ -4,92 +4,76 @@ import asyncio
 import requests_async as request
 import json
 from params import HEADERS, REQUEST_URL
-from middlewares.auth import middleware_auth 
+from middlewares.auth import middleware_auth
 
+# ==========================================================
+# VARIABLES GLOBALES
+# ==========================================================
 tasks_data = []
 headers = HEADERS
 token = None
 
-async def render_today_tasks(): # TODO pending to develop
-    global tasks_data
-    tasks_data.clear()
-    async def load_today_tasks():
-        global headers, token
-        headers = HEADERS.copy()
-        headers["Authorization"] = f"Bearer {token}"
 
-        response = await request.get(f"{REQUEST_URL}/tasks", headers=headers )
-        return response
-    tasks_data = asyncio.create_task( load_today_tasks() )
-    
-    if data.get("status") == 200:
-        for key, item in enumerate( data.get("message")):
-            pass
+# ==========================================================
+# CARGA DE TAREAS DESDE LA API
+# ==========================================================
+async def render_today_tasks():
+    """Obtiene las tareas de hoy desde la API"""
+    global headers, token
+
+    print( token )
+
+    headers = HEADERS.copy()
+
+    headers["Authorization"] = f"Bearer {token}"
+
+    try:
+        response = await request.get(f"{REQUEST_URL}/tasks", headers=headers)
+
+        print( response.json() )
+
+        if response.get("status") == 200:
+            return response.json()
+
+        return {"status": response.get("status"), "message": None}
+
+    except Exception as e:
+        print(f"❌ Error en render_today_tasks: {e}")
+        return {"status": 500, "message": str(e)}
 
 
-def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True):
-    global tasks_data
-    session = middleware_auth(page)
-    token = session.get("token","")
-    """
-    Muestra la lista de tareas.
-    Si t == "TodayTasks": muestra solo datos básicos (icono, título, completadas...).
-    Si t == "AllTasks": permite hacer slide down para ver detalles (descripción, fecha, autor).
-    """
+async def get_tasks_data():
+    """Devuelve las tareas desde la API o tareas de ejemplo si falla."""
+    data = await render_today_tasks()
 
-    # --- Validación del tipo ---
-    types_ = ["TodayTasks", "AllTasks"]
-    if t not in types_:
-        log_error(f"Type '{t}' not recognized in ListTasks. Defaulting to 'TodayTasks'.")
-        t = "TodayTasks"
+    if data.get("status") == 200 and data.get("message"):
+        return data.get("message")
 
-    # --- Componente visual: Task Item ---
+    # 🔄 MOCK si falla
+    print("⚠️ No hay datos")
+    return []
+
+
+# ==========================================================
+# COMPONENTE PRINCIPAL
+# ==========================================================
+def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True, session={}):
+
+    global token
+
+    token = session.get("token") or None
+
+    # Columna inicial
+    task_container = ft.Column([ft.Text("Cargando tareas...", color="#64748b")])
+
+    # ======================================================
+    # COMPONENTE VISUAL: TASK ITEM (DEBE IR *ANTES* DE USARSE)
+    # ======================================================
     def task_item(icon, title, completed, color, number_color, number_value,
                   description=None, date=None, author=None):
-        # Contenedor principal de la tarea
-        base_row = ft.Row(
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            vertical_alignment=ft.CrossAxisAlignment.CENTER,
-            controls=[
-                ft.Row(
-                    spacing=15,
-                    controls=[
-                        ft.Container(
-                            content=ft.Icon(icon, color="white", size=22),
-                            width=48,
-                            height=48,
-                            border_radius=15,
-                            bgcolor=color,
-                            alignment=ft.alignment.center,
-                        ),
-                        ft.Column(
-                            spacing=3,
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            controls=[
-                                ft.Text(title, weight="bold", size=15, color="#1E1E1E"),
-                                ft.Text(f"{completed} Completed", size=12, color="#8E8E93"),
-                            ],
-                        ),
-                    ],
-                ),
-                ft.Container(
-                    content=ft.Text(
-                        str(number_value),
-                        color="white",
-                        weight="bold",
-                        size=14,
-                        text_align=ft.TextAlign.CENTER,
-                    ),
-                    width=30,
-                    height=30,
-                    border_radius=8,
-                    bgcolor=number_color,
-                    alignment=ft.alignment.center,
-                ),
-            ],
-        )
-        """Crea una tarjeta de tarea, con o sin detalles expandibles."""
+
         expanded = ft.Ref[ft.Container]()
+
         def toggle_expand(e):
             if expanded.current.height == 0:
                 expanded.current.height = None
@@ -98,8 +82,7 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True):
                 expanded.current.height = 0
                 expanded.current.opacity = 0
             e.page.update()
-    
-        # --- Si es AllTasks: añadimos bloque expandible ---
+
         extra_details = None
         if t == "AllTasks":
             extra_details = ft.Container(
@@ -113,161 +96,134 @@ def ListTasks(page: ft.Page, t="TodayTasks", category=None, absolute=True):
                     spacing=3,
                     alignment=ft.MainAxisAlignment.START,
                     controls=[
-                        ft.Text(f"📝 {description or 'No description'}", size=13, color="black"),
-                        ft.Text(f"📅 {date or 'No date'}", size=13, color="black"),
-                        ft.Text(f"👤 {author or 'Unknown'}", size=13, color="black"),
+                        ft.Text(f"📝 {description or 'No description'}", size=13),
+                        ft.Text(f"📅 {date or 'No date'}", size=13),
+                        ft.Text(f"👤 {author or 'Unknown'}", size=13),
                     ],
                 ),
             )
 
-        # --- Contenedor con animación y sombra ---
-        container = ft.Container(
+        return ft.Container(
             on_click=toggle_expand if t == "AllTasks" else None,
-            content=ft.Column(
-                controls=[base_row] + ([extra_details] if extra_details else []),
-            ),
             padding=ft.padding.symmetric(vertical=8, horizontal=10),
             margin=ft.margin.symmetric(vertical=5),
             border_radius=12,
             bgcolor="white",
             shadow=ft.BoxShadow(blur_radius=15, spread_radius=-5, color="#00000025"),
             ink=True,
-        )
-
-        return container
-
-    # --- Título dinámico ---
-    title_text = (
-        "Today's Task"
-        if t == "TodayTasks"
-        else f"All Tasks of the Category {category.get('name', '') if isinstance(category, dict) else ''}"
-    )
-
-    if t == "TodayTasks":
-        title = ft.Container(
-            bgcolor="#1B2453",  # Azul oscuro elegante
-            border_radius=20,
-            padding=ft.padding.all(18),
-            margin=ft.margin.only(bottom=10, top=5),
-            shadow=ft.BoxShadow(
-                blur_radius=15,
-                spread_radius=-5,
-                color=ft.colors.with_opacity(0.2, "#000000"),
-            ),
-            content=ft.Row(
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            content=ft.Column(
                 controls=[
-                    ft.Text(
-                        title_text,
-                        size=20,
-                        weight=ft.FontWeight.BOLD,
-                        color="white",
-                    ),
-                    ft.Icon(ft.icons.TODAY_OUTLINED, color="#8EE9D1", size=24),
-                ],
-            ),
-        )
-    else:
-        title = ft.Container(
-            bgcolor="#1B2453",  # Azul oscuro elegante
-            border_radius=20,
-            padding=ft.padding.all(18),
-            margin=ft.margin.only(bottom=10, top=5),
-            shadow=ft.BoxShadow(
-                blur_radius=15,
-                spread_radius=-5,
-                color=ft.colors.with_opacity(0.2, "#000000"),
-            ),
-            content=ft.Row(
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.Column(
-                        alignment=ft.MainAxisAlignment.START,
-                        spacing=4,
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         controls=[
-                            ft.Text(
-                                "You are on Track",
-                                size=17,
-                                weight=ft.FontWeight.BOLD,
-                                color="white",
-                            ),
                             ft.Row(
-                                spacing=5,
+                                spacing=15,
                                 controls=[
-                                    ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINED, color="#8EE9D1", size=16),
-                                    ft.Text(
-                                        "50% Progress have made",
-                                        size=13,
-                                        color="#D8D8F0",
+                                    ft.Container(
+                                        content=ft.Icon(icon, color="white", size=22),
+                                        width=48,
+                                        height=48,
+                                        border_radius=15,
+                                        bgcolor=color,
+                                        alignment=ft.alignment.center,
+                                    ),
+                                    ft.Column(
+                                        spacing=3,
+                                        controls=[
+                                            ft.Text(title, weight="bold", size=15),
+                                            ft.Text(
+                                                f"{completed} Completed",
+                                                size=12,
+                                                color="#8E8E93",
+                                            ),
+                                        ],
                                     ),
                                 ],
                             ),
+                            ft.Container(
+                                content=ft.Text(
+                                    str(number_value),
+                                    color="white",
+                                    weight="bold",
+                                    size=14,
+                                ),
+                                width=30,
+                                height=30,
+                                border_radius=8,
+                                bgcolor=number_color,
+                                alignment=ft.alignment.center,
+                            ),
                         ],
                     ),
-                    # Fondo decorativo de puntos (como en el diseño)
-                    ft.Container(
-                        width=50,
-                        height=35,
-                        content=ft.Stack(
-                            controls=[
-                                ft.Container(
-                                    bgcolor=ft.colors.with_opacity(0.08, "white"),
-                                    border_radius=50,
-                                )
-                                for _ in range(8)
-                            ],
-                        ),
-                    ),
-                ],
+                    *( [extra_details] if extra_details else [] ),
+                ]
             ),
         )
 
-    tasks_data = [
-        (ft.icons.BRUSH_OUTLINED, "Sketching", 2, "#3DCAB0", "#3DCAB0", 4,
-            "Refinando el boceto inicial", "2025-10-26", "ivan_arganda96"),
-        (ft.icons.TABLE_CHART_OUTLINED, "Wireframing", 0, "#7B68EE", "#D2C8FF", 2,
-            "Definiendo estructura base", "2025-10-25", "pedrin"),
-        (ft.icons.MONITOR_OUTLINED, "Visual Design", 4, "#FF7A3C", "#FF7A3C", 4,
-            "Creación de la UI final", "2025-10-24", "rocio"),
-    ]
+    # ======================================================
+    # FUNCIÓN ASÍNCRONA  (AHORA task_item YA EXISTE)
+    # ======================================================
+    async def load_and_render_tasks():
+        data = await get_tasks_data()
+        print("📋 Datos recibidos de la API:", data)
 
-    tasks = ft.Column(
-        spacing=10,
-        controls=[
-            task_item(*t) for t in tasks_data
-        ],
+        task_container.controls.clear()
+
+        if not data:
+            task_container.controls.append(
+                ft.Text("⚠️ No hay tareas para hoy.", color="#ef4444")
+            )
+        else:
+            for task in data:
+                task_container.controls.append(
+                    task_item(
+                        ft.icons.CHECK_CIRCLE_OUTLINED,
+                        task.get("title", "Sin título"),
+                        task.get("completed", 0),
+                        "#3DCAB0",
+                        "#3DCAB0",
+                        task.get("total", 0),
+                        task.get("description"),
+                        task.get("due_date"),
+                        task.get("author"),
+                    )
+                )
+        task_container.update()
+    
+    # ======================================================
+    # ENCABEZADO Y CONTENEDOR FINAL
+    # ======================================================
+    title_text = (
+        "Today's Task"
+        if t == "TodayTasks"
+        else f"All Tasks of the Category {category.get('name', '')}"
     )
 
-    # --- Contenedor principal inferior ---
+    title = ft.Container(
+        bgcolor="#1B2453",
+        border_radius=20,
+        padding=ft.padding.all(18),
+        margin=ft.margin.only(bottom=10, top=5),
+        shadow=ft.BoxShadow(blur_radius=15, spread_radius=-5, color="#00000033"),
+        content=ft.Row(
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            controls=[
+                ft.Text(title_text, size=20, weight="bold", color="white"),
+                ft.Icon(ft.icons.TODAY_OUTLINED, color="#8EE9D1"),
+            ],
+        ),
+    )
+
     pos_props = {"bottom": 0, "left": 0, "right": 0} if absolute else {}
+
     return ft.Container(
         bgcolor="#F6F4FB",
         border_radius=ft.border_radius.only(top_left=30, top_right=30),
         height=450 if absolute else page.height - 50,
-        alignment=ft.alignment.top_center,
-        shadow=ft.BoxShadow(
-            spread_radius=-10,
-            blur_radius=25,
-            color=ft.colors.with_opacity(0.3, "#000000"),
-        ),
+        padding=25,
+        shadow=ft.BoxShadow(blur_radius=25, color="#00000033"),
         content=ft.Column(
-            [
-                ft.Container(
-                    content=title,
-                    padding=ft.padding.only(top=25, bottom=10),
-                    alignment=ft.alignment.center_left,
-                ),
-                ft.AnimatedSwitcher(
-                    content=tasks,
-                    transition=ft.AnimatedSwitcherTransition.FADE,
-                    duration=500,
-                    reverse_duration=300,
-                ),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            [title, ft.AnimatedSwitcher(content=task_container)]
         ),
-        padding=ft.padding.only(left=25, right=25, bottom=20),
         **pos_props
     )
