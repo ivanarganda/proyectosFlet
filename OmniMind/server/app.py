@@ -498,11 +498,27 @@ def tasks():
             print("id_category:", id_category)  # Debugging line
             if id_category:
                 print("Category specified, fetching tasks for category:", id_category)
-                db.execute_query(
-                    """SELECT *
-                       FROM list_tasks lt
-                       WHERE lt.id_user = ? AND lt.id_category = ?""",
-                    (id_user, id_category),
+                page = request.args.get("page", None)
+                print("Pagination parameter:", page)  # Debugging line
+                limit = request.args.get("limit", None)
+                print("Limit parameter:", limit)  # Debugging line
+                    # Mostrar todas las tareas de la categoría especificada
+                if page and limit:
+                    offset = (int(page) - 1) * int(limit)
+                    db.execute_query(
+                        """SELECT *
+                           FROM list_tasks lt
+                           WHERE lt.id_user = ? AND lt.id_category = ?
+                           ORDER BY lt.created_at DESC
+                           LIMIT ? OFFSET ?""",
+                        (id_user, id_category, int(limit), offset),
+                    )
+                else:
+                    db.execute_query(
+                        """SELECT *
+                           FROM list_tasks lt
+                           WHERE lt.id_user = ? AND lt.id_category = ?""",
+                        (id_user, id_category),
                 )
                 result = db.fetch_all()
                 return parse_json_response(result, 200)
@@ -525,57 +541,77 @@ def tasks():
         if request.method == "POST":
 
             data = request.json
-            title = data.get("title")
-            description = data.get("description", "")
+            print("Request JSON:", data)
+
+            content = data.get("content", {})
+
+            title = content.get("title")
+            description = content.get("description", "")
             id_category = data.get("id_category")
 
             if not title or not id_category:
                 raise Exception("Title and category required")
 
-            # icono y color tambien
-            icon = data.get("icon", None)
-            color = data.get("color", None)
+            icon = content.get("icon")
+            color = content.get("color")
+            state = content.get("state", 0)
 
             created_at = datetime.datetime.utcnow().isoformat()
             updated_at = created_at
-            state = data.get("state", 0)
 
-            # Insert nueva tarea con los campos actualizados (incluyendo icon y color)
             db.execute_query(
-                "INSERT INTO tasks (title, description, id_category, created_at, updated_at, state, id_user, icon, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                """
+                INSERT INTO tasks (title, description, id_category, created_at, updated_at, state, id_user, icon, color)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
                 (title, description, id_category, created_at, updated_at, state, id_user, icon, color)
             )
 
             return parse_json_response("Task created successfully", 201)
 
+
         # PUT → actualizar tarea
         if request.method == "PUT":
             data = request.json
-            id_task = data.get("id")
-            content = data.get("content")
-            id_category = data.get("id_category")
+            print("PUT JSON:", data)
+
+            id_task = request.args.get("id")
 
             if not id_task:
                 raise Exception("Task ID required")
 
+            # Recuperar campos desde "content"
+            title = data.get("title")
+            description = data.get("description", "")
+            state = data.get("state", 0)
+
+            updated_at = datetime.datetime.utcnow().isoformat()
+
             db.execute_query(
-                """UPDATE tasks 
-                   SET content = ?, id_category = ? 
-                   WHERE id = ? AND id_user = ?""",
-                (content, id_category, id_task, id_user),
+                """
+                UPDATE tasks
+                SET 
+                    title = ?, 
+                    description = ?, 
+                    state = ?, 
+                    updated_at = ?
+                WHERE id = ? AND id_user = ?
+                """,
+                (title, description, state, updated_at, id_task, id_user)
             )
+
             return parse_json_response("Task updated successfully", 200)
+
 
         # DELETE → eliminar tarea
         if request.method == "DELETE":
-            data = request.json
-            id_task = data.get("id")
+            id_task = request.args.get("id")
             if not id_task:
                 raise Exception("Task ID required")
 
             db.execute_query(
-                "DELETE FROM tasks WHERE id = ? AND id_user = ?",
-                (id_task, id_user),
+                "DELETE FROM tasks WHERE id = ?",
+                (id_task,),
             )
             return parse_json_response("Task deleted successfully", 200)
 

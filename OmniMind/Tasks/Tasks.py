@@ -26,7 +26,7 @@ token_session = None
 # --------------------------
 # UI: Lista de tareas
 # --------------------------
-def InitTasksCategories(page: ft.Page):
+def InitTasksCategories(page:ft.Page):
     input_search = ft.Container(input_search_field)
 
     # Fondo superior degradado
@@ -94,7 +94,7 @@ def InitTasksCategories(page: ft.Page):
         ),
     )
 
-    content_area = ListTasks(page=ft.Page, session={ "username":user_session, "token": token_session })  # List tasks
+    content_area = ListTasks(page, session={ "username":user_session, "token": token_session })  # List tasks
 
     background = [backwallpaper, content_area, header]
     return background
@@ -102,14 +102,14 @@ def InitTasksCategories(page: ft.Page):
 # --------------------------
 # Navegación
 # --------------------------
-def viewDetailsCategory(page=ft.Page, t="AllTasks", category=None):
+def viewDetailsCategory(page:ft.Page, t="AllTasks", category=None):
     try:
         page.go(f"/category/details/{category}")
     except Exception as e:
         log_error("viewDetailsCategory", e)
         loadSnackbar(page, "❌ Error navigating to category details.", "red")
 
-def addTask(page, id_category):
+def addTask(page:ft.Page, id_category):
     try:
         page.go(f"/tasks/create/{id_category}")
     except Exception as e:
@@ -117,7 +117,7 @@ def addTask(page, id_category):
         loadSnackbar(page, "❌ Error navigating to task creation.", "red")
 
 
-def addCategory(page):
+def addCategory(page:ft.Page):
     try:
         page.go("/category/create")
     except Exception as e:
@@ -128,7 +128,7 @@ def addCategory(page):
 # --------------------------
 # Render principal
 # --------------------------
-def RenderTasks(page: ft.Page):
+def RenderTasks(page:ft.Page):
     global user_session, token_session
 
     try:

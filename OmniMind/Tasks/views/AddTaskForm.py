@@ -1,5 +1,3 @@
-# AddTaskForm.py — versión final con preview ampliada y botón inferior
-
 import os
 import flet as ft
 from datetime import datetime
@@ -14,6 +12,7 @@ import asyncio
 import requests_async as request
 import json
 from params import *
+
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -46,16 +45,8 @@ def AddTaskForm(page: ft.Page, id_category=None):
     # --- CAMPOS -------------------------------------------------------------
     txt_title = setInputField("text", label="Task title")
 
-    txt_description = ft.TextField(
-        label="Task description",
-        multiline=True,
-        border_radius=12,
-        bgcolor="#FFFFFF",
-        border_color="#E0E0E0",
-        prefix_icon=ft.icons.DESCRIPTION,
-        height=100,         # fixed visible area
-        expand=False,       # prevent expansion
-        max_lines=None,     # allows unlimited typing, internal scroll appears automatically
+    txt_description = MarkdownEditor(
+        on_change=lambda value: set_description(value)
     )
 
     # --- PREVIEW ------------------------------------------------------------

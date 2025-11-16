@@ -78,6 +78,8 @@ def loadDetailsCategory(page: ft.Page, category):
             ],
         )
 
+        page.update()
+
         return addElementsPage(page, [stack])
 
     except Exception as e:

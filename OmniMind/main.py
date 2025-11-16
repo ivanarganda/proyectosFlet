@@ -101,11 +101,13 @@ def route_change(e: ft.RouteChangeEvent):
 
         # === TASKS ===
         elif route == "/tasks":
+            page.views.clear()
             if not is_logged_in:
-                page.views.append(ft.View("/tasks", [ft.Text("")]))
+                page.views.append(ft.View("/tasks", controls=[ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
-                page.views.append(ft.View("/tasks", [RenderTasks(page)]))
+                page.views.append(ft.View("/tasks", controls=[RenderTasks(page)]))
+            page.update()
 
         elif page.route.startswith("/category/create"):
             if not is_logged_in:
