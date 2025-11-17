@@ -1,0 +1,14 @@
+/dist
+*.egg-info
+__pycache__/
+*.toml
+*.log
+.vscode/
+.idea/
+.env
+__pypackages__/
+.mypy_cache/
+.pytest_cache/
+.cache/
+.DS_Store
+*.in
