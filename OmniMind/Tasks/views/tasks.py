@@ -40,7 +40,7 @@ def render_tasks_sync(token, t, id_category=None, page_num=1, limit=5):
 # ==========================================================
 # COMPONENTE PRINCIPAL
 # ==========================================================
-def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, session={}):
+def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, session={}, callbacks={}):
 
     token = session.get("token")
     task_container = ft.Column([ft.Text("Loading tasks...", color="#64748b")])
@@ -155,6 +155,11 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
             }
         }
 
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}"
+        }
+
         return ft.Container(
             on_click=toggle_expand if t == "AllTasks" else None,
             padding=ft.padding.symmetric(vertical=8, horizontal=10),
@@ -172,15 +177,16 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
                     request_url={
                         "delete": {
                             "url":f"{REQUEST_URL}/tasks?id={item.get('id')}",
-                            "token":token
+                            "headers":headers
                         },
                         "edit": {
                             "url":f"{REQUEST_URL}/tasks?id={item.get('id')}",
-                            "token":token
+                            "headers":headers
                         }
                     },
                     alias="task",
-                    callback=load_and_render_tasks_sync
+                    callback=load_and_render_tasks_sync,
+                    callbacks=callbacks
                 )
             ]),
         )

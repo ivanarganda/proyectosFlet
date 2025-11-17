@@ -10,26 +10,131 @@ def PopupMenuButton(
     alias: str = "item",
     request_url: dict = None,
     callback=None, # función a ejecutar tras confirmar acción
+    callbacks={}
 ):
 
     fields = []
 
     def on_change_field(e, key):
-       pass
+        pass
 
+    def parse_callbak_source( source, cb ):
+        import re
+        if source == "":
+            print("Warning: Callback source code is empty.")
+            return False
+        for src_line in list(source.split('\n')):
+            if "def" not in src_line and f"{cb.get("function").__name__}" not in src_line:
+                if not re.match( r"^[A-Za-z_][A-Za-z0-9_]*\.controls\.clear\(\)$", src_line.strip() ) \
+                or not re.match( r"^[A-Za-z_][A-Za-z0-9_]*\.controls\.append\(.+\)$", src_line.strip() ) \
+                or "page.update()" in src_line.strip():
+                    return {
+                        "function": cb.get("function"),
+                        "args": cb.get("args", [])
+                    } , cb
+        return False
+
+    async def parse_request_url(request_url, action, json_data=None):
+
+        requestes = [
+            request.delete,
+            request.put,
+            request.post,
+            request.get,
+        ]
+
+        actions = request_url.keys()
+        methods = {}
+        
+        for req in requestes:
+            for act in actions:
+                if act == action:
+                    methods[act] = req
+
+        if not isinstance(request_url, dict):
+            print("Invalid request_url format.")
+            return None
+
+        if action not in actions:
+            print("Invalid action.")
+            return None
+        # Obtener configuración de la acción
+        config = request_url.get(action)
+        if not config:
+            print(f"Missing '{action}' configuration.")
+            return None
+
+        url = config.get("url")
+        headers = config.get("headers", {})
+        token = config.get("token")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        method = methods[action]  # obtener la función correcta
+        # Ejecutar async request (SIN json.dumps)
+        response = await method(url, json=json_data, headers=headers)
+        return response
+
+        
+
+    def get_context_callback(function):
+        import ast, inspect, textwrap
+        source = inspect.getsource(function)
+        source = textwrap.dedent(source)
+        tree = ast.parse(source)
+        calls = []
+        updates_ui = False
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                try:
+                    if isinstance(node.func, ast.Attribute):
+                        calls.append(
+                            f"{node.func.value.id}.{node.func.attr}"
+                        )
+                        if node.func.attr == "update":
+                            updates_ui = True
+                    elif isinstance(node.func, ast.Name):
+                        calls.append(node.func.id)
+                except:
+                    continue
+        return {
+            "function_name": function.__name__,
+            "calls": calls,
+            "updates_ui": updates_ui,
+            "source": source
+        }
     # ------------------------------
     # Cerrar diálogo
     # ------------------------------
     def close_dialog(e):
+        import re
         dlg = e.page.dialog
         dlg.open = False
+        excecutable = True
+        callbacks_to_execute = {}
         if callback:
             callback()
-        e.page.update()
+        if callbacks:
+            for cb in callbacks.values():
+                cb.get("function")(*cb.get("args", []))
+                buffer_value_callback = get_context_callback(cb.get("function"))
+                
+                if isinstance(buffer_value_callback, dict):
+                    source = buffer_value_callback.get("source", "")
+                    parsed_callback, cb = parse_callbak_source( source, cb )
+                    if not parsed_callback:
+                        continue
+                    callbacks_to_execute[ cb.get("function") ] = parsed_callback
+                else:
+                    print("Warning: Callback context could not be retrieved.")
+                    continue
+        
+        print("Callbacks to execute:", callbacks_to_execute)
+        if callbacks_to_execute:
+            for cb_exec in callbacks_to_execute.values():
+                cb_exec.get("function")(*cb_exec.get("args", []))
+            e.page.update()
 
-    # ------------------------------
-    # Callbacks por defecto
-    # ------------------------------
     def default_on_callback():
         print("Default callback executed.")
 
@@ -40,31 +145,19 @@ def PopupMenuButton(
     def delete(ev):
         async def send_delete_request(json_data):
             # Aquí iría la lógica para enviar la solicitud HTTP
-            response = await request.delete(
-                request_url["delete"].get("url"),
-                headers={"Content-Type": "application/json", "Authorization": f"Bearer {request_url['delete'].get('token', '')}"}
-            )
-            print("Response status:", response.status_code)
+            response = await parse_request_url(request_url, "delete", json_data)
             return response.json()
 
         if request_url and "delete" in request_url:
             response = asyncio.run(send_delete_request({}))
             print("Response data:", response)
-            if callback:
-                callback()
-            ev.page.update()
         else:
             print("No delete URL provided.")
 
     def edit(ev):
         async def send_edit_request(json_data):
             # Aquí iría la lógica para enviar la solicitud HTTP
-            response = await request.put(
-                request_url["edit"].get("url"),
-                headers={"Content-Type": "application/json", "Authorization": f"Bearer {request_url['edit'].get('token', '')}"},
-                data=json.dumps(json_data),
-            )
-            print("Response status:", response.status_code)
+            response = await parse_request_url(request_url, "edit", json_data)
             return response.json()
 
         if request_url and "edit" in request_url:
@@ -82,16 +175,13 @@ def PopupMenuButton(
             for key in json_data:
                 for k, value in value_options_dropdown.items():
                     if key == k and json_data[key]:
-                        value = str(json_data[key])
+                        value = json_data[key]
                         if value in value_options_dropdown[k]:
                             json_data[key] = (value_options_dropdown[k].index(value))
 
             # hacerlo asincrono que no bloquee la UI
             response = asyncio.run(send_edit_request(json_data))
             print("Response data:", response)
-            if callback:
-                callback()
-            ev.page.update()
 
         else:
             print("No edit URL provided.")

@@ -45,8 +45,17 @@ def AddTaskForm(page: ft.Page, id_category=None):
     # --- CAMPOS -------------------------------------------------------------
     txt_title = setInputField("text", label="Task title")
 
-    txt_description = MarkdownEditor(
-        on_change=lambda value: set_description(value)
+    txt_description = ft.TextField(
+        label="Task description",
+        multiline=True,
+        min_lines=4,
+        max_lines=8,
+        width=360,
+        border_radius=10,
+        bgcolor="#FAFAFA",
+        focused_border_color="#4e73df",
+        cursor_color="#4e73df",
+        text_style=ft.TextStyle(size=15),
     )
 
     # --- PREVIEW ------------------------------------------------------------

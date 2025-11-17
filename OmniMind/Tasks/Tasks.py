@@ -27,6 +27,17 @@ token_session = None
 # UI: Lista de tareas
 # --------------------------
 def InitTasksCategories(page:ft.Page):
+    global categories_container
+
+    categories_container = ft.Column(controls=[])
+
+    def refresh_categories():
+        categories_container.controls.clear()
+        categories_container.controls.append(
+            loadTasksCategories(page, token_session, viewDetailsCategory, addTask, addCategory)
+        )
+        page.update()
+
     input_search = ft.Container(input_search_field)
 
     # Fondo superior degradado
@@ -89,16 +100,22 @@ def InitTasksCategories(page:ft.Page):
                     shadow=ft.BoxShadow(blur_radius=12, color="#00000030"),
                 ),
                 ft.Divider(height=20, color="transparent"),
-                loadTasksCategories(page, token_session, viewDetailsCategory, addTask, addCategory)
+                categories_container
             ]
         ),
     )
 
-    content_area = ListTasks(page, session={ "username":user_session, "token": token_session })  # List tasks
+    refresh_categories()
+
+    content_area = ListTasks(page, session={ "username":user_session, "token": token_session }, callbacks={
+        "load_categories": {
+            "function": refresh_categories,
+            "args": []
+        }
+    })  # List tasks
 
     background = [backwallpaper, content_area, header]
     return background
-
 # --------------------------
 # Navegación
 # --------------------------
