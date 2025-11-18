@@ -12,3 +12,4 @@ __pypackages__/
 .cache/
 .DS_Store
 *.in
+LICENSE

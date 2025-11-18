@@ -5,6 +5,15 @@ from jwt import InvalidTokenError
 import math
 from datetime import datetime, timezone, timedelta
 import platform
+from components.PopupMenu import PopupMenuButton # TODO for testing
+# from flet_popupmenu import PopupMenuButton # TODO for production
+from params import HEADERS, REQUEST_URL
+
+states = {
+    0: {"color":"#FFA500", "label":"Pending", "label_color":"#000000", "icon": ft.icons.HOURGLASS_EMPTY , "bg_icon": "#FFB740"},      # Orange
+    1: {"color":"#32CD32", "label":"Completed", "label_color":"#000000", "icon": ft.icons.CHECK_CIRCLE, "bg_icon": "#91D998"},    # Lime Green
+    2: {"color":"#1E90FF", "label":"In progress", "label_color":"#000000", "icon": ft.icons.PLAY_ARROW, "bg_icon": "#54B0FF" }   # Dodger Blue
+}
 
 # ESPECIAL FUNCTIONS
 def get_hostname():
@@ -256,8 +265,13 @@ def build_color_dialog(title: str, initial_hex: str, on_pick):
     )
     return dlg
 
-def setCarrousel(page, nodes, on_view_category, on_add_task):
+def setCarrousel(page, nodes, on_view_category, on_add_task, on_callbacks={}):
+    
     items = []
+
+    headers = HEADERS.copy()
+    token = getSession(page.client_storage.get("user") or "{}").get("token", "")
+    headers["Authorization"] = f"Bearer {token}"
 
     for node in nodes:
         # ---------- 1. Validar y parsear content ----------
@@ -305,6 +319,21 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
         # ---------- 3. Botón de añadir tarea ----------
         id_category_task = node.get("id_category", {}).get("id", None)
         category_name = node.get("category", {}).get("name", None)
+
+        item_to_edit = {
+            "id": {
+                "value": id_category_task,
+                "type": "identifier",
+                "required": True,
+                "disabled": True
+            },
+            "category": {
+                "value": category_name,
+                "type": "text",
+                "disabled": False
+            }
+        }
+
         parts.append(
             ft.Row(
                 [
@@ -345,12 +374,38 @@ def setCarrousel(page, nodes, on_view_category, on_add_task):
             border_radius=20,
             padding=15,
             shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
-            content=ft.Column(
-                parts,
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=5,
-            ),
+            content=ft.Stack(
+                [
+                    ft.Column(
+                        controls=parts,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=5,
+                    ),
+                    PopupMenuButton(
+                        page=page,
+                        id=id_category_task,
+                        item_to_edit=item_to_edit,
+                        alias=f"Category {id_category_task}",
+                        request_url = {
+                            "edit": {
+                                "url":f"{REQUEST_URL}/tasks/categories?id={id_category_task}",
+                                "headers":headers,
+                            },
+                            "delete": { 
+                                "url":f"{REQUEST_URL}//tasks/categories?id={id_category_task}",
+                                "headers":headers,
+                            }
+                        },
+                        callback=None,
+                        callbacks=on_callbacks,
+                        layout={
+                            "top":-10,
+                            "right":-10
+                        }
+                    )
+                ]
+            )
         )
         items.append(card)
 

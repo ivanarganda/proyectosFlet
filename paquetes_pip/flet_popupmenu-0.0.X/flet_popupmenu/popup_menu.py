@@ -7,7 +7,6 @@ import textwrap
 import ast
 import re
 
-
 def PopupMenuButton(
     page: ft.Page,
     id: int,
@@ -15,7 +14,8 @@ def PopupMenuButton(
     alias: str = "item",
     request_url: dict = None,
     callback=None, # función a ejecutar tras confirmar acción
-    callbacks={}
+    callbacks={},
+    layout: dict[str, int|ft.Alignment] = {},
 ):
 
     fields = []
@@ -106,9 +106,7 @@ def PopupMenuButton(
             "updates_ui": updates_ui,
             "source": source
         }
-    # ------------------------------
-    # Cerrar diálogo
-    # ------------------------------
+
     def close_dialog(e):
     
         dlg = e.page.dialog
@@ -189,9 +187,6 @@ def PopupMenuButton(
         else:
             print("No edit URL provided.")
 
-    # ------------------------------
-    # Render de contenido EDITAR
-    # ------------------------------
     def render_edit_dialog():
 
         def render_edit_fields():
@@ -300,9 +295,6 @@ def PopupMenuButton(
             controls=render_edit_fields(),
         )
 
-    # ------------------------------
-    # Render de contenido ELIMINAR
-    # ------------------------------
     def render_delete_dialog():
 
         if item_to_edit is None:
@@ -330,9 +322,6 @@ def PopupMenuButton(
             ],
         )
 
-    # ------------------------------
-    # DIÁLOGO BASE — PROFESIONAL
-    # ------------------------------
     def show_dialog(title, render_callback, on_confirm=None, confirm_text="Accept"):
         dialog = ft.AlertDialog(
             modal=True,
@@ -365,9 +354,6 @@ def PopupMenuButton(
         dialog.open = True
         page.update()
 
-    # ------------------------------
-    # EVENTO EDITAR
-    # ------------------------------
     def on_edit(e):
         print(f"Edit {alias} {id}")
         show_dialog(
@@ -380,9 +366,6 @@ def PopupMenuButton(
             confirm_text="Save changes" if item_to_edit else "Accept",
         )
 
-    # ------------------------------
-    # EVENTO ELIMINAR
-    # ------------------------------
     def on_delete(e):
         print(f"Delete {alias} {id}")
         show_dialog(
@@ -395,26 +378,66 @@ def PopupMenuButton(
             confirm_text="Delete" if item_to_edit else "Accept",
         )
 
-    # ------------------------------
-    # MENU POPUP MODERNO
-    # ------------------------------
+    layout_keys = ["bgcolor", "border_radius", "alignment",
+               "top", "right", "bottom", "left"]
+
+    valid_alignments = {
+        "top_left": ft.alignment.top_left,
+        "top_center": ft.alignment.top_center,
+        "top_right": ft.alignment.top_right,
+        "center_left": ft.alignment.center_left,
+        "center": ft.alignment.center,
+        "center_right": ft.alignment.center_right,
+        "bottom_left": ft.alignment.bottom_left,
+        "bottom_center": ft.alignment.bottom_center,
+        "bottom_right": ft.alignment.bottom_right,
+    }
+
+    args = {}
+
+    for key, value in layout.items():
+        if key not in layout_keys:
+            print(f"⚠️ Unknown layout property '{key}' ignored.")
+        else:
+            args[key] = value
+
+    if "border_radius" not in args:
+        print("⚠️ No border_radius provided, setting default.")
+        args["border_radius"] = ft.border_radius.all(8)
+
+    args["margin"] = ft.margin.only(
+        top=args.get("top", 8),
+        right=args.get("right", 8),
+        bottom=args.get("bottom", 0),
+        left=args.get("left", 0),
+    )
+
+    # Eliminar claves ya usadas en margin
+    for k in ("top", "right", "bottom", "left"):
+        args.pop(k, None)
+    
+    alignment_value = args.pop("alignment", None)
+
+    if alignment_value is None:
+        alignment = ft.alignment.top_right
+    elif isinstance(alignment_value, str) and alignment_value in valid_alignments:
+        alignment = valid_alignments[alignment_value]
+    elif isinstance(alignment_value, ft.Alignment):
+        alignment = alignment_value
+    else:
+        print("⚠️ Invalid alignment value. Using top_right.")
+        alignment = ft.alignment.top_right
+
+    args["alignment"] = alignment
+
     return ft.Container(
         content=ft.PopupMenuButton(
             icon=ft.icons.MORE_VERT,
             tooltip="Options",
             items=[
-                ft.PopupMenuItem(
-                    text="Edit",
-                    icon=ft.icons.EDIT,
-                    on_click=on_edit,
-                ),
-                ft.PopupMenuItem(
-                    text="Delete",
-                    icon=ft.icons.DELETE_OUTLINE,
-                    on_click=on_delete,
-                ),
+                ft.PopupMenuItem(text="Edit", icon=ft.icons.EDIT, on_click=on_edit),
+                ft.PopupMenuItem(text="Delete", icon=ft.icons.DELETE_OUTLINE, on_click=on_delete),
             ],
         ),
-        alignment=ft.alignment.top_right,
-        margin=ft.margin.only(top=8, right=8),
+        **args
     )

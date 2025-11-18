@@ -1,21 +1,13 @@
 import flet as ft
 import requests
-from helpers.utils import log_error
+from helpers.utils import log_error, states
 from params import HEADERS, REQUEST_URL
 import threading
 from components.Pagination import PaginationComponent
-# from components.PopupMenu import PopupMenuButton
-from flet_popupmenu import PopupMenuButton
+from components.PopupMenu import PopupMenuButton
+# from flet_popupmenu import PopupMenuButton
 
-states = {
-    0: {"color":"#FFA500", "label":"Pending", "label_color":"#000000", "icon": ft.icons.HOURGLASS_EMPTY , "bg_icon": "#FFB740"},      # Orange
-    1: {"color":"#32CD32", "label":"Completed", "label_color":"#000000", "icon": ft.icons.CHECK_CIRCLE, "bg_icon": "#91D998"},    # Lime Green
-    2: {"color":"#1E90FF", "label":"In progress", "label_color":"#000000", "icon": ft.icons.PLAY_ARROW, "bg_icon": "#54B0FF" }   # Dodger Blue
-}
 
-# ==========================================================
-# CARGA SINCRÓNICA DESDE LA API
-# ==========================================================
 def render_tasks_sync(token, t, id_category=None, page_num=1, limit=5):
     """Devuelve las tareas de hoy en modo síncrono."""
     
@@ -38,9 +30,7 @@ def render_tasks_sync(token, t, id_category=None, page_num=1, limit=5):
         print(f"❌ Error en render_tasks_sync: {e}")
         return {"status": 500, "message": str(e)}
 
-# ==========================================================
-# COMPONENTE PRINCIPAL
-# ==========================================================
+
 def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, session={}, callbacks={}):
 
     token = session.get("token")
@@ -53,9 +43,7 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
     current_page_ref = [1] # use page for pagination component
     pages_ref = [pages] # use pages for pagination component
 
-    # ======================================================
-    # COMPONENTE VISUAL: TASK ITEM
-    # ======================================================
+    
     def task_item(item, icon, title, status, color, number_color, number_value,
                   description=None, date=None, author=None):
 
@@ -187,14 +175,12 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
                     },
                     alias="task",
                     callback=load_and_render_tasks_sync,
-                    callbacks=callbacks
+                    callbacks=callbacks,
+                    layout={}
                 )
             ]),
         )
 
-    # ======================================================
-    # CARGA DE TAREAS (SINCRÓNICO en hilo)
-    # ======================================================
     def load_and_render_tasks_sync():
 
         nonlocal current_page, pages
@@ -270,9 +256,6 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
                         )
                     )
 
-    # ======================================================
-    # EJECUTAR CARGA TRAS PRIMER FRAME (NO BLOQUEA UI)
-    # ======================================================
     load_and_render_tasks_sync()
 
     # ESTE MÉTODO SIEMPRE EXISTE
@@ -284,9 +267,6 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
             load_and_render_tasks_sync
         )
     
-    # ======================================================
-    # CABECERA Y CONTENEDOR FINAL
-    # ======================================================
     title_text = (
         "Last 3 tasks"
         if t == "TodayTasks"
@@ -317,9 +297,7 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
         padding=25,
         shadow=ft.BoxShadow(blur_radius=25, color="#00000033"),
         content=(
-            # ============================================
-            # TODAY TASKS → CON SCROLL
-            # ============================================
+            
             ft.Column(
                 [
                     title,
@@ -334,9 +312,7 @@ def ListTasks(page:ft.Page, t="TodayTasks", category=None, absolute=True, sessio
 
             if t == "TodayTasks"
             else
-            # ============================================
-            # ALL TASKS → SIN SCROLL
-            # ============================================
+            
             ft.Column(
                 [
                     ft.Container(

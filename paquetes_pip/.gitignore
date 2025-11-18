@@ -1,0 +1,12 @@
+init_files.py
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.vscode/
+.idea/
+venv/
+env/
+pip-wheel-metadata/
+dist/
+build/

@@ -1,6 +1,6 @@
 ## DISPONIBLE EN INGLES Y ESPAÑOL
 
-# (VERSION INGLES) #
+# (VERSION INGLES)
 
 # Flet Popup Menu
 
@@ -18,14 +18,15 @@ pip install flet_popupmenu
 
 ## Import
 
-``` python
+```python
 from flet_popupmenu import PopupMenuButton
 ```
 
 ## Use
 
 - Initialize function called "PopupMenuButton" whose arguments are:
-``` python
+
+```python
 def PopupMenuButton(
     page: ft.Page,
     id: int,
@@ -60,7 +61,8 @@ If provided → the popup shows a form for editing the item.
 If omitted → the “edit” option is disabled automatically.
 
 Structure example:
-``` python 
+
+```python
 item_to_edit = {
     "title":  { "value": "Task A", "type": "text" },
     "state":  {
@@ -70,6 +72,7 @@ item_to_edit = {
     }
 }
 ```
+
 If your item has no editable fields → simply pass None
 
 🟡 alias: str = "item" (optional)
@@ -95,7 +98,7 @@ Defines URLs for:
 
 Structure:
 
-``` python
+```python
 
 request_url = {
     "delete": {
@@ -109,6 +112,7 @@ request_url = {
 }
 
 ```
+
 If omitted:
 
 - delete button will do nothing
@@ -122,18 +126,21 @@ If omitted:
 Function executed **after a successful delete/edit**.
 
 Use it for UI refresh:
-``` python
+
+```python
 callback = refresh_tasks
 ```
+
 ⚠️ IMPORTANT:
 The callback must NOT require arguments.
 It must be a simple callable:
 
-``` python
+```python
 def refresh_tasks():
     ...
 ```
-🟡 ```callbacks: dict = {} ``` &nbsp; (optional, advanced)
+
+🟡 `callbacks: dict = {} ` &nbsp; (optional, advanced)
 
 Allows triggering multiple auxiliary functions across your app.
 
@@ -144,7 +151,8 @@ This is useful if deleting/editing a task also needs to:
 - refresh dashboards
 
 - reload summary counters
-``` python
+
+```python
 callbacks={
     "load_categories": {
         "function": refresh_categories,
@@ -156,20 +164,40 @@ callbacks={
     }
 }
 ```
+
 If omitted → only the main callback (if any) will run.
+
+🟡 `Layout: dict = {} ` &nbsp; (optional, advanced)
+
+Allows setting layout of popup container. Values are: **top, left, right, bottom, alignment, border_radius, bg_color**
+
+```python
+
+layout = {
+    "top": int | 8,
+    "left": int | 0,
+    "right": int | 8,
+    "bottom": int | 0,
+    "alignment": "[top_right | top_center | top_left | right | center | left | bottom_right | bottom_center | bottom_left]" | ft.Alignment.top_right,
+    "border_radius": int # In case exists, will set width amd heght as 40x40 to cover image according background
+}
+
+```
 
 🌟 FULL EXAMPLE (RECOMMENDED)
 
 🟦 STRUCTURE
 
 2 files:
-``` cmd
+
+```cmd
 app.py         → main module
 tasks.py       → module where PopupMenuButton is used
 ```
 
 🟩 1️⃣ app.py — MAIN FILE (DEFINE CALLBACKS)
-``` python
+
+```python
 # app.py
 import flet as ft
 from tasks import render_tasks_list
@@ -211,8 +239,10 @@ def main(page: ft.Page):
 
 ft.app(target=main)
 ```
+
 🟩 2️⃣ tasks.py — Where is used PopupMenuButton (RECIVES CALLBACKS)
-``` python
+
+```python
 # tasks.py
 import flet as ft
 from flet_popupmenu import PopupMenuButton
@@ -292,10 +322,10 @@ def render_tasks_list(page: ft.Page, callback_main=None, callbacks_extra=None):
 
 🟧 What exacly happens when the user deletes or edits:
 
- &nbsp;&nbsp;&nbsp;  **1.** Popup sends a delete or an edit request to your API\
- &nbsp;&nbsp;&nbsp;  **2.** If API responses OK → PopupMenuButton runs:
+&nbsp;&nbsp;&nbsp; **1.** Popup sends a delete or an edit request to your API\
+ &nbsp;&nbsp;&nbsp; **2.** If API responses OK → PopupMenuButton runs:
 
-``` scss
+```scss
 callback_main()
 callbacks_extra["reload_categories"]["function"](*args)
 ```
@@ -305,9 +335,9 @@ It called by example:
 ✔ refresh_tasks() → to reload the list
 ✔ refresh_categories() → to update other system parts
 
- &nbsp;&nbsp;&nbsp;   **3.** Defenitely, the UI turns into completelly optimized.
+&nbsp;&nbsp;&nbsp; **3.** Defenitely, the UI turns into completelly optimized.
 
- ⭐ His finallity:
+⭐ His finallity:
 
 - How to separate logic across multiple files
 
@@ -348,19 +378,18 @@ Suggestions and improvements are welcome!
 
 Can add:
 
-- ✔ PyPI version  
-- ✔ Python versions  
-- ✔ Wheel status  
-- ✔ Download counts  
-- ✔ License badge  
-- ✔ Supported OS  
+- ✔ PyPI version
+- ✔ Python versions
+- ✔ Wheel status
+- ✔ Download counts
+- ✔ License badge
+- ✔ Supported OS
 
 Only say:
 
 👉 **“Put badges too**
 
-
-# (VERSIÓN EN ESPAÑOL) #
+# (VERSIÓN EN ESPAÑOL)
 
 # Menú Emergente Flet
 
@@ -385,6 +414,7 @@ from flet_popupmenu import PopupMenuButton
 ## Uso
 
 - Inicializa la función "PopupMenuButton" cuyos argumentos son:
+
 ```python
 def PopupMenuButton(
     page: ft.Page,
@@ -420,6 +450,7 @@ Si se proporciona → el menú muestra un formulario para editar el elemento.
 Si se omite → la opción “editar” se desactiva automáticamente.
 
 Ejemplo de estructura:
+
 ```python
 item_to_edit = {
     "title":  { "value": "Tarea A", "type": "text" },
@@ -430,6 +461,7 @@ item_to_edit = {
     }
 }
 ```
+
 Si tu elemento no tiene campos editables → simplemente pasa None.
 
 🟡 alias: str = "item" (opcional)
@@ -464,6 +496,7 @@ request_url = {
     }
 }
 ```
+
 Si se omite:
 
 - el botón eliminar no hará nada
@@ -475,9 +508,11 @@ Si se omite:
 Función ejecutada **tras eliminar/editar exitosamente**.
 
 Úsala para refrescar la UI:
+
 ```python
 callback = refresh_tasks
 ```
+
 ⚠️ IMPORTANTE:
 El callback NO debe requerir argumentos.
 Debe ser una función simple:
@@ -486,7 +521,8 @@ Debe ser una función simple:
 def refresh_tasks():
     ...
 ```
-🟡 ```callbacks: dict = {} ``` &nbsp; (opcional, avanzado)
+
+🟡 `callbacks: dict = {} ` &nbsp; (opcional, avanzado)
 
 Permite disparar múltiples funciones auxiliares en tu app.
 
@@ -495,6 +531,7 @@ Permite disparar múltiples funciones auxiliares en tu app.
 - recargar categorías
 - refrescar dashboards
 - recargar contadores resumen
+
 ```python
 callbacks={
     "load_categories": {
@@ -507,6 +544,7 @@ callbacks={
     }
 }
 ```
+
 Si se omite → solo se ejecuta el callback principal (si existe).
 
 🌟 EJEMPLO COMPLETO (RECOMENDADO)
@@ -514,12 +552,14 @@ Si se omite → solo se ejecuta el callback principal (si existe).
 🟦 ESTRUCTURA
 
 2 archivos:
+
 ```cmd
 app.py         → módulo principal
 tasks.py       → módulo donde se usa PopupMenuButton
 ```
 
 🟩 1️⃣ app.py — ARCHIVO PRINCIPAL (DEFINE CALLBACKS)
+
 ```python
 # app.py
 import flet as ft
@@ -562,7 +602,9 @@ def main(page: ft.Page):
 
 ft.app(target=main)
 ```
+
 🟩 2️⃣ tasks.py — Donde se usa PopupMenuButton (RECIBE CALLBACKS)
+
 ```python
 # tasks.py
 import flet as ft
@@ -643,8 +685,8 @@ def render_tasks_list(page: ft.Page, callback_main=None, callbacks_extra=None):
 
 🟧 ¿Qué ocurre exactamente al eliminar o editar?
 
-&nbsp;&nbsp;&nbsp;  **1.** El popup envía una petición de eliminación o edición a tu API\
-&nbsp;&nbsp;&nbsp;  **2.** Si la API responde OK → PopupMenuButton ejecuta:
+&nbsp;&nbsp;&nbsp; **1.** El popup envía una petición de eliminación o edición a tu API\
+&nbsp;&nbsp;&nbsp; **2.** Si la API responde OK → PopupMenuButton ejecuta:
 
 ```scss
 callback_main()
@@ -656,7 +698,7 @@ Ejemplo de llamada:
 ✔ refresh_tasks() → para recargar la lista  
 ✔ refresh_categories() → para actualizar otras partes del sistema
 
-&nbsp;&nbsp;&nbsp;  **3.** Finalmente, la UI queda completamente optimizada.
+&nbsp;&nbsp;&nbsp; **3.** Finalmente, la UI queda completamente optimizada.
 
 ⭐ Su finalidad:
 
@@ -690,12 +732,12 @@ Abre un pull request o issue en GitHub.
 
 Se pueden añadir:
 
-- ✔ Versión PyPI  
-- ✔ Versiones de Python  
-- ✔ Estado Wheel  
-- ✔ Contador de descargas  
-- ✔ Badge de licencia  
-- ✔ SO soportados  
+- ✔ Versión PyPI
+- ✔ Versiones de Python
+- ✔ Estado Wheel
+- ✔ Contador de descargas
+- ✔ Badge de licencia
+- ✔ SO soportados
 
 Solo di:
 

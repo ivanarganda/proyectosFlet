@@ -5,7 +5,7 @@ import flet as ft
 from params import *
 from helpers.utils import log_error, loadSnackbar, setCarrousel
 
-def loadTasksCategories(page: ft.Page, token, viewDetailsCategory, addTask, addCategory):
+def loadTasksCategories(page: ft.Page, token, viewDetailsCategory, addTask, addCategory, callbacks={}):
     """Carga las categorías de tareas desde la API."""
 
     async def load_data():
@@ -123,4 +123,4 @@ def loadTasksCategories(page: ft.Page, token, viewDetailsCategory, addTask, addC
             "content": parsed_content
         })
 
-    return setCarrousel(page, newData, on_view_category=viewDetailsCategory, on_add_task=addTask)
+    return setCarrousel(page, newData, on_view_category=viewDetailsCategory, on_add_task=addTask, on_callbacks=callbacks)

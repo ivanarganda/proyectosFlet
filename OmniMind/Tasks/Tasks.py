@@ -23,6 +23,7 @@ current_path = {
 
 user_session = {}
 token_session = None
+
 # --------------------------
 # UI: Lista de tareas
 # --------------------------
@@ -34,9 +35,16 @@ def InitTasksCategories(page:ft.Page):
     def refresh_categories():
         categories_container.controls.clear()
         categories_container.controls.append(
-            loadTasksCategories(page, token_session, viewDetailsCategory, addTask, addCategory)
+            loadTasksCategories(page, token_session, viewDetailsCategory, addTask, addCategory, callbacks)
         )
         page.update()
+
+    callbacks={
+        "load_categories": {
+            "function": refresh_categories,
+            "args": []
+        }
+    }
 
     input_search = ft.Container(input_search_field)
 
@@ -107,12 +115,7 @@ def InitTasksCategories(page:ft.Page):
 
     refresh_categories()
 
-    content_area = ListTasks(page, session={ "username":user_session, "token": token_session }, callbacks={
-        "load_categories": {
-            "function": refresh_categories,
-            "args": []
-        }
-    })  # List tasks
+    content_area = ListTasks(page, session={ "username":user_session, "token": token_session }, callbacks=callbacks)  # List tasks
 
     background = [backwallpaper, content_area, header]
     return background

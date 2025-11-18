@@ -404,7 +404,7 @@ def login():
 # =========================
 # TASK CATEGORIES ENDPOINTS
 # =========================
-@app.route("/tasks/categories", methods=["GET", "POST", "DELETE"])
+@app.route("/tasks/categories", methods=["GET", "POST", "PUT", "DELETE"])
 def task_categories():
     try:
         if not init_connection(db):
