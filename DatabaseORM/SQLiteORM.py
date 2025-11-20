@@ -1,6 +1,10 @@
 import sqlite3 as sql
 from typing import Union, List, Tuple, Optional
+import numpy as np
 import os
+
+# Auxiliar classes
+from QueryResults import QueryResults
 
 class SQLiteORM:
 
@@ -13,11 +17,21 @@ class SQLiteORM:
         self.query = None
 
     def get_database(self) -> str:
+
         if "db" in self.db_path: 
             return self.db_path
         return self.db_name
 
+    def close_connection(self) -> None:
+
+        self.conn.close()
+
+    def get_query(self) -> str:
+        
+        return self.query
+
     def conect_DB(self)-> Union[sql.Connection, None]:
+
         try:
             self.conn = sql.connect(self.db_path, check_same_thread=False)
             self.conn.row_factory = sql.Row
@@ -30,6 +44,7 @@ class SQLiteORM:
             return None
 
     def check_columns(self, table_name: str) -> Union[list, None]:
+
         try:
             self.cursor.execute(f"PRAGMA table_info({table_name});")
             columns_info = self.cursor.fetchall()
@@ -39,62 +54,116 @@ class SQLiteORM:
             print(f"⚠️ Error fetching columns for {table_name}: {e}")
             return None
 
-    def insert_many_single_query(self, data: list[tuple], table_name: str) -> bool:
+    def execute_query(self, query: str, params: Union[tuple, list, None]=None) -> Union[list, bool]:
+
         try:
-            # 1. Columnas reales
-            columns = self.check_columns(table_name)
 
-            # 2. Crear valores en texto SQL
-            values_sql = []
-            for row in data:
-                formatted = []
-                for val in row:
-                    # Convertir a SQL-safe literal
-                    if isinstance(val, str):
-                        formatted.append(f'"{val}"')
-                    elif val is None:
-                        formatted.append("NULL")
-                    else:
-                        formatted.append(str(val))
-                values_sql.append("(" + ", ".join(formatted) + ")")
-            
-            db.execute_query(
-                """
-                PRAGMA synchronous = OFF;
-                PRAGMA journal_mode = MEMORY;
-                PRAGMA temp_store = MEMORY;
-                PRAGMA foreign_keys = OFF;
-                """
-            )
+            if params is None:
+                result = self.cursor.execute(query)
 
-            # 3. Construir query grande
-            query = (
-                f"INSERT OR IGNORE INTO {table_name} "
-                f"({', '.join(columns)}) VALUES\n" +
-                ",\n".join(values_sql)
-            )
+            elif isinstance(params, list):
+                
+                if all(isinstance(p, (list, tuple)) for p in params):
+                    result = self.cursor.executemany(query, params)
+                else:
+                    raise ValueError("Params must be a list of tuples or lists for executemany().")
 
-            db.execute_query(query)
+            else:
+                result = self.cursor.execute(query, params)
 
-            print("✅ Insert masivo con único query completo.")
+            self.conn.commit()
 
-            db.execute_query(
-                """ 
-                PRAGMA synchronous = FULL;
-                PRAGMA journal_mode = WAL;
-                PRAGMA foreign_keys = ON;
-                """
-            )
+            cmd = query.lstrip().split()[0].upper()
+
+            if cmd in ("SELECT", "PRAGMA", "WITH"):
+
+                rows = result.fetchall()
+                return QueryResults(rows, formatter=self.format_results)
 
             return True
 
-        except Exception as e:
-            print("❌ Error en insert_many_single_query:", e)
-            self.conn.rollback()
+        except sql.Error as e:
+            print(f"⚠️ Query error: {e}")
             return False
 
 
+    # ===============================
+    # INSERT ORM ( insert both single values and many values)
+    # ===============================
+    def insert_many(self, size: int, table_name: str, pattern, chunk_size=50000):
+
+        """
+        Inserta 'size' registros en modo TURBO usando NumPy + streaming.
+        - No guarda todos los datos en RAM
+        - Genera bloques con NumPy ultra rápido
+        - Usa PRAGMA turbo para máxima velocidad
+        """
+
+        try:
+            print(f"INSERT NUMPY TURBO INIT ({size:,} rows)…")
+
+            self.execute_query("PRAGMA synchronous = OFF;")
+            self.execute_query("PRAGMA journal_mode = MEMORY;")
+            self.execute_query("PRAGMA temp_store = MEMORY;")
+            self.execute_query("PRAGMA locking_mode = EXCLUSIVE;")
+            self.execute_query("PRAGMA foreign_keys = OFF;")
+            self.execute_query("PRAGMA cache_size = -2000000;")
+
+            example = pattern(0)
+            num_cols = len(example)
+
+            columns = self.check_columns(table_name)
+
+            info = self.execute_query(f"PRAGMA table_info({table_name})")
+            primary_keys = [col['name'] for col in info if col['pk'] == 1]
+            
+            placeholders = ", ".join(["?"] * ( len(columns) - len(primary_keys) ))
+            base_query = (
+                f"INSERT INTO {table_name} ({', '.join([col for col in columns if col not in primary_keys])}) "
+                f"VALUES ({placeholders})"
+            )
+
+            print(f"✔ Using {num_cols} columns")
+            print(f"✔ Chunk size: {chunk_size:,}")
+
+            for start in range(0, size, chunk_size):
+
+                end = min(start + chunk_size, size)
+                block_len = end - start
+
+                col0 = np.arange(start + 1, end + 1)
+
+                # Generar las demás columnas (solo se repiten, no se recalculan)
+                cols = [None] * num_cols
+                cols[0] = col0
+
+                for col_index in range(1, num_cols):
+                    value = example[col_index]
+
+                    if isinstance(value, str):
+                        cols[col_index] = np.repeat(value, block_len)
+                    else:
+                        cols[col_index] = np.full(block_len, value, dtype=object)
+
+                block = list(zip(*cols))
+
+                self.execute_query(base_query, block)
+
+                print(f"   → Inserted {end:,}/{size:,}")
+
+            self.execute_query("PRAGMA foreign_keys = ON;")
+            self.execute_query("PRAGMA journal_mode = WAL;")
+            self.execute_query("PRAGMA synchronous = NORMAL;")
+
+            print("✅ INSERT NUMPY TURBO DONE")
+            return True
+
+        except Exception as e:
+            print("❌ insert_numpy_turbo error:", e)
+            return False
+
     def insert(self, data: Union[tuple, list], table_name: str )-> bool:
+
         try:
             if isinstance(data, (list, tuple)) and not any(isinstance(row, (list, tuple)) for row in data):
                 columns_name_db =  self.check_columns( table_name )
@@ -130,51 +199,9 @@ class SQLiteORM:
             print(f"⚠️ Insert error: {e}")
             return False
 
-    def format_table(self, data: list) -> str:
-
-        if not data:
-            return "No data available."
-
-        headers = [f"Col{i+1}" for i in range(len(data[0]))]
-
-        table = " | ".join(headers) + "\n"
-        table += "-" * len(table) + "\n"
-        for row in data:
-            formatted_values = [str(value) for value in row]
-            table += " | ".join(formatted_values) + "\n"
-
-        return table
-
-    def execute_query(self, query: str, params: Union[tuple, list, None]=None) -> Union[list, bool]:
-        try:
-            self.query = query
-
-            if params is None:
-                self.cursor.execute(query)
-
-            elif isinstance(params, list):
-                
-                if all(isinstance(p, (list, tuple)) for p in params):
-                    self.cursor.executemany(query, params)
-                else:
-                    raise ValueError("Params must be a list of tuples or lists for executemany().")
-
-            else:
-                self.cursor.execute(query, params)
-
-            self.conn.commit()
-
-            cmd = query.lstrip().split()[0].upper()
-
-            if cmd in ("SELECT", "PRAGMA", "WITH"):
-                return self.cursor.fetchall()
-
-            return True
-
-        except sql.Error as e:
-            print(f"⚠️ Query error: {e}")
-            return False
-
+    # ===============================
+    # SELECT ORM ( select both by clasical and criterial)
+    # ===============================
     def select_all(self, table: str):
 
         query = f"SELECT * FROM {table}"
@@ -185,7 +212,8 @@ class SQLiteORM:
         if not conditions:
             raise ValueError("select_one requires at least one condition.")
 
-        where = " AND ".join(f"{col} = ?" for col in conditions)
+        conditions_list = [f"{col} = ?" for col in conditions]
+        where = " AND ".join(conditions_list)
         params = tuple(conditions.values())
 
         query = f"SELECT * FROM {table} WHERE {where} LIMIT 1"
@@ -194,7 +222,8 @@ class SQLiteORM:
 
     def select_where(self, table: str, **conditions):
 
-        where = " AND ".join(f"{col} = ?" for col in conditions)
+        conditions_list = [f"{col} = ?" for col in conditions]
+        where = " AND ".join(conditions_list)
         params = tuple(conditions.values())
 
         query = f"SELECT * FROM {table} WHERE {where}"
@@ -225,6 +254,7 @@ class SQLiteORM:
 
 
     def reset_autoincrement(self, table_name: str, delete_rows: bool=False) -> bool:
+
         """
         Reset AUTOINCREMENT counter for a table.
         If delete_rows=True, also clears all rows from the table.
@@ -241,6 +271,10 @@ class SQLiteORM:
             print(f"⚠️ Error resetting autoincrement for {table_name}: {e}")
             return False
 
+
+    # ========================
+    # FETCHING DATA
+    # ========================  
     def fetch_all(self) -> list[dict]:
 
         rows = self.cursor.fetchall()
@@ -264,8 +298,27 @@ class SQLiteORM:
         results = [dict(row) for row in rows]
 
         return results
-    
+
+    # =====================
+    # FORMATING DATA
+    # =====================
+    def format_table(self, data: list) -> str:
+
+        if not data:
+            return "No data available."
+
+        headers = [f"Col{i+1}" for i in range(len(data[0]))]
+
+        table = " | ".join(headers) + "\n"
+        table += "-" * len(table) + "\n"
+        for row in data:
+            formatted_values = [str(value) for value in row]
+            table += " | ".join(formatted_values) + "\n"
+
+        return table
+
     def formatted_query(self) -> str:
+
         return self.query.strip().replace("\n", " ").replace("  ", " ")
     
     def format_results(self, rows: list[dict]) -> str:
@@ -295,12 +348,3 @@ class SQLiteORM:
             table += " | ".join(formatted_values) + "\n"
 
         return table
-
-
-    def close_connection(self) -> None:
-
-        self.conn.close()
-
-    def get_query(self) -> str:
-        
-        return self.query
