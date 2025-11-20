@@ -39,6 +39,61 @@ class SQLiteORM:
             print(f"⚠️ Error fetching columns for {table_name}: {e}")
             return None
 
+    def insert_many_single_query(self, data: list[tuple], table_name: str) -> bool:
+        try:
+            # 1. Columnas reales
+            columns = self.check_columns(table_name)
+
+            # 2. Crear valores en texto SQL
+            values_sql = []
+            for row in data:
+                formatted = []
+                for val in row:
+                    # Convertir a SQL-safe literal
+                    if isinstance(val, str):
+                        formatted.append(f'"{val}"')
+                    elif val is None:
+                        formatted.append("NULL")
+                    else:
+                        formatted.append(str(val))
+                values_sql.append("(" + ", ".join(formatted) + ")")
+            
+            db.execute_query(
+                """
+                PRAGMA synchronous = OFF;
+                PRAGMA journal_mode = MEMORY;
+                PRAGMA temp_store = MEMORY;
+                PRAGMA foreign_keys = OFF;
+                """
+            )
+
+            # 3. Construir query grande
+            query = (
+                f"INSERT OR IGNORE INTO {table_name} "
+                f"({', '.join(columns)}) VALUES\n" +
+                ",\n".join(values_sql)
+            )
+
+            db.execute_query(query)
+
+            print("✅ Insert masivo con único query completo.")
+
+            db.execute_query(
+                """ 
+                PRAGMA synchronous = FULL;
+                PRAGMA journal_mode = WAL;
+                PRAGMA foreign_keys = ON;
+                """
+            )
+
+            return True
+
+        except Exception as e:
+            print("❌ Error en insert_many_single_query:", e)
+            self.conn.rollback()
+            return False
+
+
     def insert(self, data: Union[tuple, list], table_name: str )-> bool:
         try:
             if isinstance(data, (list, tuple)) and not any(isinstance(row, (list, tuple)) for row in data):
@@ -67,31 +122,7 @@ class SQLiteORM:
                 
                 self.execute_query(query, args)
                 print("✅ Insert successful")
-                return True
-            elif isinstance(data, list) and all(isinstance(row, (list, tuple)) for row in data):
-                print("Inserting multiple records...")
-                columns_name_db =  self.check_columns( table_name )
-                print(f"Columns in DB: {columns_name_db}")
-                error_tuples = []
-                for row in range(len(data)):
-                    if len(data[row]) != len(columns_name_db):
-                        error_tuples.append(data[row])
-                
-                if error_tuples:
-                    raise ValueError(f"⚠️ The following tuples have incorrect number of values and will be skipped: {self.format_table(data)} --> {error_tuples}")
-
-                info = self.execute_query(f"PRAGMA table_info({table_name})")
-                primary_keys = [col['name'] for col in info if col['pk'] == 1]
-                placeholders = ", ".join(["?"] * ( len(data[0]) ))
-                query = f"INSERT OR IGNORE INTO {table_name} ({', '.join([col for col in columns_name_db ])}) VALUES ({placeholders})"
-
-                print(f"Query: {query}")
-                args = data
-
-                self.execute_query(query, args)
-                print("✅ Insert successful for multiple records")
-                return True
-            
+                return True            
             else:
                 raise ValueError("Data must be a tuple/list for single insert or list of tuples/lists for multiple inserts.")
                 
