@@ -26,10 +26,6 @@ class SQLiteORM:
 
         self.conn.close()
 
-    def get_query(self) -> str:
-        
-        return self.query
-
     def conect_DB(self)-> Union[sql.Connection, None]:
 
         try:
@@ -43,6 +39,59 @@ class SQLiteORM:
             print(f"❌ Database error: {e}")
             return None
 
+    def get_sqlite_type(self, value):
+        if value is None:
+            return "NULL"
+        if isinstance(value, bool):
+            return "INTEGER"
+        if isinstance(value, int):
+            return "INTEGER"
+        if isinstance(value, float):
+            return "REAL"
+        if isinstance(value, str):
+            return "TEXT"
+        if isinstance(value, bytes):
+            return "BLOB"
+
+        # Tipos especiales
+        import datetime, decimal, uuid, json
+
+        if isinstance(value, (datetime.date, datetime.datetime)):
+            return "TEXT"  # ISO format recommended
+
+        if isinstance(value, decimal.Decimal):
+            return "NUMERIC"
+
+        if isinstance(value, uuid.UUID):
+            return "TEXT"
+
+        if isinstance(value, (list, dict)):
+            return "TEXT"  # Save as JSON
+
+        # Cualquier otro tipo: guardarlo como texto
+        return "TEXT"
+
+    def get_pk(self, table_name):
+
+        import json
+
+        primary_keys = [ { "name": field.get("name") , "type": field.get("type") } for field in self.get_object_columns( table_name ) if field.get("pk") == 1]
+
+        return list( primary_keys )
+
+    def get_query(self) -> str:
+        
+        return self.query
+
+    def get_object_columns(self, table_name: str) -> Union[dict, None]:
+
+        try:
+            columns = self.execute_query(f"PRAGMA table_info({table_name});").json
+            return columns
+        except sql.Error as e:
+            print(f"⚠️ Error fetching columns for {table_name}: {e}")
+            return None
+
     def check_columns(self, table_name: str) -> Union[list, None]:
 
         try:
@@ -54,10 +103,32 @@ class SQLiteORM:
             print(f"⚠️ Error fetching columns for {table_name}: {e}")
             return None
 
+    def check_table(self, table_name):
+
+        import json
+        
+        try:
+        
+            data = self.execute_query("""
+                SELECT name FROM sqlite_master WHERE type='table' AND name = ?
+            """, (table_name,)).count
+
+            if data == 0:
+                raise Exception(f"Not found table {table_name}")
+            
+            return True
+    
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
+
     def execute_query(self, query: str, params: Union[tuple, list, None]=None) -> Union[list, bool]:
+
+        import re
 
         try:
 
+            # Check if all tables over query exist
             if params is None:
                 result = self.cursor.execute(query)
 
@@ -269,6 +340,69 @@ class SQLiteORM:
             return True
         except sql.Error as e:
             print(f"⚠️ Error resetting autoincrement for {table_name}: {e}")
+            return False
+
+    # ========================
+    # DELETE RECORDS
+    # ========================
+    def delete(self, data: Union[list, int] = None, table_name: str = "") -> bool:
+        try:
+
+            # Validate table
+            if self.check_table(table_name) == 0:
+                raise Exception(f"Table '{table_name}' does not exist")
+
+            # Obtain primary key
+            primary_keys = self.get_pk(table_name)
+
+            if len(primary_keys) == 0:
+                raise Exception("Table has no primary key — cannot perform delete by ID.")
+
+            if len(primary_keys) > 1:
+                raise Exception(
+                    f"Table has multiple primary keys. Choose one: {', '.join(pk['name'] for pk in primary_keys)}"
+                )
+
+            name_primary_key = primary_keys[0]["name"]
+            type_primary_key = primary_keys[0]["type"]
+
+            # =============================
+            # CASE: data as only ID
+            # =============================
+            if isinstance(data, int):
+                placeholders = "?"
+                where = f" WHERE {name_primary_key} IN ({placeholders})"
+                params = (data,)
+
+            # =============================
+            # CASE: data as a list of IDs
+            # =============================
+            elif isinstance(data, list) and len(data) > 0:
+                # Validar tipos
+                wrong_ids = [item for item in data if self.get_sqlite_type(item) != type_primary_key]
+
+                if wrong_ids:
+                    raise Exception(
+                        f"IDs {', '.join(map(str, wrong_ids))} do not match primary key type '{type_primary_key}' in table '{table_name}'"
+                    )
+
+                # Crear placeholders seguros
+                placeholders = ", ".join(["?"] * len(data))
+                where = f" WHERE {name_primary_key} IN ({placeholders})"
+                params = tuple(data)
+
+            else:
+                raise Exception("You must provide an integer ID or a list of IDs for deletion.")
+
+            query = f"DELETE FROM {table_name}{where}"
+            print("Executing:", query)
+            print("Params:", params)
+
+            self.execute_query(query, params)
+            return True
+
+        except Exception as e:
+            print(f"Error: {e}")
             return False
 
 

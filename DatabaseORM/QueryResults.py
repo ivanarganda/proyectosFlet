@@ -31,7 +31,7 @@ class QueryResults:
     @property
     def json(self):
         import json
-        return json.dumps(self.dicts, indent=4, ensure_ascii=False)
+        return json.loads(json.dumps(self.dicts, indent=4, ensure_ascii=False))
 
     @property
     def table(self):
