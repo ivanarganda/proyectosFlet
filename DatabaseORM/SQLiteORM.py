@@ -26,20 +26,21 @@ class SQLiteORM:
 
         self.conn.close()
 
-    def conect_DB(self)-> Union[sql.Connection, None]:
+    def conect_DB(self) -> Union[sql.Connection, None]:
 
         try:
             self.conn = sql.connect(self.db_path, check_same_thread=False)
             self.conn.row_factory = sql.Row
             self.cursor = self.conn.cursor()
-            self.cursor.execute("PRAGMA journal_mode=WAL;")
+            self.cursor.execute("PRAGMA journal_mode=WAL;") # multi threading to avoid blocks of database
             print("✅ Connection success to database:", self.db_name.split('.')[0:(self.db_name.count('.'))][0])
             return self.conn
         except sql.Error as e:
             print(f"❌ Database error: {e}")
             return None
 
-    def get_sqlite_type(self, value):
+    def get_sqlite_type(self, value) -> str:
+
         if value is None:
             return "NULL"
         if isinstance(value, bool):
@@ -53,7 +54,7 @@ class SQLiteORM:
         if isinstance(value, bytes):
             return "BLOB"
 
-        # Tipos especiales
+        # Special types
         import datetime, decimal, uuid, json
 
         if isinstance(value, (datetime.date, datetime.datetime)):
@@ -68,10 +69,10 @@ class SQLiteORM:
         if isinstance(value, (list, dict)):
             return "TEXT"  # Save as JSON
 
-        # Cualquier otro tipo: guardarlo como texto
+        # Every other kind: save as text
         return "TEXT"
 
-    def get_pk(self, table_name):
+    def get_pk(self, table_name: str) -> list:
 
         import json
 
@@ -103,7 +104,7 @@ class SQLiteORM:
             print(f"⚠️ Error fetching columns for {table_name}: {e}")
             return None
 
-    def check_table(self, table_name):
+    def check_table(self, table_name: str) -> bool:
 
         import json
         
@@ -204,7 +205,7 @@ class SQLiteORM:
 
                 col0 = np.arange(start + 1, end + 1)
 
-                # Generar las demás columnas (solo se repiten, no se recalculan)
+                # Generate the rest of columns (Only repeated, will not be recalculated)
                 cols = [None] * num_cols
                 cols[0] = col0
 
@@ -349,7 +350,7 @@ class SQLiteORM:
         try:
 
             # Validate table
-            if self.check_table(table_name) == 0:
+            if self.check_table(table_name) == True:
                 raise Exception(f"Table '{table_name}' does not exist")
 
             # Obtain primary key

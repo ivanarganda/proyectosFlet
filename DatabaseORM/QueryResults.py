@@ -3,7 +3,7 @@ class QueryResults:
 
     def __init__(self, rows, formatter=None):
         self.rows = rows
-        self.formatter = formatter  # por si quieres usar format_results de tu ORM
+        self.formatter = formatter  # in case you want to use format_results
 
     @property
     def raw(self):
@@ -22,7 +22,7 @@ class QueryResults:
                     try:
                         v = v.decode("utf-8")
                     except:
-                        v = str(v)  # fallback seguro
+                        v = str(v)  # secured fallback
                 d[k] = v
             results.append(d)
         return results
@@ -38,7 +38,7 @@ class QueryResults:
         if self.formatter:
             return self.formatter(self.rows)
 
-        # tabla simple por defecto
+        # simple table as default
         if not self.rows:
             return "No results."
 
