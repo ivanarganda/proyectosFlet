@@ -243,7 +243,7 @@ class SQLiteORM:
                 raise Exception("items is empty, there are not rows to insert.")
 
             # ==========================
-            # 1. COLUMNAS DE LA TABLA
+            # 1. TABLE COLUMNS
             # ==========================
             columns = self.check_columns(table_name)
             if not columns:
@@ -266,7 +266,7 @@ class SQLiteORM:
                 )
 
             # ==========================
-            # 3. VALIDACIÓN DE FILAS
+            # 3. VALIDATE ROWS LENGTH
             # ==========================
             expected_cols = len(cols_to_insert)
 
@@ -277,7 +277,7 @@ class SQLiteORM:
                     )
 
             # ==========================
-            # 4. QUERY PREPARADA
+            # 4. PREPARED QUERY
             # ==========================
             placeholders = ", ".join(["?"] * expected_cols)
             base_query = (
@@ -291,7 +291,7 @@ class SQLiteORM:
             self.activate_stream()
 
             # ==========================
-            # 6. CHUNK SIZE INTELIGENTE
+            # 6. CHUNK SIZE INTELLIGENT
             # ==========================
             chunk_size = auto_chunk_size(items, mode="sqlite")
             total = len(items)
@@ -301,7 +301,7 @@ class SQLiteORM:
             print(f"✔ Chunk size: {chunk_size:,}")
 
             # ==========================
-            # 7. INSERT POR BLOQUES
+            # 7. INSERT BY CHUNKS
             # ==========================
             for start in range(0, total, chunk_size):
                 chunk = items[start : start + chunk_size]
@@ -309,7 +309,7 @@ class SQLiteORM:
                 print(f"   → Recorded {start + len(chunk)}/{total}")
 
             # ==========================
-            # 8. RESTAURAR PRAGMAS
+            # 8. RESTAURE PRAGMAS
             # ==========================
             self.desactivate_stream()
 
@@ -412,13 +412,11 @@ class SQLiteORM:
         return self.execute_query(query, values)
 
     # ========================
-    # DELETE RECORDS
+    # UPDATE RECORDS
     # ========================
-    def delete(self, data: Union[list, int] = None, table_name: str = "") -> bool:
+    def update(self, set_values=dict, data: Union[str,list, int] = None, table_name: str = "") -> bool:
 
         try:
-
-            row_count = 0
 
             self.activate_stream()
 
@@ -426,101 +424,49 @@ class SQLiteORM:
             if not self.check_table(table_name):
                 raise Exception(f"Table '{table_name}' does not exist")
 
-            # Obtain primary key
-            primary_keys = self.get_pk(table_name)
+            if isinstance(data, str) and data.strip() == "all":
+                data = None
 
-            if len(primary_keys) == 0:
-                raise Exception("Table has no primary key — cannot perform delete by ID.")
+            # Build WHERE clause
+            where, params, row_count = list(self._build_where_clause(data=data, table=table_name).values())
 
-            if len(primary_keys) > 1:
-                raise Exception( f"Table has multiple primary keys. Choose one: {', '.join(pk['name'] for pk in primary_keys)}")
+            print( f"{where} {params} {row_count} ")
 
-            name_primary_key = primary_keys[0]["name"]
-            type_primary_key = primary_keys[0]["type"]
+            # check if keys of set values are valid columns
+            valid_columns = self.check_columns(table_name)
+            for col in set_values.keys():
+                if col not in valid_columns:
+                    raise Exception(f"Column '{col}' does not exist in table '{table_name}'")
 
-            # =============================
-            # CASE: data as only ID
-            # =============================
-            if isinstance(data, int):
-                placeholders = "?"
-                where = f" WHERE {name_primary_key} IN ({placeholders})"
-                params = (data,)
+            query = f"UPDATE {table_name} SET {self._build_set_clause(set_values)}{where}"
 
-            # =============================
-            # CASE: data as a list of IDs
-            # =============================
-            elif (
-                isinstance(data, list)
-                and len(data) == 3
-                and isinstance(data[0], str)
-                and data[1].upper() in ("=", ">", "<", "<>", "!=", ">=", "<=")
-                and isinstance(data[2], (int, float, str))
-            ):
-                column, op, value = data
-                where = f" WHERE {column} {op} ?"
-                params = (value,)
+            self.query = query
 
-                row_count = self.processing_stream(table=table_name, column=column, operator=op, value=value)
+            print(f"Executing delete: {self.formatted_query()} with params {tuple(set_values.values()) + params}")
+            self.execute_query(query, tuple(set_values.values()) + params)
 
-            # --- LIKE ---
-            elif (
-                isinstance(data, list)
-                and len(data) == 3
-                and isinstance(data[0], str)
-                and data[1].upper() == "LIKE"
-                and isinstance(data[2], str)
-            ):
-                column, op, value = data
+            print("✅ Update successful")
 
-                op = op.upper()
+            return True
 
-                type_value = self.get_sqlite_type(value)
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
+    # ========================
+    # DELETE RECORDS
+    # ========================
+    def delete(self, data: Union[list, int] = None, table_name: str = "") -> bool:
 
-                if type_value.upper() not in ("TEXT", "VARCHAR", "CHAR"):
-                    raise Exception(f"Column '{column}' is type '{type_value}', cannot use {op}")
+        try:
 
-                if not self.is_text_column(table_name, column):
-                    raise Exception(f"Cannot use {op} on non-text column '{column}' (type: {type_value})")
-                    
-                where = f" WHERE {column} {op} ?"
-                params = (value,)
+            self.activate_stream()
 
-            # --- BETWEEN ---
-            elif (
-                isinstance(data, list)
-                and len(data) == 3
-                and isinstance(data[0], str)
-                and data[1].upper() == "BETWEEN"
-                and isinstance(data[2], (list,tuple))
-                and len(data[2]) == 2
-            ):
-                column, op, (v1, v2) = data[0], data[1], data[2]
-                where = f" WHERE {column} {op.upper()} ? AND ?"
-                params = (v1, v2)
+            # Validate table
+            if not self.check_table(table_name):
+                raise Exception(f"Table '{table_name}' does not exist")
 
-            elif isinstance(data, list) and len(data) > 0:
-                # Validar tipos
-                wrong_ids = []
-
-                # Stream delete
-                for item in data:
-                    print(f"Processing id ({item})")
-                    if self.get_sqlite_type(item) != type_primary_key:
-                        print(f"Error processing id {item}")
-                        wrong_ids.append(item)
-
-                if wrong_ids:
-                    raise Exception(
-                        f"IDs {', '.join(map(str, wrong_ids))} do not match primary key type '{type_primary_key}' in table '{table_name}'"
-                    )
-
-                # Crear placeholders seguros
-                placeholders = ", ".join(["?"] * len(data))
-                where = f" WHERE {name_primary_key} IN ({placeholders})"
-                params = tuple(data)
-
-            else:
-                raise Exception("You must provide an integer ID or a list of IDs for deletion.")
+            # Build WHERE clause
+            where, params, row_count = list(self._build_where_clause(data=data, table=table_name).values())
 
             if row_count == 0:
                 print("No rows found to delete with the provided criteria.")
@@ -528,7 +474,11 @@ class SQLiteORM:
 
             query = f"DELETE FROM {table_name}{where}"
 
-            self.execute_query(query, params)
+            self.query = query
+
+            print(f"Executing delete: {self.formatted_query()} with params {params}")
+
+            # self.execute_query(query, params)
 
             print("✅ Delete successful")
 
@@ -643,6 +593,131 @@ class SQLiteORM:
     # =======================
     # ADDITIONAL METHODS
     # =======================
+    def _build_placeholders(self, length: int) -> str:
+
+        return ", ".join(["?"] * length)
+
+    def _build_set_clause(self, set_values: dict) -> str:
+
+        set_clauses = [f"{col} = ?" for col in set_values.keys()]
+        return ", ".join(set_clauses)
+
+    def _build_where_clause(self, **args) -> dict[str, Union[str, int, list, tuple]]:
+        # Obtain primary key
+        print( f"Building WHERE clause with args: {args} " )
+        data, table_name = list(args.values())
+        primary_keys = self.get_pk(table_name)
+        where = ""
+        params = ()
+        row_count = 0
+
+        if len(primary_keys) == 0:
+            raise Exception("Table has no primary key — cannot perform delete by ID.")
+
+        if len(primary_keys) > 1:
+            raise Exception( f"Table has multiple primary keys. Choose one: {', '.join(pk['name'] for pk in primary_keys)}")
+
+        name_primary_key = primary_keys[0]["name"]
+        type_primary_key = primary_keys[0]["type"]
+
+        if data is not None:
+            # =============================
+            # CASE: data as only ID
+            # =============================
+            if isinstance(data, int):
+                placeholders = "?"
+                where = f" WHERE {name_primary_key} IN ({placeholders})"
+                params = (data,)
+
+            # =============================
+            # CASE: data as a list of IDs
+            # =============================
+            elif (
+                isinstance(data, list)
+                and len(data) == 3
+                and isinstance(data[0], str)
+                and data[1].upper() in ("=", ">", "<", "<>", "!=", ">=", "<=")
+                and isinstance(data[2], (int, float, str))
+            ):
+                column, op, value = data
+                where = f" WHERE {column} {op} ?"
+                params = (value,)
+
+                row_count = self.processing_stream(table=table_name, column=column, operator=op, value=value)
+
+            # --- LIKE ---
+            elif (
+                isinstance(data, list)
+                and len(data) == 3
+                and isinstance(data[0], str)
+                and data[1].upper() == "LIKE"
+                and isinstance(data[2], str)
+            ):
+                column, op, value = data
+
+                op = op.upper()
+
+                type_value = self.get_sqlite_type(value)
+
+                if type_value.upper() not in ("TEXT", "VARCHAR", "CHAR"):
+                    raise Exception(f"Column '{column}' is type '{type_value}', cannot use {op}")
+
+                if not self.is_text_column(table_name, column):
+                    raise Exception(f"Cannot use {op} on non-text column '{column}' (type: {type_value})")
+                    
+                where = f" WHERE {column} {op} ?"
+                params = (value,)
+
+            # --- BETWEEN ---
+            elif (
+                isinstance(data, list)
+                and len(data) == 3
+                and isinstance(data[0], str)
+                and data[1].upper() == "BETWEEN"
+                and isinstance(data[2], (list,tuple))
+                and len(data[2]) == 2
+            ):
+                column, op, (v1, v2) = data[0], data[1], data[2]
+                where = f" WHERE {column} {op.upper()} ? AND ?"
+                params = (v1, v2)
+            
+            elif (
+                isinstance(data, list)
+                and len(data) == 3
+                and isinstance(data[0], str)
+                and data[1].upper() == "IN"
+                and isinstance(data[2], (list,tuple))
+            ):
+                column, op, values = data[0], data[1], data[2]
+                where = f" WHERE {column} {op.upper()} ({', '.join(['?'] * len(values))})"
+                params = tuple(values)
+
+            elif isinstance(data, list) and len(data) > 0:
+                # Validar tipos
+                wrong_ids = []
+
+                # Stream delete
+                for item in data:
+                    print(f"Processing id ({item})")
+                    if self.get_sqlite_type(item) != type_primary_key:
+                        print(f"Error processing id {item}")
+                        wrong_ids.append(item)
+
+                if wrong_ids:
+                    raise Exception(
+                        f"IDs {', '.join(map(str, wrong_ids))} do not match primary key type '{type_primary_key}' in table '{table_name}'"
+                    )
+
+                # Crear placeholders seguros
+                placeholders = ", ".join(["?"] * len(data))
+                where = f" WHERE {name_primary_key} IN ({placeholders})"
+                params = tuple(data)
+
+            else:
+                raise Exception("You must provide an integer ID or a list of IDs for deletion.")
+        
+        return {"where": where, "params": params , "row_count": row_count }
+
     def reset_autoincrement(self, table_name: str) -> bool:
 
         """
