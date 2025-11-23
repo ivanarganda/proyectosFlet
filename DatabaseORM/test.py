@@ -25,3 +25,4 @@ db.connect_DB()
 #     data=["id_producto", "IN", (4,5,6)],
 #     table_name='productos'
 # )
+
