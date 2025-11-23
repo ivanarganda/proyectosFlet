@@ -1,6 +1,3 @@
-import pypandoc
-
-md_content = """
 # QuantumForge ORM
 
 *A next-generation ultra-high-performance Python ORM forged for speed, streaming, and massive data operations.*
@@ -45,7 +42,16 @@ pip install quantumforge
 db = SQLiteORM("productos.db")
 db.conect_DB()
 
-# 2. Massive Insert
+# 2. Insert
+
+# Simple
+
+db.insert(
+    table_name="productos",
+    items=[ "producto_x", 10.5, "2023-01-01", 1, 1]
+)
+
+# Massive
 
 db.insert_many(
     table_name="productos",
@@ -55,13 +61,26 @@ db.insert_many(
     ]
 )
 
-# 3. Dynamic UPDATE
+# 3. UPDATE
 
 db.update(
     set_values={"nombre": "nuevo", "precio": 50},
     data=["id_producto", "IN", (1,2,3)],
     table_name="productos"
 )
+
+"""  Update all records with nombre and precio column"""
+db.update(
+    set_values={"nombre": "nuevo", "precio": 50},
+    table_name="productos"
+)
+
+# OTHER UPDATE AND DELETE ALTERNATIVES 
+# In case you want delete or update all records without necesity on seeting arguments, take those two functions
+# ⚠️ Use delete_all() carefully. This operation removes every row from the table.
+
+db.delete_all(table_name="productos")
+db.update_all(set_values={"nombre": "nuevo", "precio": 50}, table_name="productos")
 
 # 4. DELETE with and without conditions
 
@@ -70,10 +89,12 @@ db.delete(
     table_name="productos"
 )
 
-"""  Delete all rwcords """
+"""  Delete all records """
 db.delete(
     table_name="productos"
 )
+
+# 5 
 
 🧠 Architecture
 

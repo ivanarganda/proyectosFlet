@@ -135,7 +135,8 @@ class SQLiteORM:
             return False
 
     """
-        DATABASE DML FUNCTIONS: insert, insert_many, select_all, select_one, select_where, select_columns, select_by_id, select_like, select_in, update, delete
+        DATABASE DML FUNCTIONS: insert, insert_many, select_all, select_one, select_where, 
+            select_columns, select_by_id, select_like, select_in, update_all, update, delete_all, delete
         DESCRIPTION: These methods provide basic CRUD operations for interacting with the SQLite database.
     """
     # ===============================
@@ -378,6 +379,13 @@ class SQLiteORM:
         return self.execute_query(query, values)
 
     # ========================
+    # UPDATE ALL RECORDS
+    # ========================
+    def update_all(self, set_values: dict, table_name: str) -> bool:
+        
+        return self.update(set_values=set_values, table_name=table_name)
+        
+    # ========================
     # UPDATE RECORDS
     # ========================
     def update(self, set_values=dict, data: Union[str,list, int] = None, table_name: str = "") -> bool:
@@ -390,10 +398,6 @@ class SQLiteORM:
             if not self.check_table(table_name):
 
                 raise Exception(f"Table '{table_name}' does not exist")
-
-            if isinstance(data, str) and data.strip() == "all":
-
-                data = None
 
             # Build WHERE clause
             where, params, row_count = list(self._build_where_clause(data=data, table=table_name).values())
@@ -428,6 +432,13 @@ class SQLiteORM:
             return False
 
     # ========================
+    # DELETE ALL RECORDS
+    # ========================
+    def delete_all(self, table_name: str) -> bool:
+
+        return self.delete(table_name=table_name)
+
+    # ========================
     # DELETE RECORDS
     # ========================
     def delete(self, data: Union[list, int] = None, table_name: str = "") -> bool:
@@ -455,8 +466,8 @@ class SQLiteORM:
             self.query = query
 
             print(f"Executing delete: {self.formatted_query()} with params {params}")
-
-            # self.execute_query(query, params)
+    
+            self.execute_query(query, params)
 
             print("✅ Delete successful")
 
