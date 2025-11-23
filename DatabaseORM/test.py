@@ -1,9 +1,9 @@
 import os
 import sys
-from SQLiteORM import SQLiteORM as Database
+from SQLiteORM import *
 import re
 
-db = Database("productos.db")
+db = SQLiteORM("productos.db")
 
 db.connect_DB()
 
@@ -26,3 +26,9 @@ db.connect_DB()
 #     table_name='productos'
 # )
 
+db.create_table( 
+    table_name = "test",
+    columns={
+        "id": integer(pk=True, autoincrement=True)
+    }
+)

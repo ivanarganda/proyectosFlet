@@ -12,6 +12,21 @@ import datetime, decimal, uuid, json
 # Auxiliar classes
 from helpers.QueryResults import QueryResults
 
+__all__ = [
+
+    "SQLiteORM",
+    "integer"
+
+]
+
+def _build_type_declaration(base_type: str, **kwargs) -> str:
+    
+    return base_type  # Placeholder implementation
+
+def integer(**kwargs):
+
+    return _build_type_declaration("INTEGER", **kwargs)
+
 class SQLiteORM:
 
     def __init__(self, db_path: str):
@@ -488,6 +503,56 @@ class SQLiteORM:
         except Exception as e:
 
             print(f"Error: {e}")
+
+            return False
+    
+    """
+
+        DEFINITION DATA LANGUAGE FUNCTIONS: create_table, drop_table, alter_table
+        DESCRIPTION: These methods handle DDL operations for managing database schema.
+        
+        # ======================== EXAMPLE USAGE ========================
+        db.create_table(
+            "productos",
+            columns={
+                "id": integer(pk=True, autoincrement=True),
+                "nombre": text(not_null=True),
+                "precio": real(default=0),
+                "activo": boolean(default=1),
+                "id_marca": integer(fk=("marcas", "id"))
+            }
+        )
+
+    """
+    def create_table(self, table_name: str, columns: dict= None ) -> bool:
+
+        try:
+
+            if not columns or not isinstance(columns, dict):
+
+                raise ValueError("Data must be a non-empty list of column definitions.")
+
+            col_defs = []
+
+            for col_name, opts in columns.items():
+
+                col_def = col_name + " " + opts
+
+                col_defs.append(col_def)
+
+            print(col_defs)
+
+            return True
+
+        except sql.Error as e:
+
+            print(f"⚠️ Create table error: {e}")
+
+            return False
+        
+        except ValueError as ve:
+
+            print(f"⚠️ Value error: {ve}")
 
             return False
 
