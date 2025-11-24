@@ -18,228 +18,368 @@ class TypeData(Exception):
 __all__ = [
 
     "SQLiteORM",
-    "integer", "text", "floating",
+    "integer", "text", "floating", "numeric", "varchar", "boolean","enum"
 
 ]
 
+SQLITE_FUNCS = ["CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP"]
+
 def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
 
-    pk = kwargs.get("pk", False)
-    
-    autoincrement = kwargs.get("autoincrement", False)
-    
-    not_null = kwargs.get("not_null", False)
-    
-    default = kwargs.get("default", None)
-    
-    fk = kwargs.get("fk", None)
-    
-    size = kwargs.get("size", None)
-    
-    unique = kwargs.get("unique", False)
-    
-    pos_not_null = None
-    
-    pos_primary_key = None
-    
-    pos_autoincrement = None
-    
-    pos_default = None
-    
-    pos_fk = None
-    
-    pos_unique = None
+    pk             = kwargs.get("pk", False)
 
-    def _validate_number_type( type_: str ) -> Union[None, list]:
+    autoincrement  = kwargs.get("autoincrement", False)
 
-        nonlocal base_type, default, not_null, pk, autoincrement, size, pos_not_null, pos_primary_key, pos_autoincrement, pos_default
-        
-        if pk:
+    not_null       = kwargs.get("not_null", False)
 
-            base_type += ",PRIMARY_KEY"
+    default        = kwargs.get("default", None)
 
-        if autoincrement:
+    enum_values    = kwargs.get("enum_values", None)
 
-            base_type += ",AUTOINCREMENT"
+    size           = kwargs.get("size", None)
 
-        if not_null:
+    unique         = kwargs.get("unique", False)
 
-            base_type += ",NOT_NULL"
-        
-        if default:
+    fk             = kwargs.get("fk", None)
 
-            base_type += f",DEFAULT({default})"
+    def add_common_options(options: list):
 
-        if default and type_ == "INTEGER" and ( isinstance(default, str) or isinstance(default, float) ):
+        nonlocal default
 
-            raise TypeData("SQLite INTEGER type does not accept string defaults.")
+        if not_null:      options.append("NOT_NULL")
 
-        if default and type_ == "REAL" and ( isinstance(default, str) or isinstance(default, int) ):
+        if pk:            options.append("PRIMARY_KEY")
 
-            raise TypeData("SQLite DECIMAL type does not accept string defaults.")
-        
-        # Check not null always first
-        options = base_type.replace(" ", "").split(",")
-        
-        pos_not_null = safe_index(options, "NOT_NULL")
+        if autoincrement: options.append("AUTOINCREMENT")
 
-        pos_primary_key = safe_index(options, "PRIMARY_KEY")
+        if unique:        options.append("UNIQUE")
 
-        pos_autoincrement = safe_index(options, "AUTOINCREMENT")
+        if default is not None:
 
-        pos_default = safe_index(options, f"DEFAULT({default})")
+            # Clone value to avoid mutating original
+            default_value = default
 
-        if pos_not_null > -1 and pos_primary_key > -1 and ( ( pos_not_null - 1 ) != 0 or ( pos_not_null -1  ) == pos_primary_key or ( pos_not_null -1  ) == pos_autoincrement ): # must be first after type and never after primary key
+            # Check if it's a TEXT literal and not a SQLite function
+            if isinstance(default_value, str) and not default_value.upper() in SQLITE_FUNCS:
 
-            options.remove("NOT_NULL")
+                default_value = f"'{default_value}'"
 
-            options.insert(1, "NOT_NULL")
-        
-        if pos_autoincrement > -1 and ( pos_autoincrement + 1 != pos_primary_key or pos_autoincrement - 1 != pos_primary_key ): # must be always beside primary key and to the end
+            options.append(f"DEFAULT({default_value})")
 
-            options.remove("AUTOINCREMENT")
-
-            if pos_primary_key > -1:
-
-                options.insert(pos_primary_key + 1, "AUTOINCREMENT")
-
-            else:
-
-                options.append("AUTOINCREMENT")
-        
-        if pos_default > -1 and (  pos_autoincrement > -1 or pos_primary_key > -1 ): # must be always to the end
-
-            raise ValueError(json.dumps({ "message": "SQLite DEFAULT must be used only without PRIMARY KEY and AUTOINCREMENT declarations." , "value": f"DEFAULT({default})", "base_type": base_type } ))
-
-        if type_ in base_type and size is not None:
-
-            raise ValueError(json.dumps({ "message": "SQLite INTEGER type does not support size specification." , "value": size, "base_type": base_type } ))
-        
         return options
 
-    if base_type == "INTEGER" or base_type == "INT" or base_type == "REAL":
+    # ============================================
+    # 4. Validación para tipos numéricos
+    # ============================================
+    def validate_numeric(type_):
 
-        options = _validate_number_type( base_type )
-        
-    elif base_type == "TEXT":
-
-        if not_null:
-
-            base_type += ",NOT_NULL"
-        
-        if default:
-
-            base_type += f",DEFAULT({default})"
-        
-        if unique:
-
-            base_type += ",UNIQUE"
-        
-        if size:
-
-            raise ValueError(json.dumps({ "message": "SQLite TEXT type does not support size specification." , "value": size, "base_type": base_type } ))
-        
-        # Check not null always first
-        options = base_type.replace(" ", "").split(",")
-        
-        pos_not_null = safe_index(options, "NOT_NULL")
-
-        pos_default = safe_index(options, f"DEFAULT({default})")
-
-        if pos_not_null > -1 and ( ( pos_not_null - 1 ) != 0 ): # must be first after type
-
-            options.remove("NOT_NULL")
-
-            options.insert(1, "NOT_NULL")
-        
-        if pos_default > -1 and pos_default != len(options) -1 : # must be always to the end
-
-            options.remove(f"DEFAULT({default})")
-
-            options.append(f"DEFAULT({default})")
-        
         if size is not None:
 
-            raise ValueError(json.dumps({ "message": "SQLite TEXT type does not support size specification." , "value": size, "base_type": base_type } ))
-        
-    # replace _ 
-    base_type = " ".join(options).replace("_", " ").replace(",", " ")
+            raise ValueError(json.dumps({
+                "message": f"SQLite {type_} type does NOT support size.",
+                "value": size,
+                "base_type": type_
+            }))
+
+        if default is not None:
+
+            # INTEGER cannot accept float or str
+            if type_ == "INTEGER" and isinstance(default, (str, float)):
+
+                raise ValueError(json.dumps({
+                    "message": "SQLite INTEGER cannot use string or float as DEFAULT",
+                    "value": default,
+                    "base_type": type_
+                }))
+
+            # REAL must not accept strings
+            if type_ == "REAL" and isinstance(default, str):
+
+                raise ValueError(json.dumps({
+                    "message": "SQLite REAL cannot use string as DEFAULT",
+                    "value": default,
+                    "base_type": type_
+                }))
+
+    # ============================================
+    # 5. Validación para TEXT / DATE
+    # ============================================
+    def validate_text_date(type_):
+
+        if size is not None:
+
+            raise ValueError(json.dumps({
+                "message": f"SQLite {type_} does NOT support size",
+                "value": size,
+                "base_type": type_
+            }))
     
-    return base_type or "TEXT"  # Placeholder implementation
+    def validate_varchar(type_):
+
+        nonlocal size, default
+
+        if size is None:
+
+            raise ValueError(json.dumps({
+                "message": "SQLite VARCHAR requires a size parameter",
+                "value": size,
+                "base_type": type_
+            }))
+
+        if not isinstance(size, int) or size <= 0:
+
+            raise ValueError(json.dumps({
+                "message": "SQLite VARCHAR size must be a positive integer",
+                "value": size,
+                "base_type": type_
+            }))
+        
+        if default is not None:
+
+            if isinstance(default, str) and default.upper() in SQLITE_FUNCS:
+
+                return  # es una función válida de SQLite
+            
+            if isinstance( default , str ):
+
+                clean_default = default.strip("'").strip('"')
+                if len(clean_default) > size:
+                    raise ValueError(json.dumps({
+                        "message": f"SQLite VARCHAR default value exceeds defined size of {size}",
+                        "value": default,
+                        "base_type": type_
+                    }))
+    
+    def validate_boolean(type_):
+
+        if size is not None:
+
+            raise ValueError(json.dumps({
+                "message": f"SQLite BOOLEAN does NOT support size",
+                "value": size,
+                "base_type": type_
+            }))
+
+        if default is not None:
+
+            if not isinstance(default, int) or default not in (0, 1):
+
+                raise ValueError(json.dumps({
+                    "message": "SQLite BOOLEAN default must be 0 or 1",
+                    "value": default,
+                    "base_type": type_
+                }))
+    
+    def validate_enum(type_):
+
+        nonlocal enum_values
+
+        if default is not None and default not in enum_values:
+
+            raise ValueError(json.dumps({
+                "message": f"SQLite ENUM default must be among that values {", ".join(enum_values)}",
+                "value": default,
+                "base_type": type_
+            }))
+
+    options = [base_type]
+
+    if base_type in ("INTEGER", "REAL", "NUMERIC"):
+
+        validate_numeric(base_type)
+
+        options = add_common_options(options)
+
+    elif base_type in ("TEXT", "DATE"):
+
+        validate_text_date(base_type)
+
+        options = add_common_options(options)
+    
+    elif base_type == "VARCHAR":
+
+        validate_varchar(base_type)
+
+        # Optain position varchar
+        pos_varchar = options.index("VARCHAR")
+
+        options[pos_varchar] = f"VARCHAR({size})"
+
+        options = add_common_options(options)
+    
+    elif base_type == "BOOLEAN":
+
+        # SQLite does not have a separate BOOLEAN type, use INTEGER
+        base_type = "INTEGER"
+
+        validate_boolean(base_type)
+
+        options = add_common_options(options)
+    
+    elif base_type == "ENUM":
+
+        if enum_values:
+
+            cleaned = []
+
+            for val in enum_values:
+
+                if isinstance(val, str):
+
+                    cleaned.append(f"'{val}'")
+
+                else:
+
+                    cleaned.append(str(val))
+            
+            check_sql = f"CHECK( IN ({', '.join(cleaned)}))"
+
+            options.append(check_sql)
+
+            validate_enum(base_type)
+
+            options = add_common_options(options)
+
+    else:
+
+        raise TypeError(f"Unsupported SQLite type: {base_type}")
+
+    # ============================================
+    # 7. Reordenar opciones limpia y correctamente
+    # ============================================
+    protected = []
+
+    for opt in options:
+
+        if opt.startswith("DEFAULT("):
+
+            protected.append(opt)  # lo dejamos intacto
+
+        else:
+
+            protected.append(opt.replace("_", " "))
+
+    options = protected
+
+    # ============================================
+    # 8. Formatear salida
+    # ============================================
+    formatted = " ".join(options)
+
+    return formatted
+
+def build_type(type_name: str, **kwargs):
+
+    try:
+
+        return _build_type_declaration(type_name, **kwargs)
+
+    except ValueError as ve:
+
+        data = json.loads(str(ve))
+
+        msg = data.get("message", "")
+
+        val = data.get("value", "")
+
+        bt  = data.get("base_type", type_name)
+
+        print(f"⚠️ {msg} Given: {val} for base type: {bt}")
+
+        if bt in ("ENUM"):
+
+            raise Exception(f"⚠️ {msg} Given: {val} for base type: {bt}")
+
+        # formatear salida final
+        if isinstance(bt, str):
+
+            return bt.replace("_", " ").strip()
+
+        return str(bt)
+
+    except TypeData as e:
+
+        print(f"⚠️ Unexpected error: {e}")
+
+        return type_name
+    
+    except Exception as e:
+
+        print( e )
+
+def boolean(**kwargs):
+
+    # SQLite does not have a separate BOOLEAN type, use INTEGER as numeric type
+    return numeric(**kwargs)
 
 def integer(**kwargs):
 
-    try: 
-
-        return _build_type_declaration("INTEGER", **kwargs)
-
-    except ValueError as ve:
-
-        message = json.loads(str(ve)).get("message", {})
-
-        value = json.loads(str(ve)).get("value" , None)
-
-        base_type = json.loads(str(ve)).get("base_type" , [])
-
-        if "size" in base_type:
-
-            base_type = base_type.remove("size")
-
-        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
-
-        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
-
-    except TypeData as e:
-
-        print(f"⚠️ Unexpected error: {e}")
-
-        return "INTEGER"
+    return build_type("INTEGER", **kwargs)
 
 def floating(**kwargs):
 
-    try: 
-
-        return _build_type_declaration("REAL", **kwargs)
-    except ValueError as ve:
-
-        message = json.loads(str(ve)).get("message", {})
-
-        value = json.loads(str(ve)).get("value" , None)
-
-        base_type = json.loads(str(ve)).get("base_type" , [])
-
-        if "size" in base_type:
-
-            base_type = base_type.remove("size")
-
-        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
-
-        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
-
-    except TypeData as e:
-
-        print(f"⚠️ Unexpected error: {e}")
-
-        return "REAL"
+    return build_type("REAL", **kwargs)
 
 def text(**kwargs):
 
-    try: 
+    return build_type("TEXT", **kwargs)
 
-        return _build_type_declaration("TEXT", **kwargs)
+def varchar(**kwargs):
 
-    except ValueError as ve:
+    return build_type("VARCHAR", **kwargs)
 
-        message = json.loads(str(ve)).get("message", {})
+def numeric(**kwargs):
 
-        value = json.loads(str(ve)).get("value" , None)
+    base_type = "NUMERIC"
 
-        base_type = json.loads(str(ve)).get("base_type" , [])
+    if "default" in kwargs:
 
-        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
+        default = kwargs["default"]
 
-        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
+        regex_int = r"^-?\d+$"
 
+        regex_float = r"^-?\d+\.\d+$"
+
+        regex_cientific = r"^-?\d+(\.\d+)?[eE][-+]?\d+$"
+
+        regex_date = r"^\d{4}-\d{2}-\d{2}$"
+
+        # Comprobación del default
+        if default is None:
+
+            type_ = "NUMERIC"
+
+        elif re.match(regex_int, str(default)):
+
+            type_ = "INTEGER"
+
+        elif re.match(regex_float, str(default)) or re.match(regex_cientific, str(default)):
+
+            type_ = "REAL"
+        
+        elif re.match(regex_date, str(default)):
+            
+            type_ = "DATE"  # SQLite almacena fechas como texto
+
+        else:
+
+            type_ = "TEXT"
+    
+    base_type = type_
+
+    return build_type(base_type, **kwargs)
+
+def enum(**kwargs):
+
+    enum_values = kwargs.get("enum_values", None)
+
+    if not isinstance(enum_values, (list, tuple)) or len(enum_values) == 0:
+
+        raise ValueError("ENUM requires a non-empty list of values")
+
+    # Guardar los valores para validación
+
+    return build_type("ENUM", **kwargs)
 
 class SQLiteORM:
 
@@ -738,7 +878,7 @@ class SQLiteORM:
         )
 
     """
-    def create_table(self, table_name: str, columns: dict= None ) -> bool:
+    def create_table(self, table_name: str, columns: dict= None, foreign_keys: dict= None ) -> bool:
 
         try:
 
@@ -747,14 +887,34 @@ class SQLiteORM:
                 raise ValueError("Data must be a non-empty list of column definitions.")
 
             col_defs = []
+            col_names = []
 
             for col_name, opts in columns.items():
 
                 col_def = col_name + " " + opts
 
+                if "CHECK(" in opts and "ENUM" in opts:
+
+                    col_def = col_def.replace("CHECK(", f"CHECK({col_name} ", 1)
+
                 col_defs.append(col_def)
 
-            print(col_defs)
+                if foreign_keys:
+
+                    col_names.append( col_name )
+
+            header_create_table = f"CREATE TABLE IF NOT EXISTS {table_name}"
+
+            body_options_create_table = f"{",\n".join(col_defs)}"
+
+            relations_foreign_keys = ""
+
+            # Check foreign_keys
+            if len(col_names) != 0:
+                
+                print( col_names )
+
+            query = f"{header_create_table} ({body_options_create_table}{relations_foreign_keys})" 
 
             return True
 
@@ -772,7 +932,7 @@ class SQLiteORM:
 
     """
 
-        ADDITIONAL METHODS: fetch_all, fetch_one, fetch_many, format_table, formatted_query, 
+        ADDITIONAL METHODS: fetch_all, fetch_one, fetch_many, date, time, datetime, format_table, formatted_query, 
             format_results, processing_stream, _build_placeholders, _build_set_clause, _build_where_clause, execute_query, 
             reset_autoincrement, reset_autoincrements, activate_stream, desactivate_stream, is_text_column, get_database, 
             get_sqlite_type, get_pk, get_query, get_object_columns, check_columns, check_table
@@ -809,6 +969,21 @@ class SQLiteORM:
         results = [dict(row) for row in rows]
 
         return results
+
+    def date(self) -> str:
+
+        # Return current date in YYYY-MM-DD format
+        return SQLITE_FUNCS[0]
+    
+    def time(self) -> str:
+
+        # Return current time in HH:MM:SS format
+        return SQLITE_FUNCS[1]
+    
+    def datetime(self) -> str:
+
+        # Return current date and time in YYYY-MM-DD HH:MM:SS format
+        return SQLITE_FUNCS[2]
 
     def format_table(self, data: list) -> str:
 

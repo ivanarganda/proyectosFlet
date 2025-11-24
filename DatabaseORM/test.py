@@ -27,11 +27,14 @@ db.connect_DB()
 # )
 
 db.create_table( 
-    table_name="test",
+    table_name="compras",
     columns={
-        "id": integer( pk=True, autoincrement=True ),
-        "identify": integer( not_null=True , default=100 ),
-        "name": text( not_null=True, default="ivan" ),
-        "price": floating(default=9.99),
+        'id': integer(primary_key=True, autoincrement=True),
+        'fecha_compra': numeric(default=db.datetime()),
+        'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
+        'id_producto': integer(not_null=True)
+    },
+    foreign_keys={
+        'fk_orders_user': ("id_producto", "products", "id_producto")
     }
 )
