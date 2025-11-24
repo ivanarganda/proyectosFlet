@@ -27,8 +27,11 @@ db.connect_DB()
 # )
 
 db.create_table( 
-    table_name = "test",
+    table_name="test",
     columns={
-        "id": integer(pk=True, autoincrement=True)
+        "id": integer( pk=True, autoincrement=True ),
+        "identify": integer( not_null=True , default=100 ),
+        "name": text( not_null=True, default="ivan" ),
+        "price": floating(default=9.99),
     }
 )

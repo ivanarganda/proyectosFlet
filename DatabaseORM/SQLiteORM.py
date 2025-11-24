@@ -12,20 +12,234 @@ import datetime, decimal, uuid, json
 # Auxiliar classes
 from helpers.QueryResults import QueryResults
 
+class TypeData(Exception):
+    pass
+
 __all__ = [
 
     "SQLiteORM",
-    "integer"
+    "integer", "text", "floating",
 
 ]
 
-def _build_type_declaration(base_type: str, **kwargs) -> str:
+def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
+
+    pk = kwargs.get("pk", False)
     
-    return base_type  # Placeholder implementation
+    autoincrement = kwargs.get("autoincrement", False)
+    
+    not_null = kwargs.get("not_null", False)
+    
+    default = kwargs.get("default", None)
+    
+    fk = kwargs.get("fk", None)
+    
+    size = kwargs.get("size", None)
+    
+    unique = kwargs.get("unique", False)
+    
+    pos_not_null = None
+    
+    pos_primary_key = None
+    
+    pos_autoincrement = None
+    
+    pos_default = None
+    
+    pos_fk = None
+    
+    pos_unique = None
+
+    def _validate_number_type( type_: str ) -> Union[None, list]:
+
+        nonlocal base_type, default, not_null, pk, autoincrement, size, pos_not_null, pos_primary_key, pos_autoincrement, pos_default
+        
+        if pk:
+
+            base_type += ",PRIMARY_KEY"
+
+        if autoincrement:
+
+            base_type += ",AUTOINCREMENT"
+
+        if not_null:
+
+            base_type += ",NOT_NULL"
+        
+        if default:
+
+            base_type += f",DEFAULT({default})"
+
+        if default and type_ == "INTEGER" and ( isinstance(default, str) or isinstance(default, float) ):
+
+            raise TypeData("SQLite INTEGER type does not accept string defaults.")
+
+        if default and type_ == "REAL" and ( isinstance(default, str) or isinstance(default, int) ):
+
+            raise TypeData("SQLite DECIMAL type does not accept string defaults.")
+        
+        # Check not null always first
+        options = base_type.replace(" ", "").split(",")
+        
+        pos_not_null = safe_index(options, "NOT_NULL")
+
+        pos_primary_key = safe_index(options, "PRIMARY_KEY")
+
+        pos_autoincrement = safe_index(options, "AUTOINCREMENT")
+
+        pos_default = safe_index(options, f"DEFAULT({default})")
+
+        if pos_not_null > -1 and pos_primary_key > -1 and ( ( pos_not_null - 1 ) != 0 or ( pos_not_null -1  ) == pos_primary_key or ( pos_not_null -1  ) == pos_autoincrement ): # must be first after type and never after primary key
+
+            options.remove("NOT_NULL")
+
+            options.insert(1, "NOT_NULL")
+        
+        if pos_autoincrement > -1 and ( pos_autoincrement + 1 != pos_primary_key or pos_autoincrement - 1 != pos_primary_key ): # must be always beside primary key and to the end
+
+            options.remove("AUTOINCREMENT")
+
+            if pos_primary_key > -1:
+
+                options.insert(pos_primary_key + 1, "AUTOINCREMENT")
+
+            else:
+
+                options.append("AUTOINCREMENT")
+        
+        if pos_default > -1 and (  pos_autoincrement > -1 or pos_primary_key > -1 ): # must be always to the end
+
+            raise ValueError(json.dumps({ "message": "SQLite DEFAULT must be used only without PRIMARY KEY and AUTOINCREMENT declarations." , "value": f"DEFAULT({default})", "base_type": base_type } ))
+
+        if type_ in base_type and size is not None:
+
+            raise ValueError(json.dumps({ "message": "SQLite INTEGER type does not support size specification." , "value": size, "base_type": base_type } ))
+        
+        return options
+
+    if base_type == "INTEGER" or base_type == "INT" or base_type == "REAL":
+
+        options = _validate_number_type( base_type )
+        
+    elif base_type == "TEXT":
+
+        if not_null:
+
+            base_type += ",NOT_NULL"
+        
+        if default:
+
+            base_type += f",DEFAULT({default})"
+        
+        if unique:
+
+            base_type += ",UNIQUE"
+        
+        if size:
+
+            raise ValueError(json.dumps({ "message": "SQLite TEXT type does not support size specification." , "value": size, "base_type": base_type } ))
+        
+        # Check not null always first
+        options = base_type.replace(" ", "").split(",")
+        
+        pos_not_null = safe_index(options, "NOT_NULL")
+
+        pos_default = safe_index(options, f"DEFAULT({default})")
+
+        if pos_not_null > -1 and ( ( pos_not_null - 1 ) != 0 ): # must be first after type
+
+            options.remove("NOT_NULL")
+
+            options.insert(1, "NOT_NULL")
+        
+        if pos_default > -1 and pos_default != len(options) -1 : # must be always to the end
+
+            options.remove(f"DEFAULT({default})")
+
+            options.append(f"DEFAULT({default})")
+        
+        if size is not None:
+
+            raise ValueError(json.dumps({ "message": "SQLite TEXT type does not support size specification." , "value": size, "base_type": base_type } ))
+        
+    # replace _ 
+    base_type = " ".join(options).replace("_", " ").replace(",", " ")
+    
+    return base_type or "TEXT"  # Placeholder implementation
 
 def integer(**kwargs):
 
-    return _build_type_declaration("INTEGER", **kwargs)
+    try: 
+
+        return _build_type_declaration("INTEGER", **kwargs)
+
+    except ValueError as ve:
+
+        message = json.loads(str(ve)).get("message", {})
+
+        value = json.loads(str(ve)).get("value" , None)
+
+        base_type = json.loads(str(ve)).get("base_type" , [])
+
+        if "size" in base_type:
+
+            base_type = base_type.remove("size")
+
+        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
+
+        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
+
+    except TypeData as e:
+
+        print(f"⚠️ Unexpected error: {e}")
+
+        return "INTEGER"
+
+def floating(**kwargs):
+
+    try: 
+
+        return _build_type_declaration("REAL", **kwargs)
+    except ValueError as ve:
+
+        message = json.loads(str(ve)).get("message", {})
+
+        value = json.loads(str(ve)).get("value" , None)
+
+        base_type = json.loads(str(ve)).get("base_type" , [])
+
+        if "size" in base_type:
+
+            base_type = base_type.remove("size")
+
+        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
+
+        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
+
+    except TypeData as e:
+
+        print(f"⚠️ Unexpected error: {e}")
+
+        return "REAL"
+
+def text(**kwargs):
+
+    try: 
+
+        return _build_type_declaration("TEXT", **kwargs)
+
+    except ValueError as ve:
+
+        message = json.loads(str(ve)).get("message", {})
+
+        value = json.loads(str(ve)).get("value" , None)
+
+        base_type = json.loads(str(ve)).get("base_type" , [])
+
+        print(f"⚠️ {message} Given: {value} for base type: {base_type}")
+
+        return base_type.join(", ").replace("_", " ").replace(",", " ").strip()
+
 
 class SQLiteORM:
 

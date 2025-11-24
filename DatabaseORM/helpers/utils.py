@@ -1,6 +1,13 @@
 import sys
 import os
 
+def safe_index( list , value ):
+    """ Devuelve el índice de value en list o -1 si no se encuentra """
+    try:
+        return list.index( value )
+    except ValueError:
+        return -1
+
 def auto_chunk_size(data, mode="balanced"):
     """
     mode:
