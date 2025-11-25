@@ -50,7 +50,16 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
 
         if pk:            options.append("PRIMARY_KEY")
 
-        if autoincrement: options.append("AUTOINCREMENT")
+        if autoincrement:
+            if not pk:
+                print("⚠️ AUTOINCREMENT requires PRIMARY KEY in SQLite")
+                return options
+
+            if base_type.upper() != "INTEGER":
+                print("⚠️ AUTOINCREMENT only works with INTEGER PRIMARY KEY")
+                return options
+
+            options.append("AUTOINCREMENT")
 
         if unique:        options.append("UNIQUE")
 
@@ -909,10 +918,67 @@ class SQLiteORM:
 
             relations_foreign_keys = ""
 
-            # Check foreign_keys
+            # --- Check foreign_keys ---
             if len(col_names) != 0:
-                
-                print( col_names )
+
+                # Obtain database tables
+                database_tables = [table.get("name") for table in self.get_db_tables()]
+
+                # Obtain primary_keys of each table    { table: [ primary keys  ] , .....  }
+                primary_keys = {}
+
+                for table in database_tables:
+                    primary_keys[table] = [pk for pk in self.get_pk(table)]
+
+                # First loop represent possible foreign keys
+                for constraint, (field_source, table_destination, field_destination) in foreign_keys.items():
+
+                    # 1. Check that source field exists in the new table definition
+                    if field_source not in col_names:
+                        raise Exception(
+                            f"Invalid field_source '{field_source}'. It does not exist in table '{table_name}'"
+                        )
+
+                    # 2. Check that destination table exists
+                    if table_destination not in database_tables:
+                        raise Exception(
+                            f"Invalid table_destination '{table_destination}'. Table does not exist"
+                        )
+
+                    # 3. Obtain PKs of destination table
+                    fks = primary_keys.get(table_destination, [])
+                    fk_names = [fk.get("name") for fk in fks]
+                    fk_types = [fk.get("type") for fk in fks]  # list of types if composite PKs
+
+                    # 4. Check that destination field is a primary key
+                    if field_destination not in fk_names:
+                        raise Exception(
+                            f"Invalid field_destination '{field_destination}'. "
+                            f"It is not a primary key of table '{table_destination}'"
+                        )
+
+                    # 5. Extract the type of source field
+                    #    Your method is kept but fixed to extract only type
+                    for col in col_defs:
+                        if col.startswith(f"{field_source} "):
+                            field_source_type = col.split()[1].upper()   # INTEGER, TEXT, REAL…
+                            break
+                    else:
+                        raise Exception(f"Unable to extract type for field '{field_source}'")
+
+                    # 6. Extract matching PK type from destination
+                    index_dest = fk_names.index(field_destination)
+                    field_destination_type = fk_types[index_dest].upper()
+
+                    # 7. Compare types
+                    if field_destination_type != field_source_type:
+                        raise Exception(
+                            f"Invalid such a field destination {field_destination} from table {table_destination} "
+                            f"due to mismatched types: {field_source_type} != {field_destination_type}"
+                        )
+
+                    # 8. Build foreign key SQL
+                    relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({field_source}) REFERENCES {table_destination}({field_destination})"
 
             query = f"{header_create_table} ({body_options_create_table}{relations_foreign_keys})" 
 
@@ -929,13 +995,22 @@ class SQLiteORM:
             print(f"⚠️ Value error: {ve}")
 
             return False
+        
+        except Exception as e:
+
+            print(e)
+
+            return False
+    
+    def create_tables( self, datatables: dict ):
+        pass
 
     """
 
         ADDITIONAL METHODS: fetch_all, fetch_one, fetch_many, date, time, datetime, format_table, formatted_query, 
             format_results, processing_stream, _build_placeholders, _build_set_clause, _build_where_clause, execute_query, 
             reset_autoincrement, reset_autoincrements, activate_stream, desactivate_stream, is_text_column, get_database, 
-            get_sqlite_type, get_pk, get_query, get_object_columns, check_columns, check_table
+            get_sqlite_type, get_pk, get_query, get_object_columns, check_columns, check_table, get_db_tables
         
         DESCRIPTION: These methods provide additional functionalities for fetching results, formatting outputs,
             building SQL clauses, executing queries, managing autoincrement values, and checking database schema.
@@ -1469,6 +1544,20 @@ class SQLiteORM:
             
             return True
     
+        except Exception as e:
+
+            print(f"Error: {e}")
+
+            return False
+    
+    def get_db_tables( self ) -> Union[list, bool]:
+
+        try:
+
+            return self.execute_query( """
+                SELECT name FROM sqlite_master WHERE type='table'
+            """ ).json
+
         except Exception as e:
 
             print(f"Error: {e}")

@@ -29,12 +29,12 @@ db.connect_DB()
 db.create_table( 
     table_name="compras",
     columns={
-        'id': integer(primary_key=True, autoincrement=True),
+        'id': integer(autoincrement=True, primary_key=True),
         'fecha_compra': numeric(default=db.datetime()),
         'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
         'id_producto': integer(not_null=True)
     },
     foreign_keys={
-        'fk_orders_user': ("id_producto", "products", "id_producto")
+        'fk_orders_user': ("id_producto", "productos", "id_producto")
     }
 )
