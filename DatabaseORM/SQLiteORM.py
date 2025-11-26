@@ -11,6 +11,7 @@ import datetime, decimal, uuid, json
 
 # Auxiliar classes
 from helpers.QueryResults import QueryResults
+from helpers.SchemaValidator import SchemaValidator
 
 class TypeData(Exception):
     pass
@@ -323,23 +324,24 @@ def boolean(**kwargs):
 
 def integer(**kwargs):
 
-    return build_type("INTEGER", **kwargs)
+    return { "__col_type__":int, "_callback_": build_type("INTEGER", **kwargs) }
 
 def floating(**kwargs):
 
-    return build_type("REAL", **kwargs)
+    return { "__col_type__":float, "_callback_": build_type("REAL", **kwargs) }
 
 def text(**kwargs):
 
-    return build_type("TEXT", **kwargs)
+    return { "__col_type__":str, "_callback_": build_type("TEXT", **kwargs) }
 
 def varchar(**kwargs):
 
-    return build_type("VARCHAR", **kwargs)
+    return { "__col_type__":str, "_callback_": build_type("VARCHAR", **kwargs) }
 
 def numeric(**kwargs):
 
     base_type = "NUMERIC"
+    base_instance = int
 
     if "default" in kwargs:
 
@@ -365,30 +367,42 @@ def numeric(**kwargs):
         elif re.match(regex_float, str(default)) or re.match(regex_cientific, str(default)):
 
             type_ = "REAL"
+            base_instance = float
         
         elif re.match(regex_date, str(default)):
             
             type_ = "DATE"  # SQLite almacena fechas como texto
+            base_instance = str
 
         else:
 
             type_ = "TEXT"
+            base_instance = str
     
     base_type = type_
 
-    return build_type(base_type, **kwargs)
+    return { "__col_type__":base_instance, "_callback_": build_type(base_type, **kwargs) }
 
 def enum(**kwargs):
 
     enum_values = kwargs.get("enum_values", None)
+    type_ = str
 
     if not isinstance(enum_values, (list, tuple)) or len(enum_values) == 0:
 
         raise ValueError("ENUM requires a non-empty list of values")
 
+    if any( isinstance( item, int ) for item in enum_values ):
+
+        type_ = int
+
+    if any( isinstance( item, ( bool, float ) ) for item in enum_values ):
+
+        type_ = item.__name__
+
     # Guardar los valores para validación
 
-    return build_type("ENUM", **kwargs)
+    return { "__col_type__":type_, "_callback_": build_type("ENUM", **kwargs) }
 
 class SQLiteORM:
 
@@ -887,22 +901,36 @@ class SQLiteORM:
         )
 
     """
-    def create_table(self, table_name: str, columns: dict= None, foreign_keys: dict= None ) -> bool:
+    def create_table(self, table_name: str, columns: dict= None, foreign_keys: dict= None , multiple = False ) -> bool:
 
         try:
 
-            if not columns or not isinstance(columns, dict):
+            if not multiple:
 
-                raise ValueError("Data must be a non-empty list of column definitions.")
+                data = {
+                    table_name: [
+                        columns,
+                        foreign_keys
+                    ]
+                }
+
+                sv = SchemaValidator( data , 'create_table' )
+                sv._validateSchema()
+
+            if self.check_table(table_name):
+                raise Exception(f"⚠️ Table {table_name} already exists")
 
             col_defs = []
+
             col_names = []
 
             for col_name, opts in columns.items():
 
-                col_def = col_name + " " + opts
+                opts_ = opts.get("_callback_")
 
-                if "CHECK(" in opts and "ENUM" in opts:
+                col_def = col_name + " " + opts_
+
+                if "CHECK(" in opts_ and "ENUM" in opts_:
 
                     col_def = col_def.replace("CHECK(", f"CHECK({col_name} ", 1)
 
@@ -928,6 +956,7 @@ class SQLiteORM:
                 primary_keys = {}
 
                 for table in database_tables:
+
                     primary_keys[table] = [pk for pk in self.get_pk(table)]
 
                 # First loop represent possible foreign keys
@@ -935,23 +964,28 @@ class SQLiteORM:
 
                     # 1. Check that source field exists in the new table definition
                     if field_source not in col_names:
+
                         raise Exception(
                             f"Invalid field_source '{field_source}'. It does not exist in table '{table_name}'"
                         )
 
                     # 2. Check that destination table exists
                     if table_destination not in database_tables:
+
                         raise Exception(
                             f"Invalid table_destination '{table_destination}'. Table does not exist"
                         )
 
                     # 3. Obtain PKs of destination table
                     fks = primary_keys.get(table_destination, [])
+
                     fk_names = [fk.get("name") for fk in fks]
+
                     fk_types = [fk.get("type") for fk in fks]  # list of types if composite PKs
 
                     # 4. Check that destination field is a primary key
                     if field_destination not in fk_names:
+
                         raise Exception(
                             f"Invalid field_destination '{field_destination}'. "
                             f"It is not a primary key of table '{table_destination}'"
@@ -960,18 +994,25 @@ class SQLiteORM:
                     # 5. Extract the type of source field
                     #    Your method is kept but fixed to extract only type
                     for col in col_defs:
+
                         if col.startswith(f"{field_source} "):
+
                             field_source_type = col.split()[1].upper()   # INTEGER, TEXT, REAL…
+
                             break
+
                     else:
+
                         raise Exception(f"Unable to extract type for field '{field_source}'")
 
                     # 6. Extract matching PK type from destination
                     index_dest = fk_names.index(field_destination)
+
                     field_destination_type = fk_types[index_dest].upper()
 
                     # 7. Compare types
                     if field_destination_type != field_source_type:
+
                         raise Exception(
                             f"Invalid such a field destination {field_destination} from table {table_destination} "
                             f"due to mismatched types: {field_source_type} != {field_destination_type}"
@@ -980,7 +1021,17 @@ class SQLiteORM:
                     # 8. Build foreign key SQL
                     relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({field_source}) REFERENCES {table_destination}({field_destination})"
 
-            query = f"{header_create_table} ({body_options_create_table}{relations_foreign_keys})" 
+            query = f"{header_create_table} ({body_options_create_table}{relations_foreign_keys});" 
+
+            semicolon = query.find(";")
+
+            if len( query ) - 1 == semicolon:
+
+                print(f"Ready to execute query create table.... {table_name}")
+
+                if ( self.execute_query( query ) ):
+
+                    print( f"✅ Successfully migrated table {table_name} to database {self.db_name}" )
 
             return True
 
@@ -1002,8 +1053,27 @@ class SQLiteORM:
 
             return False
     
-    def create_tables( self, datatables: dict ):
-        pass
+    def create_tables( self, datatables ):
+
+        try:
+
+            if not isinstance( datatables, dict ):
+
+                raise Exception("❌ Unable to init tables, not allowed arguments. Must be an object")
+            
+            sv = SchemaValidator( datatables , 'create_table' )
+
+            sv._validateSchema()
+
+            for table, ( columns , foreign_keys ) in datatables.items():
+
+                self.create_table( table_name=table, columns=columns, foreign_keys=foreign_keys, multiple=True )
+        
+        except Exception as e:
+
+            print(e)
+
+            return False
 
     """
 
