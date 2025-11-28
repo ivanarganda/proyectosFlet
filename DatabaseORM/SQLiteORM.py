@@ -914,11 +914,11 @@ class SQLiteORM:
                     ]
                 }
 
-                sv = SchemaValidator( data , 'create_table' )
+                sv = SchemaValidator( data , 'create_table' )   # validate dictionary
                 sv._validateSchema()
 
-            if self.check_table(table_name):
-                raise Exception(f"⚠️ Table {table_name} already exists")
+            # if self.check_table(table_name):
+            #     raise Exception(f"⚠️ Table {table_name} already exists")
 
             col_defs = []
 
@@ -952,47 +952,42 @@ class SQLiteORM:
                 # Obtain database tables
                 database_tables = [table.get("name") for table in self.get_db_tables()]
 
+                def __check_table_destination(table_destination: str) -> bool:
+
+                    return table_destination in database_tables
+                     
                 # Obtain primary_keys of each table    { table: [ primary keys  ] , .....  }
                 primary_keys = {}
 
-                for table in database_tables:
+                def __get_table_destination_foreign_keys( table: str ) -> Union[ list, bool ]:
 
-                    primary_keys[table] = [pk for pk in self.get_pk(table)]
+                    try:
+                        if not isinstance( table, str ):
 
-                # First loop represent possible foreign keys
-                for constraint, (field_source, table_destination, field_destination) in foreign_keys.items():
+                            raise Exception("")
 
-                    # 1. Check that source field exists in the new table definition
-                    if field_source not in col_names:
+                        # 3. Obtain PKs of destination table
+                        fks = primary_keys.get(table, [])
 
-                        raise Exception(
-                            f"Invalid field_source '{field_source}'. It does not exist in table '{table_name}'"
-                        )
+                        fk_names = [fk.get("name") for fk in fks]
 
-                    # 2. Check that destination table exists
-                    if table_destination not in database_tables:
+                        fk_types = [fk.get("type") for fk in fks]  # list of types if composite PKs
 
-                        raise Exception(
-                            f"Invalid table_destination '{table_destination}'. Table does not exist"
-                        )
+                        return fk_names , fk_types
+                    
+                    except Exception: 
 
-                    # 3. Obtain PKs of destination table
-                    fks = primary_keys.get(table_destination, [])
+                        return False , False
+                
+                def __check_pk_destinations( fk_n , fd ):
 
-                    fk_names = [fk.get("name") for fk in fks]
+                    return fd in fk_n
 
-                    fk_types = [fk.get("type") for fk in fks]  # list of types if composite PKs
-
-                    # 4. Check that destination field is a primary key
-                    if field_destination not in fk_names:
-
-                        raise Exception(
-                            f"Invalid field_destination '{field_destination}'. "
-                            f"It is not a primary key of table '{table_destination}'"
-                        )
-
+                def __check_pk_types( fd ):
                     # 5. Extract the type of source field
                     #    Your method is kept but fixed to extract only type
+                    field_source_type = False
+
                     for col in col_defs:
 
                         if col.startswith(f"{field_source} "):
@@ -1000,26 +995,148 @@ class SQLiteORM:
                             field_source_type = col.split()[1].upper()   # INTEGER, TEXT, REAL…
 
                             break
+                    
+                    if not isinstance(field_source_type, str) and field_source_type == False:
 
-                    else:
-
-                        raise Exception(f"Unable to extract type for field '{field_source}'")
-
+                        return False, f"Not found field source type for field destination {fd}"
+ 
                     # 6. Extract matching PK type from destination
-                    index_dest = fk_names.index(field_destination)
+                    index_dest = fk_names.index(fd)
 
                     field_destination_type = fk_types[index_dest].upper()
 
                     # 7. Compare types
                     if field_destination_type != field_source_type:
 
-                        raise Exception(
-                            f"Invalid such a field destination {field_destination} from table {table_destination} "
+                        return False, (
+                            f"Invalid such a field destination {fd} from table {table_destination} "
                             f"due to mismatched types: {field_source_type} != {field_destination_type}"
                         )
+                    
+                    return True , ""
 
-                    # 8. Build foreign key SQL
-                    relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({field_source}) REFERENCES {table_destination}({field_destination})"
+                for table in database_tables:
+
+                    primary_keys[table] = [pk for pk in self.get_pk(table)]
+
+                found_table_destination = True
+
+                found_primary_keys = True
+
+                found_primary_keys_destinations = True
+
+                _checked_fk_types = True
+
+                _checked_fk_types_error = ""
+
+                _table_destination = ""
+
+                _fields_destination = []
+ 
+                # First loop represent possible foreign keys
+                for constraint, (field_source, table_destination, field_destination) in foreign_keys.items():
+
+                    if isinstance( field_source, str ) and isinstance( field_destination, str ): 
+
+                        # 1. Check that source field exists in the new table definition
+                        if field_source not in col_names:
+
+                            raise Exception(
+                                f"Invalid field_source '{field_source}'. It does not exist in table '{table_name}'"
+                            )
+
+                        # 2. Check that destination table exists
+                        found_table_destination = __check_table_destination(table_destination)
+
+                        _table_destination = table_destination
+
+                        if not found_table_destination: break
+
+                        # 3. Obtain PKs of destination table
+                        fk_names , fk_types = __get_table_destination_foreign_keys( _table_destination )
+                        
+                        found_primary_keys = fk_names
+
+                        if isinstance( found_primary_keys, bool ): break
+
+                        # 4. Check that destination field is a primary key
+                        found_primary_keys_destinations = __check_pk_destinations( fk_names, field_destination )
+
+                        _fields_destination.append( field_destination )
+
+                        if found_primary_keys_destinations == False: break
+
+                        checked_fk_types , error = __check_pk_types( field_destination )
+
+                        _checked_fk_types = checked_fk_types
+
+                        _checked_fk_types_error = error
+
+                        if _checked_fk_types == False and _checked_fk_types_error != "": break
+
+                        # 8. Build foreign key SQL
+                        relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({field_source}) REFERENCES {table_destination}({field_destination})"
+
+                        print( "Foreign keys str" )
+
+                    elif isinstance( field_source, tuple ) and isinstance( field_destination, tuple ):
+
+                        if len(field_source) != len(field_destination):
+
+                            raise ValueError(
+                                f"Foreign key '{constraint}' must have same number both of source and destination columns"
+                            )
+
+                        # 1. Check both source fields exist in the new table definition
+                        not_found_cols = []
+
+                        for col in field_source:
+
+                            if col not in col_names and col not in not_found_cols:
+
+                                not_found_cols.append(col)
+
+                        if len(not_found_cols) != 0:
+                            
+                            raise ValueError(f"Unable to bind foreign key. Not found column{singularOrPlural( not_found_cols )} {",".join(not_found_cols)}")
+                        
+                        # 2. Check that destination table exists
+                        found_table_destination = __check_table_destination(table_destination)
+
+                        _table_destination = table_destination
+
+                        if not found_table_destination: break
+
+                        relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({",".join(field_source)}) REFERENCES {table_destination}({",".join(field_destination)})"
+
+                        print( "Foreign keys tuples" )
+                        
+                    else:
+
+                        print( "Foreign key both str and tuple" )
+            
+            if found_table_destination == False: 
+
+                raise Exception(
+                    f"Invalid table_destination '{_table_destination}'. Table does not exist"
+                )
+
+            if found_primary_keys == False: 
+
+                raise Exception(
+                    f"Not found primary keys for '{_table_destination}'"
+                )
+
+            if _fields_destination and found_primary_keys_destinations == False:
+
+                raise Exception(
+                    f"Invalid field{singularOrPlural( _fields_destination )}_destination '{",".join(_fields_destination)}'. "
+                    f"It is not a primary key of table '{_table_destination}'"
+                )
+
+            if _checked_fk_types == False and _checked_fk_types_error != "":
+
+                raise Exception( _checked_fk_types_error )
 
             query = f"{header_create_table} ({body_options_create_table}{relations_foreign_keys});" 
 

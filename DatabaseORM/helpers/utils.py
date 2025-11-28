@@ -1,7 +1,20 @@
 import sys
 import os
+from typing import Union
 
-def safe_index( list , value ):
+def singularOrPlural( List: Union[list, dict] ) -> Union[ str, bool ]:
+
+    try: 
+        if not isinstance( List, ( list, dict ) ):
+            raise Exception("")
+        if len( List ) > 1: 
+            return "s"
+        return ""
+    except Exception as e:
+        return False
+
+
+def safe_index( list , value ) -> int:
     """ Devuelve el índice de value en list o -1 si no se encuentra """
     try:
         return list.index( value )
