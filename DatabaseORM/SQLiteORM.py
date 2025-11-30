@@ -14,11 +14,13 @@ from helpers.QueryResults import QueryResults
 from helpers.SchemaValidator import SchemaValidator
 
 class TypeData(Exception):
+
     pass
 
 __all__ = [
 
     "SQLiteORM",
+    
     "integer", "text", "floating", "numeric", "varchar", "boolean","enum"
 
 ]
@@ -52,12 +54,17 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if pk:            options.append("PRIMARY_KEY")
 
         if autoincrement:
+
             if not pk:
+
                 print("⚠️ AUTOINCREMENT requires PRIMARY KEY in SQLite")
+
                 return options
 
             if base_type.upper() != "INTEGER":
+
                 print("⚠️ AUTOINCREMENT only works with INTEGER PRIMARY KEY")
+
                 return options
 
             options.append("AUTOINCREMENT")
@@ -86,9 +93,13 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if size is not None:
 
             raise ValueError(json.dumps({
+
                 "message": f"SQLite {type_} type does NOT support size.",
+
                 "value": size,
+
                 "base_type": type_
+
             }))
 
         if default is not None:
@@ -97,18 +108,26 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
             if type_ == "INTEGER" and isinstance(default, (str, float)):
 
                 raise ValueError(json.dumps({
+
                     "message": "SQLite INTEGER cannot use string or float as DEFAULT",
+
                     "value": default,
+
                     "base_type": type_
+
                 }))
 
             # REAL must not accept strings
             if type_ == "REAL" and isinstance(default, str):
 
                 raise ValueError(json.dumps({
+
                     "message": "SQLite REAL cannot use string as DEFAULT",
+
                     "value": default,
+
                     "base_type": type_
+
                 }))
 
     # ============================================
@@ -119,9 +138,13 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if size is not None:
 
             raise ValueError(json.dumps({
+
                 "message": f"SQLite {type_} does NOT support size",
+
                 "value": size,
+
                 "base_type": type_
+
             }))
     
     def validate_varchar(type_):
@@ -131,17 +154,25 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if size is None:
 
             raise ValueError(json.dumps({
+
                 "message": "SQLite VARCHAR requires a size parameter",
+
                 "value": size,
+
                 "base_type": type_
+
             }))
 
         if not isinstance(size, int) or size <= 0:
 
             raise ValueError(json.dumps({
+
                 "message": "SQLite VARCHAR size must be a positive integer",
+
                 "value": size,
+
                 "base_type": type_
+
             }))
         
         if default is not None:
@@ -153,11 +184,17 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
             if isinstance( default , str ):
 
                 clean_default = default.strip("'").strip('"')
+
                 if len(clean_default) > size:
+
                     raise ValueError(json.dumps({
+
                         "message": f"SQLite VARCHAR default value exceeds defined size of {size}",
+
                         "value": default,
+
                         "base_type": type_
+
                     }))
     
     def validate_boolean(type_):
@@ -165,9 +202,13 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if size is not None:
 
             raise ValueError(json.dumps({
+
                 "message": f"SQLite BOOLEAN does NOT support size",
+
                 "value": size,
+
                 "base_type": type_
+
             }))
 
         if default is not None:
@@ -175,9 +216,13 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
             if not isinstance(default, int) or default not in (0, 1):
 
                 raise ValueError(json.dumps({
+
                     "message": "SQLite BOOLEAN default must be 0 or 1",
+
                     "value": default,
+
                     "base_type": type_
+
                 }))
     
     def validate_enum(type_):
@@ -187,9 +232,13 @@ def _build_type_declaration(base_type: str, **kwargs) -> Union[str, bool]:
         if default is not None and default not in enum_values:
 
             raise ValueError(json.dumps({
+
                 "message": f"SQLite ENUM default must be among that values {", ".join(enum_values)}",
+
                 "value": default,
+
                 "base_type": type_
+
             }))
 
     options = [base_type]
@@ -341,6 +390,7 @@ def varchar(**kwargs):
 def numeric(**kwargs):
 
     base_type = "NUMERIC"
+
     base_instance = int
 
     if "default" in kwargs:
@@ -367,16 +417,19 @@ def numeric(**kwargs):
         elif re.match(regex_float, str(default)) or re.match(regex_cientific, str(default)):
 
             type_ = "REAL"
+
             base_instance = float
         
         elif re.match(regex_date, str(default)):
             
             type_ = "DATE"  # SQLite almacena fechas como texto
+
             base_instance = str
 
         else:
 
             type_ = "TEXT"
+
             base_instance = str
     
     base_type = type_
@@ -386,6 +439,7 @@ def numeric(**kwargs):
 def enum(**kwargs):
 
     enum_values = kwargs.get("enum_values", None)
+
     type_ = str
 
     if not isinstance(enum_values, (list, tuple)) or len(enum_values) == 0:
@@ -423,6 +477,7 @@ class SQLiteORM:
         self.stream_mode = False
     
     """
+
         DATABASE CONNECTION FUNCTIONS: close_connection, connect_DB, connect_stream_DB, close_connection_stream_DB
         DESCRIPTION: These methods handle the connection to the SQLite database, including standard and eStream modes.
         
@@ -527,10 +582,13 @@ class SQLiteORM:
             return False
 
     """
+
         DATABASE DML FUNCTIONS: insert, insert_many, select_all, select_one, select_where, 
             select_columns, select_by_id, select_like, select_in, update_all, update, delete_all, delete
         DESCRIPTION: These methods provide basic CRUD operations for interacting with the SQLite database.
+
     """
+
     # ===============================
     # INSERT ORM ( insert both single values and many values)
     # ===============================
@@ -885,7 +943,7 @@ class SQLiteORM:
     
     """
 
-        DEFINITION DATA LANGUAGE FUNCTIONS: create_table, drop_table, alter_table
+        DEFINITION DATA LANGUAGE FUNCTIONS: create_table, create_tables, drop_table, drop_tables, rename_table, rename_tables, alter_table, alter_tables
         DESCRIPTION: These methods handle DDL operations for managing database schema.
         
         # ======================== EXAMPLE USAGE ========================
@@ -908,17 +966,24 @@ class SQLiteORM:
             if not multiple:
 
                 data = {
+
                     table_name: [
+
                         columns,
+
                         foreign_keys
+
                     ]
+
                 }
 
                 sv = SchemaValidator( data , 'create_table' )   # validate dictionary
+
                 sv._validateSchema()
 
-            # if self.check_table(table_name):
-            #     raise Exception(f"⚠️ Table {table_name} already exists")
+            if self.check_table(table_name):
+
+                raise Exception(f"⚠️ Table {table_name} already exists")
 
             col_defs = []
 
@@ -1009,8 +1074,11 @@ class SQLiteORM:
                     if field_destination_type != field_source_type:
 
                         return False, (
+
                             f"Invalid such a field destination {fd} from table {table_destination} "
+
                             f"due to mismatched types: {field_source_type} != {field_destination_type}"
+
                         )
                     
                     return True , ""
@@ -1042,7 +1110,9 @@ class SQLiteORM:
                         if field_source not in col_names:
 
                             raise Exception(
+
                                 f"Invalid field_source '{field_source}'. It does not exist in table '{table_name}'"
+                                
                             )
 
                         # 2. Check that destination table exists
@@ -1084,7 +1154,9 @@ class SQLiteORM:
                         if len(field_source) != len(field_destination):
 
                             raise ValueError(
+
                                 f"Foreign key '{constraint}' must have same number both of source and destination columns"
+
                             )
 
                         # 1. Check both source fields exist in the new table definition
@@ -1118,20 +1190,27 @@ class SQLiteORM:
             if found_table_destination == False: 
 
                 raise Exception(
+
                     f"Invalid table_destination '{_table_destination}'. Table does not exist"
+
                 )
 
             if found_primary_keys == False: 
 
                 raise Exception(
+
                     f"Not found primary keys for '{_table_destination}'"
+
                 )
 
             if _fields_destination and found_primary_keys_destinations == False:
 
                 raise Exception(
+
                     f"Invalid field{singularOrPlural( _fields_destination )}_destination '{",".join(_fields_destination)}'. "
+
                     f"It is not a primary key of table '{_table_destination}'"
+
                 )
 
             if _checked_fk_types == False and _checked_fk_types_error != "":
@@ -1191,7 +1270,419 @@ class SQLiteORM:
             print(e)
 
             return False
+    
+    def drop_table( self, table_name: str ) -> bool:
 
+        try:
+
+            if not isinstance(table_name, str) or table_name == "":
+
+                raise ValueError("Invalid table name for DROP TABLE")
+
+            if self.check_table( table_name ) == False:
+
+                print(f"⚠️ Table '{table_name}' does not exist")
+
+                return True
+
+            query = f"DROP TABLE IF EXISTS {table_name};"
+
+            if self.execute_query(query):
+
+                print(f"✅ Table '{table_name}' dropped successfully")
+
+                return True
+
+            return False
+
+        except sql.Error as e:
+
+            print(f"⚠️ Drop table SQL error: {e}")
+
+            return False
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+    
+    def drop_tables( self, tables: list ) -> bool:
+        
+        try:
+            
+            sv = SchemaValidator( tables , "drop_table" )
+
+            sv._validateSchema()
+
+            for table in tables:
+
+                self.drop_table( table )
+
+            return True
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+
+    def rename_table( self, current_table:str, new_table: str ) -> bool:
+
+        try:
+
+            if  current_table == "":
+
+                raise ValueError(f"Must not be empty current table for RENAME TABLE")
+
+            if  new_table == "":
+
+                raise ValueError(f"Must not be empty new table for RENAME TABLE")
+
+            if ( not isinstance(current_table, str) or current_table == "" ):
+
+                raise ValueError(f"Invalid current table {current_table} for RENAME TABLE")
+                
+            if ( not isinstance(new_table, str) or new_table == "" ):
+
+                raise ValueError(f"Invalid new table {new_table} for RENAME TABLE")
+
+            if self.check_table( current_table ) == False:
+
+                print(f"⚠️ Table '{current_table}' does not exist")
+
+                return True
+            
+            if self.check_table( new_table ) == True:
+
+                print(f"⚠️ There is already table named {new_table}")
+
+                return True
+
+            if current_table == new_table: 
+
+                print(f"⚠️ Unable to rename table. Both tables are named on the same")
+
+                return True
+
+            query = f"ALTER TABLE {current_table} RENAME TO {new_table};"
+
+            if self.execute_query(query):
+
+                print(f"✅ Table '{current_table}' renamed to '{new_table}' successfully")
+
+                return True
+
+            return False
+
+        except sql.Error as e:
+
+            print(f"⚠️ Raname table SQL error: {e}")
+
+            return False
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+    
+    def rename_tables( self, tables: dict ) -> bool:
+        
+        try:
+
+            if not isinstance( tables, dict ):
+
+                raise Exception("❌ Unable to init tables, not allowed arguments. Must be an object")
+            
+            sv = SchemaValidator( tables , "rename_table" )
+
+            sv._validateSchema()
+
+            for current_table, new_table in tables.items():
+
+                self.rename_table( current_table, new_table )
+
+            return True
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+
+    """
+
+        Estructure args: 
+        (
+            table_name = table,
+            [
+                ( "edit", <field> , <format> ),
+                ( "add", <field> , <format>, optional[ after=<field> | before=<field> ] ),
+                ( "drop", <field> ),
+            ]
+        )
+
+    """
+
+    def alter_table(self, table_name: str, operations: list) -> bool:
+
+        try:
+            self.activate_stream()
+
+            if not isinstance(table_name, str):
+                raise Exception(f"❌ Invalid table name {table_name}. Must be string")
+
+            if not isinstance(operations, list):
+                raise Exception(f"❌ Unable to init operations for table {table_name}")
+
+            # Validate schema
+            sv = SchemaValidator(operations, "alter_table")
+            sv._validateSchema()
+
+            # Get table info
+            columns, fks, sql_create = self.get_table_info(table_name)
+
+            cols = [col.get('name') for col in columns]
+
+            data_types_cols = []
+
+            constraints = self.get_constraints(table_name)
+
+            body_constraint = ""
+
+            fk_constraints = []
+
+            for key,values in constraints.items():
+
+                if values["type"] != "FOREIGN KEY":
+                    continue
+
+                constraint = key
+                columns_     = ",".join(values.get("columns"))        # lista
+                ref_table    = values.get("ref_table")      # string
+                ref_columns  = ",".join(values.get("ref_columns"))    # lista
+                on_delete    = values.get("on_delete")      # string
+                on_update    = values.get("on_update")      # string
+                
+                fk_constraints.append( f"CONSTRAINT {constraint} FOREIGN KEY ({columns_}) REFERENCES {ref_table}({ref_columns})" )
+            
+            body_constraint = ",\n".join(fk_constraints)
+
+            for col in columns:
+
+                data_type = col["name"]
+
+                # TYPE
+                if col.get("type") == "ENUM":
+                    # Buscar CHECK ENUM en el SQL original
+                    pattern = rf"{col['name']}\s+ENUM\s+CHECK\s*\(\s*{col['name']}\s+IN\s*\((.*?)\)\)"
+                    match = re.search(pattern, sql_create)
+
+                    if match:
+                        enum_raw = match.group(1).replace(" ", "")
+                        data_type += f" ENUM CHECK({col['name']} IN ({enum_raw}))"
+
+                    else:
+                        data_type += " ENUM"   # fallback
+
+                else:
+                    data_type += f" {col['type']}"
+
+                # NOT NULL
+                if col.get("notnull") == 1:
+                    data_type += " NOT NULL"
+
+                # PK & AUTOINCREMENT
+                if col.get("pk") == 1:
+                    data_type += " PRIMARY KEY"
+                    if col.get("type") == "INTEGER":
+                        data_type += " AUTOINCREMENT"
+
+                # DEFAULT
+                if col.get("dflt_value") is not None:
+                    data_type += f" DEFAULT({col.get('dflt_value')})"
+
+                data_types_cols.append(data_type)
+
+            # -----------------------------------------------------------------
+            # Helper para reconstrucción en EDIT / ADD WITH POSITION
+            # -----------------------------------------------------------------
+            def __build_create_table(new_sql):
+
+                try:
+    
+                    match = re.search(r'CREATE TABLE\s+["\']?(\w+)["\']?\s*\(', sql_create)
+                    if match:
+                        real_table_name = match.group(1)
+                    else:
+                        raise Exception("❌ Unable to detect table name in CREATE TABLE")
+
+                    new_sql = re.sub(
+                        rf'CREATE TABLE\s+["\']?{real_table_name}["\']?\s*\(',
+                        f'CREATE TABLE IF NOT EXISTS temp_{real_table_name} (',
+                        sql_create
+                    )
+
+                    self.execute_query(new_sql)
+
+                    # Copiar datos
+                    self.execute_query(
+                        f"INSERT INTO temp_{table_name} SELECT * FROM {table_name};"
+                    )
+
+                    # Reemplazar tablas
+                    self.drop_table(table_name)
+                    self.rename_table(f"temp_{table_name}", table_name)
+
+                    return True
+
+                except Exception:
+                    return False
+
+            # -----------------------------------------------------------------
+            # PROCESS OPERATIONS
+            # -----------------------------------------------------------------
+            for op in operations:
+
+                # ==============================================================
+                # EDIT
+                # ==============================================================
+                if op[0] == "edit":
+
+                    table_field = op[1]
+                    new_callback = op[2].get("_callback_")
+
+                    new_data_type = f"{table_field} {new_callback}"
+
+                    if table_field not in cols:
+                        raise Exception(f"❌ Column '{table_field}' not found in {table_name}")
+
+                    # Buscar línea actual de esa columna
+                    current_data_type = next(
+                        (c for c in data_types_cols if c.startswith(table_field)),
+                        None
+                    )
+
+                    if current_data_type is None:
+                        raise Exception(f"❌ Could not locate column definition for {table_field}")
+
+                    # Reemplazar
+                    new_sql = sql_create.replace(current_data_type, new_data_type)
+
+                    if not __build_create_table(new_sql):
+                        raise Exception("❌ Failed executing EDIT alter table")
+
+                # ==============================================================
+                # ADD NORMAL / ADD WITH POSITION
+                # ==============================================================
+                elif op[0] == "add":
+
+                    table_field = op[1]
+                    callback = op[2].get("_callback_")
+                    position = op[3] if len(op) == 4 else None
+
+                    new_data_type = f"{table_field} {callback}"
+
+                    # --------------------------
+                    # ADD NORMAL
+                    # --------------------------
+                    if position is None:
+
+                        sql = (
+                            f"ALTER TABLE {table_name}\n"
+                            f"    ADD COLUMN {new_data_type};"
+                        )
+
+                        self.execute_query(sql)
+
+                        print(f"✅ Added new column '{table_field}' to {table_name} successfully")
+                        continue
+
+                    # --------------------------
+                    # ADD WITH POSITION
+                    # --------------------------
+                    try:
+                        # Validar syntax
+                        if not (position.startswith("after=") or position.startswith("before=")):
+                            raise Exception(
+                                f"❌ Position must be after=<col> or before=<col> → {position}"
+                            )
+
+                        parts = position.split("=")
+                        if len(parts) != 2:
+                            raise Exception(
+                                f"❌ Invalid assignment '{position}'. Use after=<col> or before=<col>"
+                            )
+
+                        col_position = parts[1]
+
+                        if col_position not in cols:
+                            raise Exception(
+                                f"❌ Column '{col_position}' not found in table '{table_name}'"
+                            )
+                
+                        pattern = rf"^\s*{col_position}\b[\s\S]*?(?=^\s*\w+\b|\)$)"
+
+                        match = re.search(pattern, sql_create, flags=re.MULTILINE)
+
+                        if match:
+                        
+                            match_ = match.group()
+
+                            col_name_from_match = match_.strip().split()[0]
+
+                            result = list(filter(
+
+                                lambda col_def: col_def.startswith(col_name_from_match + " "),
+
+                                data_types_cols
+
+                            ))
+
+                            index = None
+
+                            if result:
+
+                                index = data_types_cols.index(result[0])
+
+                            if index is not None:
+
+                                if position.startswith("after="):
+
+                                    data_types_cols.insert( index + 1 , new_data_type )
+                                
+                                else: 
+
+                                    data_types_cols.insert( index , new_data_type )
+
+                            else:
+
+                                data_types_cols.append( new_data_type )
+                        
+                        else:
+
+                            data_types_cols.append( new_data_type )
+
+                        # Replace from create table sql
+                        new_body_create_table = ",\n".join( data_types_cols )
+
+                    except Exception as e:
+
+                        print(e)
+
+                        continue
+
+                # end for operations
+
+            self.desactivate_stream()
+            return True
+
+        except Exception as e:
+            print(e)
+            return False
+
+   
     """
 
         ADDITIONAL METHODS: fetch_all, fetch_one, fetch_many, date, time, datetime, format_table, formatted_query, 
@@ -1536,6 +2027,7 @@ class SQLiteORM:
 
         """
         Reset AUTOINCREMENT counter for a specific table.
+
         """
         try:
 
@@ -1557,6 +2049,7 @@ class SQLiteORM:
 
         """
         Reset AUTOINCREMENT counter for all tables.
+
         """
         try:
 
@@ -1681,6 +2174,10 @@ class SQLiteORM:
 
         return list( primary_keys )
 
+    def get_fk( self, table_name: str ) -> dict:
+
+        return self.execute_query( f"PRAGMA foreign_key_list({table_name})" )
+
     def get_query(self) -> str:
         
         return self.query
@@ -1722,12 +2219,14 @@ class SQLiteORM:
         try:
         
             data = self.execute_query("""
+
                 SELECT name FROM sqlite_master WHERE type='table' AND name = ?
+
             """, (table_name,)).count
 
             if data == 0:
 
-                raise Exception(f"Not found table {table_name}")
+                return False
             
             return True
     
@@ -1742,7 +2241,9 @@ class SQLiteORM:
         try:
 
             return self.execute_query( """
+
                 SELECT name FROM sqlite_master WHERE type='table'
+
             """ ).json
 
         except Exception as e:
@@ -1750,3 +2251,122 @@ class SQLiteORM:
             print(f"Error: {e}")
 
             return False
+
+    def get_constraints(self, table_name: str) -> dict:
+        """
+        Extract all constraints (FOREIGN KEY, CHECK, UNIQUE) from a table.
+        Output format is a single dict:
+        
+        {
+            "constraint_name": {
+                "type": "FOREIGN KEY" | "CHECK" | "UNIQUE",
+                ...data...
+            }
+        }
+        """
+
+        constraints = {}
+
+        # -------------------------------------------------------
+        # 1. Read raw CREATE TABLE source
+        # -------------------------------------------------------
+        sql_res = self.execute_query(
+            f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        ).json
+
+        if not sql_res or not sql_res[0]["sql"]:
+            return {}
+
+        sql = sql_res[0]["sql"]
+
+        # -------------------------------------------------------
+        # 2. Extract constraint names + type via regex
+        # -------------------------------------------------------
+
+        pattern = r"CONSTRAINT\s+(\w+)\s+(FOREIGN KEY|CHECK|UNIQUE)"
+        named_constraints = re.findall(pattern, sql)
+
+        # Pre-fill dictionary with basic structure
+        for name, ctype in named_constraints:
+            constraints[name] = {"type": ctype}
+
+        # -------------------------------------------------------
+        # 3. FOREIGN KEY definitions (must merge with PRAGMA)
+        # -------------------------------------------------------
+        fk_list = self.execute_query(
+            f"PRAGMA foreign_key_list({table_name})"
+        ).json
+
+        # SQLite groups FK constraints by their sequential id
+        fk_counter = 0
+
+        for fk in fk_list:
+
+            # Find matching constraint name (in order)
+            fk_name = None
+            counter = 0
+
+            for cname, cdata in constraints.items():
+                if cdata["type"] == "FOREIGN KEY":
+                    if counter == fk["id"]:
+                        fk_name = cname
+                        break
+                    counter += 1
+
+            # If FK is unnamed (rare), skip
+            if not fk_name:
+                continue
+
+            # Fill constraint detail
+            constraints[fk_name].update({
+                "columns":      [fk["from"]],
+                "ref_table":    fk["table"],
+                "ref_columns":  [fk["to"]],
+                "on_delete":    fk["on_delete"],
+                "on_update":    fk["on_update"],
+            })
+
+        # -------------------------------------------------------
+        # 4. CHECK constraints – extract full expression
+        # -------------------------------------------------------
+        check_pattern = r"CONSTRAINT\s+(\w+)\s+CHECK\s*\((.*?)\)"
+        check_matches = re.findall(check_pattern, sql, flags=re.DOTALL)
+
+        for name, expression in check_matches:
+            if name in constraints and constraints[name]["type"] == "CHECK":
+                constraints[name]["expression"] = expression.strip()
+
+        # -------------------------------------------------------
+        # 5. UNIQUE constraints – extract columns
+        # -------------------------------------------------------
+        unique_pattern = r"CONSTRAINT\s+(\w+)\s+UNIQUE\s*\((.*?)\)"
+        unique_matches = re.findall(unique_pattern, sql)
+
+        for name, cols in unique_matches:
+            if name in constraints and constraints[name]["type"] == "UNIQUE":
+                constraints[name]["columns"] = [
+                    c.strip() for c in cols.split(",")
+                ]
+
+        return constraints
+
+
+
+
+    def get_table_info( self, table_name ):
+
+        data = {
+
+            "columns": self.execute_query(f"PRAGMA table_info({table_name})").json,
+
+            "foreign_keys": self.execute_query(f"PRAGMA foreign_key_list({table_name})").json,
+
+            "sql": (self.execute_query(
+
+                f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+
+            ).json)[0]["sql"]
+
+        }
+
+        return data.get("columns", False) , data.get("foreign_keys", False) , data.get("sql", False)

@@ -39,30 +39,43 @@ db.connect_DB()
 #     }
 # )
 
-db.create_tables({
+# db.create_tables({
 
-    "compras": [
-        {
-            'id': integer(autoincrement=True, pk=True),
-            'fecha_compra': numeric(default=db.datetime()),
-            'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
-            'id_producto': integer(not_null=True),
-            # 'id_cliente': integer(not_null=True)
-        },
-        {
-            'fk_orders_user': ("id_producto", "productos", "id_producto")
-        }, 
-    ],
-    "pedidos": [
-        {
-            'id': integer(autoincrement=True, pk=True),
-            'fecha_pedido': numeric(default=db.datetime()),
-            'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
-            'id_compra': integer(not_null=True),
-            'id_producto': integer(not_null=True)
-        },
-        {
-            'fk_orders_user': ("id_producto", "productos", "id_producto")
-        }, 
+#     "compras": [
+#         {
+#             'id': integer(autoincrement=True, pk=True),
+#             'fecha_compra': numeric(default=db.datetime()),
+#             'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
+#             'id_producto': integer(not_null=True),
+#             # 'id_cliente': integer(not_null=True)
+#         },
+#         {
+#             'fk_orders_user': ("id_producto", "productos", "id_producto")
+#         }, 
+#     ],
+#     "pedidos": [
+#         {
+#             'id': integer(autoincrement=True, pk=True),
+#             'fecha_pedido': numeric(default=db.datetime()),
+#             'status': enum(enum_values=['pending', 'completed', 'canceled'], default='pending', not_null=True),
+#             'id_compra': integer(not_null=True),
+#             'id_producto': integer(not_null=True)
+#         },
+#         {
+#             'fk_orders_user': ("id_producto", "productos", "id_producto")
+#         }, 
+#     ]
+# })
+
+db.alter_table(
+    table_name = "compras",
+    operations = [
+        ("add", "titulo", varchar(size=50, default="unknown"), "after=fecha_compra")
     ]
-})
+)
+
+# columns,_,sql = db.get_table_info("compras")
+
+# print( 
+#     sql
+#  )
