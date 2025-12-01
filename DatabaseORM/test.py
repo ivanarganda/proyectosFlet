@@ -1,11 +1,11 @@
-import os
-import sys
-from SQLiteORM import *
-import re
+# import os
+# import sys
+# from SQLiteORM import *
+# import re
 
-db = SQLiteORM("productos.db")
+# db = SQLiteORM("productos.db")
 
-db.connect_DB()
+# db.connect_DB()
 
 # db.insert_many(
 #     table_name="productos",
@@ -67,15 +67,22 @@ db.connect_DB()
 #     ]
 # })
 
-db.alter_table(
-    table_name = "compras",
-    operations = [
-        ("add", "titulo", varchar(size=50, default="unknown"), "after=fecha_compra")
-    ]
+import os
+import sys
+from SQLiteORM import *
+import re
+
+db = SQLiteORM("futbol.db")
+
+db.connect_DB()
+
+db.create_table( 
+    table_name="reportes",
+    columns={
+        'id': integer(autoincrement=True, pk=True),
+        'id_usuario': integer(not_null=True)
+    },
+    foreign_keys={
+        'fk_orders_user': ("id_usuario", "usuarios", "id")
+    }
 )
-
-# columns,_,sql = db.get_table_info("compras")
-
-# print( 
-#     sql
-#  )

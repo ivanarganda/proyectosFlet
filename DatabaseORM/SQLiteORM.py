@@ -963,6 +963,19 @@ class SQLiteORM:
 
         try:
 
+            found_table_destination = True
+            found_primary_keys = True
+
+            found_primary_keys_destinations = True
+
+            _checked_fk_types = True
+
+            _checked_fk_types_error = ""
+
+            _table_destination = ""
+
+            _fields_destination = []
+
             if not multiple:
 
                 data = {
@@ -1087,19 +1100,6 @@ class SQLiteORM:
 
                     primary_keys[table] = [pk for pk in self.get_pk(table)]
 
-                found_table_destination = True
-
-                found_primary_keys = True
-
-                found_primary_keys_destinations = True
-
-                _checked_fk_types = True
-
-                _checked_fk_types_error = ""
-
-                _table_destination = ""
-
-                _fields_destination = []
  
                 # First loop represent possible foreign keys
                 for constraint, (field_source, table_destination, field_destination) in foreign_keys.items():
@@ -1431,13 +1431,16 @@ class SQLiteORM:
             self.activate_stream()
 
             if not isinstance(table_name, str):
+
                 raise Exception(f"❌ Invalid table name {table_name}. Must be string")
 
             if not isinstance(operations, list):
+
                 raise Exception(f"❌ Unable to init operations for table {table_name}")
 
             # Validate schema
             sv = SchemaValidator(operations, "alter_table")
+
             sv._validateSchema()
 
             # Get table info
@@ -1456,13 +1459,19 @@ class SQLiteORM:
             for key,values in constraints.items():
 
                 if values["type"] != "FOREIGN KEY":
+
                     continue
 
                 constraint = key
+                
                 columns_     = ",".join(values.get("columns"))        # lista
+
                 ref_table    = values.get("ref_table")      # string
+
                 ref_columns  = ",".join(values.get("ref_columns"))    # lista
+
                 on_delete    = values.get("on_delete")      # string
+
                 on_update    = values.get("on_update")      # string
                 
                 fk_constraints.append( f"CONSTRAINT {constraint} FOREIGN KEY ({columns_}) REFERENCES {ref_table}({ref_columns})" )
@@ -1475,32 +1484,43 @@ class SQLiteORM:
 
                 # TYPE
                 if col.get("type") == "ENUM":
+                    
                     # Buscar CHECK ENUM en el SQL original
                     pattern = rf"{col['name']}\s+ENUM\s+CHECK\s*\(\s*{col['name']}\s+IN\s*\((.*?)\)\)"
+
                     match = re.search(pattern, sql_create)
 
                     if match:
+
                         enum_raw = match.group(1).replace(" ", "")
+
                         data_type += f" ENUM CHECK({col['name']} IN ({enum_raw}))"
 
                     else:
+
                         data_type += " ENUM"   # fallback
 
                 else:
+
                     data_type += f" {col['type']}"
 
                 # NOT NULL
                 if col.get("notnull") == 1:
+
                     data_type += " NOT NULL"
 
                 # PK & AUTOINCREMENT
                 if col.get("pk") == 1:
+
                     data_type += " PRIMARY KEY"
+
                     if col.get("type") == "INTEGER":
+
                         data_type += " AUTOINCREMENT"
 
                 # DEFAULT
                 if col.get("dflt_value") is not None:
+
                     data_type += f" DEFAULT({col.get('dflt_value')})"
 
                 data_types_cols.append(data_type)
@@ -1513,31 +1533,43 @@ class SQLiteORM:
                 try:
     
                     match = re.search(r'CREATE TABLE\s+["\']?(\w+)["\']?\s*\(', sql_create)
+
                     if match:
+
                         real_table_name = match.group(1)
+
                     else:
+
                         raise Exception("❌ Unable to detect table name in CREATE TABLE")
 
                     new_sql = re.sub(
+
                         rf'CREATE TABLE\s+["\']?{real_table_name}["\']?\s*\(',
+
                         f'CREATE TABLE IF NOT EXISTS temp_{real_table_name} (',
+
                         sql_create
+
                     )
 
                     self.execute_query(new_sql)
 
                     # Copiar datos
                     self.execute_query(
+
                         f"INSERT INTO temp_{table_name} SELECT * FROM {table_name};"
+
                     )
 
                     # Reemplazar tablas
                     self.drop_table(table_name)
+
                     self.rename_table(f"temp_{table_name}", table_name)
 
                     return True
 
                 except Exception:
+
                     return False
 
             # -----------------------------------------------------------------
@@ -1551,26 +1583,33 @@ class SQLiteORM:
                 if op[0] == "edit":
 
                     table_field = op[1]
+
                     new_callback = op[2].get("_callback_")
 
                     new_data_type = f"{table_field} {new_callback}"
 
                     if table_field not in cols:
+
                         raise Exception(f"❌ Column '{table_field}' not found in {table_name}")
 
                     # Buscar línea actual de esa columna
                     current_data_type = next(
+
                         (c for c in data_types_cols if c.startswith(table_field)),
+
                         None
+
                     )
 
                     if current_data_type is None:
+
                         raise Exception(f"❌ Could not locate column definition for {table_field}")
 
                     # Reemplazar
                     new_sql = sql_create.replace(current_data_type, new_data_type)
 
                     if not __build_create_table(new_sql):
+
                         raise Exception("❌ Failed executing EDIT alter table")
 
                 # ==============================================================
@@ -1579,7 +1618,9 @@ class SQLiteORM:
                 elif op[0] == "add":
 
                     table_field = op[1]
+
                     callback = op[2].get("_callback_")
+
                     position = op[3] if len(op) == 4 else None
 
                     new_data_type = f"{table_field} {callback}"
@@ -1590,13 +1631,17 @@ class SQLiteORM:
                     if position is None:
 
                         sql = (
+
                             f"ALTER TABLE {table_name}\n"
+
                             f"    ADD COLUMN {new_data_type};"
+
                         )
 
                         self.execute_query(sql)
 
                         print(f"✅ Added new column '{table_field}' to {table_name} successfully")
+
                         continue
 
                     # --------------------------
@@ -1605,21 +1650,31 @@ class SQLiteORM:
                     try:
                         # Validar syntax
                         if not (position.startswith("after=") or position.startswith("before=")):
+
                             raise Exception(
+
                                 f"❌ Position must be after=<col> or before=<col> → {position}"
+
                             )
 
                         parts = position.split("=")
+
                         if len(parts) != 2:
+
                             raise Exception(
+
                                 f"❌ Invalid assignment '{position}'. Use after=<col> or before=<col>"
+
                             )
 
                         col_position = parts[1]
 
                         if col_position not in cols:
+
                             raise Exception(
+
                                 f"❌ Column '{col_position}' not found in table '{table_name}'"
+
                             )
                 
                         pattern = rf"^\s*{col_position}\b[\s\S]*?(?=^\s*\w+\b|\)$)"
@@ -1676,10 +1731,13 @@ class SQLiteORM:
                 # end for operations
 
             self.desactivate_stream()
+
             return True
 
         except Exception as e:
+
             print(e)
+
             return False
 
    

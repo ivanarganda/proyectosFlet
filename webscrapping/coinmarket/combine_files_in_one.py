@@ -34,7 +34,7 @@ def sanatize_cols( cols ):
 
     return clean_cols
 
-year_selected = "2013"
+year_selected = "2019"
 path = "./tablas_exportadas"
 
 files = os.listdir(path)
