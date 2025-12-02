@@ -11,82 +11,97 @@ db = SQLiteORM("futbol.db")
 
 db.connect_DB()
 
-# db.drop_tables([
-#    "temporadas",
-#    "equipos",
-#    "partidos",
-#    "stats_equipo_partido"
-# ])
+def drop_tables():
 
-db.create_tables({
+    db.drop_tables([
+       "usuarios",
+       "temporadas",
+       "equipos",
+       "partidos",
+       "stats_equipo_partido",
+       "reportes"
+    ])
 
-    # ============================================================
-    # 1. TEMPORADAS
-    # ============================================================
-    "temporadas": [
-        {
-            "id_temporada": integer(autoincrement=True),
-            "nombre": text(not_null=True),        # "2024/2025"
-            "fecha_inicio": numeric(default=db.date()),
-            "fecha_fin": numeric(default=db.date())
-        }
-    ],
+def init_tables():
 
-    # ============================================================
-    # 2. EQUIPOS
-    # ============================================================
-    "equipos": [
-        {
-            "id_equipo": integer(autoincrement=True),
-            "nombre": text(not_null=True),        # "Real Madrid"
-            "abreviatura": text(),                # "RMA"
-            "ciudad": text()
-        }
-    ],
+    db.create_tables({
 
-    # ============================================================
-    # 3. PARTIDOS
-    # ============================================================
-    "partidos": [
-        {
-            "id_partido": integer(autoincrement=True),
-            "id_temporada": integer(not_null=True),
-            "jornada": integer(),
-            "fecha": numeric(default=db.datetime()),
+        "usuarios": [
+            {
+                "id_usuario": integer(not_null=True,autoincrement=True),
+                "nombre": text( not_null=True ),
+                "email": text( unique=True, not_null=True ),
+                "password": text( not_null=True ),
+                "created_at": numeric( default=db.datetime() ),
+                "updated_at": numeric( default=db.datetime())
+            }
+        ],
+        # ============================================================
+        # 1. TEMPORADAS
+        # ============================================================
+        "temporadas": [
+            {
+                "id_temporada": integer(autoincrement=True),
+                "nombre": text(not_null=True),        # "2024/2025"
+                "fecha_inicio": numeric(default=db.date()),
+                "fecha_fin": numeric(default=db.date())
+            }
+        ],
 
-            "id_local": integer(not_null=True),
-            "id_visitante": integer(not_null=True),
+        # ============================================================
+        # 2. EQUIPOS
+        # ============================================================
+        "equipos": [
+            {
+                "id_equipo": integer(autoincrement=True),
+                "nombre": text(not_null=True),        # "Real Madrid"
+                "abreviatura": text(),                # "RMA"
+                "ciudad": text()
+            }
+        ],
 
-            "goles_local": integer(),
-            "goles_visitante": integer()
-        },
-        {
-            "fk_temporada": ("id_temporada", "temporadas", "id_temporada"),
-            "fk_local": ("id_local", "equipos", "id_equipo"),
-            "fk_visitante": ("id_visitante", "equipos", "id_equipo")
-        }
-    ],
+        "estadios": [
+            {
+                "id_estadio": integer(autoincrement=True),
+                "nombre": text(not_null=True),        # "Real Madrid"
+                "abreviatura": text(),                # "RMA"
+                "ciudad": text()
+            }
+        ],
+        # ============================================================
+        # 3. PARTIDOS
+        # ============================================================
+        "partidos": [
+            {
+                "id_partido": integer(primary_key=True),
+                "id_temporada": integer(not_null=True),
+                "ronda": integer(not_null=True),
+                "fecha": text(not_null=True),
+                "id_estadio_dentro": integer(not_null=True),
+                "goles_dentro": integer(),
+                "id_estadio_fuera": integer(not_null=True),
+                "goles_fuera": integer(),
+                "estado": text(not_null=True),
+                "slug": text(),
+                "timestamp_raw": integer()
+            },
+            {
+                "fk_temporada": ("id_temporada", "temporadas", "id_temporada"),
+                "fk_estadio_partido": ( ("id_estadio_dentro","id_estadio_fuera") , "estadios" , ("id_estadio_dentro","id_estadio_fuera") )
+            }
+        ],
 
-    # ============================================================
-    # 4. STATS DE EQUIPO POR PARTIDO
-    # ============================================================
-    "stats_equipo_partido": [
-        {
-            "id_stat": integer(autoincrement=True),
-
-            "id_partido": integer(not_null=True),
-            "id_equipo": integer(not_null=True),
-
-            "posesion": real(),
-            "tiros_totales": integer(),
-            "tiros_puerta": integer(),
-            "corners": integer(),
-            "faltas": integer(),
-            "xG": real()
-        },
-        {
-            "fk_partido": ("id_partido", "partidos", "id_partido"),
-            "fk_equipo": ("id_equipo", "equipos", "id_equipo")
-        }
-    ]
-})
+        "reportes": [
+            {
+                "id_reporte": integer( autoincrement=True ),
+                "titulo": text( not_null=True ),
+                "filtros": obj( not_null=True ),
+                "id_usuario": integer(not_null=True),
+                "created_at": numeric( default=db.datetime() ),
+                "updated_at": numeric( default=db.datetime() )
+            },
+            {
+                "fk_reportes_usuarios": ( "id_usuario", "usuarios" , "id_usuario" )
+            }
+        ]
+    })

@@ -1,106 +1,124 @@
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "DatabaseORM"))
-from DatabaseORM.SQLiteORM import *
+
 import re
 import requests
-from datetime import datetime
-import json
 import pandas as pd
+from datetime import datetime
+from DatabaseORM.SQLiteORM import *
+from params import HEADERS
 
+# ==========================================
+# CONFIGURACIÓN DE LA BD
+# ==========================================
 db = SQLiteORM("futbol.db")
-
 db.connect_DB()
 
-HEADERS = {
-    "Accept": (
-        "text/html,application/xhtml+xml,application/xml;q=0.9,"
-        "image/avif,image/webp,image/apng,*/*;q=0.8,"
-        "application/signed-exchange;v=b3;q=0.7"
-    ),
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "es-ES,es;q=0.9,en-GB;q=0.8,en;q=0.7,en-US;q=0.6,zh-CN;q=0.5,zh;q=0.4",
-    "Cache-Control": "max-age=0",
-    "If-None-Match": "\"1b3ddd626a\"",
-    "Priority": "u=0, i",
-    "Sec-Ch-Ua": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"",
-    "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "none",
-    "Sec-Fetch-User": "?1",
-    "Upgrade-Insecure-Requests": "1",
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/142.0.0.0 Safari/537.36"
-    )
-}
+# Lista global donde guardaremos resultados
+partidos = []
 
-from datetime import datetime
-import re
-from datetime import datetime
+
+# ==========================================
+# UTILS
+# ==========================================
+def safe_get(obj, key, default=None):
+    """Devuelve obj[key] si existe y obj es dict, si no devuelve default."""
+    return obj.get(key, default) if isinstance(obj, dict) else default
+
 
 def extraer_año_temporada(nombre):
+    """Extrae un año a partir de expresiones tipo '2024/25' o 'LaLiga 25'."""
     if isinstance(nombre, int):
-        return 2000 + nombre  # ej: 25 → 2025
+        return 2000 + nombre
 
     nombre = str(nombre)
 
-    match_4 = re.search(r"(20\d{2})", nombre)
-    if match_4:
-        return int(match_4.group(1))
+    # 4 cifras → 2023
+    if m := re.search(r"(20\d{2})", nombre):
+        return int(m.group(1))
 
-    match_2 = re.search(r"(\d{2})/\d{2}", nombre)
-    if match_2:
-        return 2000 + int(match_2.group(1))
+    # 2 cifras en formato XX/XX
+    if m := re.search(r"(\d{2})/\d{2}", nombre):
+        return 2000 + int(m.group(1))
 
-    match_suelto = re.search(r"(\d{2})$", nombre)
-    if match_suelto:
-        return 2000 + int(match_suelto.group(1))
+    # Últimas 2 cifras sueltas
+    if m := re.search(r"(\d{2})$", nombre):
+        return 2000 + int(m.group(1))
 
     return None
 
+
+# ==========================================
+# PETICIONES AL PROXY
+# ==========================================
+def obtener_temporadas_laliga():
+    """Obtiene todas las temporadas de LaLiga desde el proxy."""
+    url = "http://localhost:3000/temporadas"
+    data = requests.get(url).json()
+
+    resultado = []
+    for t in data.get("seasons", []):
+        year_end = int(t["year"].split("/")[-1])
+        name = t["name"]
+
+        if year_end < 21: 
+            continue
+        if "Primera Division" in name:
+            continue
+
+        resultado.append({
+            "id": t["id"],
+            "nombre": name
+        })
+
+    return resultado
+
+
+def obtener_jornadas(id_liga):
+    """Devuelve la jornada actual y el listado de todas las rondas."""
+    url = f"http://localhost:3000/jornadas/{id_liga}"
+    data = requests.get(url).json()
+    return data["currentRound"], data["rounds"]
+
+
 def obtener_partidos_ronda(id_liga, ronda):
-
-    print( id_liga, ronda )
-
+    """Obtiene los eventos de una ronda (devueltos por tu API de Node)."""
     url = f"http://localhost:3000/partidos/{id_liga}/{ronda}"
-
     resp = requests.get(url).json()
 
-    print( resp )
+    if isinstance(resp, list):
+        return resp   # ya viene mapeado desde Node.js (si usas la versión avanzada)
 
-    if resp is None:
-        return []
-
+    # si viene en formato viejo:
     return resp.get("events", [])
 
+
+# ==========================================
+# PROCESAMIENTO DE TEMPORADA
+# ==========================================
 def procesar_temporada(id_liga, nombre_temporada):
+    """Obtiene 1 partido por ronda (excepto ronda actual)."""
+
+    global partidos
 
     año_inicio = extraer_año_temporada(nombre_temporada)
     año_actual = datetime.now().year
 
-    # Validación temporada
     if año_inicio is None:
-        print("No se puede extraer año:", nombre_temporada)
-        return []
+        print("⚠ No se pudo extraer año:", nombre_temporada)
+        return False
 
+    # Solo temporadas actual o pasada
     if año_inicio not in (año_actual, año_actual - 1):
-        print("Temporada antigua:", nombre_temporada)
-        return []
+        print("⏭ Temporada antigua:", nombre_temporada)
+        return False
 
-    # Obtener jornadas
     current_round, rounds = obtener_jornadas(id_liga)
 
-    partidos_totales = []
-
     for r in rounds:
+        ronda = safe_get(r, "round")
 
-        ronda = r.get("round")
-
-        # Evitar ronda actual
         if ronda == current_round:
             continue
 
@@ -109,57 +127,28 @@ def procesar_temporada(id_liga, nombre_temporada):
         if not eventos:
             continue
 
-        partidos_totales.extend(eventos)
+        # Guardar solo el primer evento de esta ronda
+        partidos.append(eventos[0])
+        
+    return True
 
-        break
+# ==========================================
+# MAIN: PROCESAR TODAS LAS TEMPORADAS
+# ==========================================
+if __name__ == "__main__":
 
-    return partidos_totales
+    for temporada in obtener_temporadas_laliga():
 
+        id_liga = temporada["id"]
+        nombre = temporada["nombre"]
 
-def obtener_jornadas( id_liga ):
+        print(f"Procesando temporada: {nombre}")
 
-    url = f"http://localhost:3000/jornadas/{id_liga}"
-    data = requests.get(url).json()
+        procesar_temporada(id_liga, nombre)
 
-    return data["currentRound"] , data["rounds"]
+        print("Partidos recopilados:", len(partidos))
 
+        df = pd.DataFrame(partidos)
+        print(df)
 
-
-# ===========================================
-# Obtener temporada actual
-# ===========================================
-def obtener_temporadas_laliga():
-
-    url = "http://localhost:3000/temporadas"
-    data = requests.get(url).json()
-
-    temporadas = data.get("seasons", [])
-
-    resultado = []
-    for t in temporadas:
-        if int(t["year"].split("/")[-1]) < 21 or "Primera Division" in t["name"]: continue
-        resultado.append({
-            "id": t["id"],
-            "nombre": t["name"]
-        })
-
-    return resultado
-
-
-# Probarlo
-partidos = None
-
-for temporada in obtener_temporadas_laliga():
-
-    id_liga = temporada["id"]
-    nombre = temporada["nombre"]
-
-    print("Procesando temporada:", nombre)
-
-    partidos = procesar_temporada(id_liga, nombre)
-
-    df = pd.DataFrame(partidos)
-
-    break
-
-print( partidos )
+        break  # eliminar si quieres procesar TODAS las temporadas

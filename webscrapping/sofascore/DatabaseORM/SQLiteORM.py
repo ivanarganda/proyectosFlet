@@ -21,7 +21,7 @@ __all__ = [
 
     "SQLiteORM",
     
-    "integer", "text", "json", "floating", "real", "numeric", "varchar", "boolean","enum"
+    "integer", "text", "obj", "floating", "real", "numeric", "varchar", "boolean","enum"
 
 ]
 
@@ -385,7 +385,7 @@ def text(**kwargs):
 
     return { "__col_type__":str, "_callback_": build_type("TEXT", **kwargs) }
 
-def json(**kwargs):
+def obj(**kwargs):
 
     return { "__col_type__":str, "_callback_": build_type("JSON", **kwargs) }
 
