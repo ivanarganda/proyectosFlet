@@ -965,11 +965,12 @@ class SQLiteORM:
         )
 
     """
-    def create_table(self, table_name: str, columns: dict= None, foreign_keys: dict= None , multiple = False ) -> bool:
+    def create_table(self, table_name: str, columns: dict= None, foreign_keys: dict= None , multiple = False, validation = 'standard' ) -> bool:
 
         try:
 
             found_table_destination = True
+
             found_primary_keys = True
 
             found_primary_keys_destinations = True
@@ -1112,6 +1113,8 @@ class SQLiteORM:
 
                     if isinstance( field_source, str ) and isinstance( field_destination, str ): 
 
+                        print( field_destination )
+
                         # 1. Check that source field exists in the new table definition
                         if field_source not in col_names:
 
@@ -1126,7 +1129,7 @@ class SQLiteORM:
 
                         _table_destination = table_destination
 
-                        if not found_table_destination: break
+                        if validation == 'strict' and not found_table_destination: break
 
                         # 3. Obtain PKs of destination table
                         fk_names , fk_types = __get_table_destination_foreign_keys( _table_destination )
@@ -1153,7 +1156,7 @@ class SQLiteORM:
                         # 8. Build foreign key SQL
                         relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({field_source}) REFERENCES {table_destination}({field_destination})"
 
-                        print( "Foreign keys str" )
+                        print(f"Foreign key str")
 
                     elif isinstance( field_source, tuple ) and isinstance( field_destination, tuple ):
 
@@ -1183,25 +1186,17 @@ class SQLiteORM:
 
                         _table_destination = table_destination
 
-                        if not found_table_destination: break
+                        if validation == 'strict' and not found_table_destination: break
 
                         relations_foreign_keys += f",\nCONSTRAINT {constraint} FOREIGN KEY ({",".join(field_source)}) REFERENCES {table_destination}({",".join(field_destination)})"
-
-                        print( "Foreign keys tuples" )
                         
+                        print(f"Foreign key tuple")
+
                     else:
 
-                        print( "Foreign key both str and tuple" )
-            
-            if found_table_destination == False: 
+                        continue
 
-                raise Exception(
-
-                    f"Invalid table_destination '{_table_destination}'. Table does not exist"
-
-                )
-
-            if found_primary_keys == False: 
+            if validation == 'strict' and found_primary_keys == False: 
 
                 raise Exception(
 
@@ -1209,15 +1204,25 @@ class SQLiteORM:
 
                 )
 
-            if _fields_destination and found_primary_keys_destinations == False:
+            if validation == 'strict':
+            
+                if found_table_destination == False: 
 
-                raise Exception(
+                    raise Exception(
 
-                    f"Invalid field{singularOrPlural( _fields_destination )}_destination '{",".join(_fields_destination)}'. "
+                        f"Invalid table_destination '{_table_destination}'. Table does not exist"
 
-                    f"It is not a primary key of table '{_table_destination}'"
+                    )
 
-                )
+                if _fields_destination and found_primary_keys_destinations == False:
+
+                    raise Exception(
+
+                        f"Invalid field{singularOrPlural( _fields_destination )}_destination '{",".join(_fields_destination)}'. "
+
+                        f"It is not a primary key of table '{_table_destination}'"
+
+                    )
 
             if _checked_fk_types == False and _checked_fk_types_error != "":
 
@@ -1255,7 +1260,7 @@ class SQLiteORM:
 
             return False
     
-    def create_tables( self, datatables ):
+    def create_tables( self, datatables , checking_foreign_keys = 'standard' ):
 
         try:
 
@@ -1282,7 +1287,9 @@ class SQLiteORM:
 
                 foreign_keys = dataset[1] if len(dataset) > 1 else None
 
-                self.create_table( table_name=table, columns=columns, foreign_keys=foreign_keys, multiple=True )
+                time.sleep(0.1)
+
+                self.create_table( table_name=table, columns=columns, foreign_keys=foreign_keys, multiple=True , validation=checking_foreign_keys )
 
         except Exception as e:
 

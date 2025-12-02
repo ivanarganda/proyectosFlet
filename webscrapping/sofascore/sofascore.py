@@ -18,17 +18,20 @@ db.connect_DB()
 # Lista global donde guardaremos resultados
 partidos = []
 
+# Base del proxy
+PROXY = "http://localhost:3000"
+
 
 # ==========================================
 # UTILS
 # ==========================================
 def safe_get(obj, key, default=None):
-    """Devuelve obj[key] si existe y obj es dict, si no devuelve default."""
+    """Devuelve obj[key] si existe y obj es dict."""
     return obj.get(key, default) if isinstance(obj, dict) else default
 
 
 def extraer_año_temporada(nombre):
-    """Extrae un año a partir de expresiones tipo '2024/25' o 'LaLiga 25'."""
+    """Extrae año de cadena tipo '2024/25'."""
     if isinstance(nombre, int):
         return 2000 + nombre
 
@@ -38,11 +41,11 @@ def extraer_año_temporada(nombre):
     if m := re.search(r"(20\d{2})", nombre):
         return int(m.group(1))
 
-    # 2 cifras en formato XX/XX
+    # 2 cifras en XX/XX
     if m := re.search(r"(\d{2})/\d{2}", nombre):
         return 2000 + int(m.group(1))
 
-    # Últimas 2 cifras sueltas
+    # Últimas dos
     if m := re.search(r"(\d{2})$", nombre):
         return 2000 + int(m.group(1))
 
@@ -50,11 +53,11 @@ def extraer_año_temporada(nombre):
 
 
 # ==========================================
-# PETICIONES AL PROXY
+# PETICIONES AL PROXY (ADAPTADAS A LALIGA)
 # ==========================================
 def obtener_temporadas_laliga():
     """Obtiene todas las temporadas de LaLiga desde el proxy."""
-    url = "http://localhost:3000/temporadas"
+    url = f"{PROXY}/laliga/temporadas"
     data = requests.get(url).json()
 
     resultado = []
@@ -62,9 +65,8 @@ def obtener_temporadas_laliga():
         year_end = int(t["year"].split("/")[-1])
         name = t["name"]
 
-        if year_end < 21: 
-            continue
-        if "Primera Division" in name:
+        # Filtrar temporadas antiguas o que no correspondan a LaLiga
+        if year_end < 21:
             continue
 
         resultado.append({
@@ -75,30 +77,30 @@ def obtener_temporadas_laliga():
     return resultado
 
 
-def obtener_jornadas(id_liga):
-    """Devuelve la jornada actual y el listado de todas las rondas."""
-    url = f"http://localhost:3000/jornadas/{id_liga}"
+def obtener_jornadas(id_temporada):
+    """Devuelve la jornada actual y lista de rondas."""
+    url = f"{PROXY}/laliga/temporada/{id_temporada}/jornadas"
     data = requests.get(url).json()
     return data["currentRound"], data["rounds"]
 
 
-def obtener_partidos_ronda(id_liga, ronda):
-    """Obtiene los eventos de una ronda (devueltos por tu API de Node)."""
-    url = f"http://localhost:3000/partidos/{id_liga}/{ronda}"
+def obtener_partidos_ronda(id_temporada, ronda):
+    """Obtiene los partidos de una ronda usando el proxy."""
+    url = f"{PROXY}/laliga/temporada/{id_temporada}/jornada/{ronda}"
     resp = requests.get(url).json()
 
+    # En nuestro proxy, esto SIEMPRE es una lista limpia
     if isinstance(resp, list):
-        return resp   # ya viene mapeado desde Node.js (si usas la versión avanzada)
+        return resp
 
-    # si viene en formato viejo:
     return resp.get("events", [])
 
 
 # ==========================================
 # PROCESAMIENTO DE TEMPORADA
 # ==========================================
-def procesar_temporada(id_liga, nombre_temporada):
-    """Obtiene 1 partido por ronda (excepto ronda actual)."""
+def procesar_temporada(id_temporada, nombre_temporada):
+    """Obtiene 1 partido por ronda exceptuando la ronda actual."""
 
     global partidos
 
@@ -109,12 +111,12 @@ def procesar_temporada(id_liga, nombre_temporada):
         print("⚠ No se pudo extraer año:", nombre_temporada)
         return False
 
-    # Solo temporadas actual o pasada
+    # Solo temporada actual y anterior
     if año_inicio not in (año_actual, año_actual - 1):
         print("⏭ Temporada antigua:", nombre_temporada)
         return False
 
-    current_round, rounds = obtener_jornadas(id_liga)
+    current_round, rounds = obtener_jornadas(id_temporada)
 
     for r in rounds:
         ronda = safe_get(r, "round")
@@ -122,33 +124,35 @@ def procesar_temporada(id_liga, nombre_temporada):
         if ronda == current_round:
             continue
 
-        eventos = obtener_partidos_ronda(id_liga, ronda)
+        eventos = obtener_partidos_ronda(id_temporada, ronda)
 
         if not eventos:
             continue
 
-        # Guardar solo el primer evento de esta ronda
+        # Guardar solo el primer partido de cada ronda
         partidos.append(eventos[0])
-        
+
     return True
 
+
 # ==========================================
-# MAIN: PROCESAR TODAS LAS TEMPORADAS
+# MAIN
 # ==========================================
 if __name__ == "__main__":
 
-    for temporada in obtener_temporadas_laliga():
+    temporadas = obtener_temporadas_laliga()
 
-        id_liga = temporada["id"]
+    for temporada in temporadas:
+        id_temp = temporada["id"]
         nombre = temporada["nombre"]
 
-        print(f"Procesando temporada: {nombre}")
+        print(f"\nProcesando temporada: {nombre}")
 
-        procesar_temporada(id_liga, nombre)
+        procesar_temporada(id_temp, nombre)
 
         print("Partidos recopilados:", len(partidos))
 
         df = pd.DataFrame(partidos)
         print(df)
 
-        break  # eliminar si quieres procesar TODAS las temporadas
+        break  # quítalo para procesar TODAS las temporadas
