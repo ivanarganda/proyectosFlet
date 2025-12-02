@@ -1113,8 +1113,12 @@ class SQLiteORM:
 
                     if isinstance( field_source, str ) and isinstance( field_destination, str ): 
 
-                        # TODO: handle multiple foreign keys targeting the same PK on the same table,
-                        #       avoiding index collisions during FK type checks
+                        # TODO: when multiple FK tuples share the same field_destination (e.g., 
+                        #       id_local → equipos.id_equipo and id_visitante → equipos.id_equipo), 
+                        #       generate a per-constraint scoped identifier so the validator does 
+                        #       not overwrite or ignore subsequent FKs. Implement a loop to map 
+                        #       each FK independently and avoid name/type conflicts.
+
 
                         # 1. Check that source field exists in the new table definition
                         if field_source not in col_names:
