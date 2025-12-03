@@ -7,6 +7,8 @@ const LALIGA = 8;  // ID oficial de Sofascore
 
 async function request_URL(res, config) {
     try {
+        console.log(config.url);
+        
         const browser = await chromium.launch({ headless: true });
         const page = await browser.newPage();
         let interceptedData = null;
@@ -76,8 +78,8 @@ app.get("/laliga/temporadas", async (req, res) => {
 });
 
 // Equipos de LaLiga
-app.get("/laliga/equipos", async (req, res) => {
-    request_URL(res, { url: `https://api.sofascore.com/api/v1/unique-tournament/${LALIGA}/teams` });
+app.get("/laliga/equipos/:id_temporada", async (req, res) => {
+    request_URL(res, { url: `https://api.sofascore.com/api/v1/unique-tournament/${LALIGA}/season/${req.params.id_temporada}/teams` });
 });
 
 //

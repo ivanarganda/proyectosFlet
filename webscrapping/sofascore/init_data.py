@@ -51,7 +51,7 @@ def init_tables():
         # ============================================================
         "temporadas": [
             {
-                "id_temporada": integer(autoincrement=True),
+                "id_temporada": integer(pk=True),
                 "nombre": text(not_null=True),
                 "year_start": integer(),
                 "year_end": integer(),
@@ -65,19 +65,27 @@ def init_tables():
         # ============================================================
         "equipos": [
             {
-                "id_equipo": integer(primary_key=True),
+                "id_equipo": integer(pk=True),
                 "nombre": text(not_null=True),
                 "slug": text(),
                 "escudo": text()
             }
         ],
 
+        "jugadores": [
+            {
+                "id_jugador": integer(pk=True),
+                "nombre": text(default="Unknown"),
+                "edad": integer(not_null=True),
+                "sexo": enum(enum_values=["H","M"], not_null=True)
+            }
+        ],
         # ============================================================
         # ESTADIOS
         # ============================================================
         "estadios": [
             {
-                "id_estadio": integer(primary_key=True),
+                "id_estadio": integer(pk=True),
                 "nombre": text(not_null=True),
                 "ciudad": text(),
                 "capacidad": integer(),
@@ -93,7 +101,7 @@ def init_tables():
         # ============================================================
         "jornadas": [
             {
-                "id_jornada": integer(autoincrement=True),
+                "id_jornada": integer(pk=True),
                 "id_temporada": integer(not_null=True),
                 "numero": integer(not_null=True),
                 "fecha_creacion": numeric(default=db.date())
@@ -108,7 +116,7 @@ def init_tables():
         # ============================================================
         "partidos": [
             {
-                "id_partido": integer(primary_key=True),
+                "id_partido": integer(pk=True),
                 "id_temporada": integer(not_null=True),
                 "id_jornada": integer(not_null=True),
                 "id_local": integer(not_null=True),
@@ -133,7 +141,7 @@ def init_tables():
         # ============================================================
         "stats_equipo_partido": [
             {
-                "id_stats": integer(autoincrement=True),
+                "id_stats": integer(pk=True),
                 "id_partido": integer(not_null=True),
                 "id_equipo": integer(not_null=True),
                 "posesion": real(),
@@ -156,7 +164,7 @@ def init_tables():
         # ============================================================
         "stats_jugador_partido": [
             {
-                "id_registro": integer(autoincrement=True),
+                "id_registro": integer(pk=True),
                 "id_partido": integer(not_null=True),
                 "id_jugador": integer(not_null=True),
                 "minutos_jugados": real(),
@@ -181,7 +189,7 @@ def init_tables():
         # ============================================================
         "usuarios": [
             {
-                "id_usuario": integer(autoincrement=True),
+                "id_usuario": integer(pk=True),
                 "nombre": text(not_null=True),
                 "email": text(not_null=True),
                 "password": text(not_null=True),
@@ -195,10 +203,11 @@ def init_tables():
         # ============================================================
         "reportes": [
             {
-                "id_reporte": integer(autoincrement=True),
+                "id_reporte": integer(pk=True),
                 "id_usuario": integer(not_null=True),
                 "titulo": text(not_null=True),
                 "descripcion": text(),
+                "filtros": obj(default="""{}"""),
                 "fecha_creacion": numeric(default=db.date())
             },
             {
@@ -211,7 +220,7 @@ def init_tables():
         # ============================================================
         "reportes_partidos": [
             {
-                "id": integer(autoincrement=True),
+                "id": integer(pk=True),
                 "id_reporte": integer(not_null=True),
                 "id_partido": integer(not_null=True),
                 "comentario": text()
@@ -227,7 +236,7 @@ def init_tables():
         # ============================================================
         "reportes_jugadores": [
             {
-                "id": integer(autoincrement=True),
+                "id": integer(pk=True),
                 "id_reporte": integer(not_null=True),                
                 "id_jugador": integer(not_null=True),               
                 "comentario": text()

@@ -624,9 +624,9 @@ class SQLiteORM:
 
                 raise Exception(f"It could not be obtained table_info PRAGMA from '{table_name}'")
 
-            primary_keys = [col["name"] for col in info if col["pk"] == 1]
+            # primary_keys = [col["name"] for col in info if col["pk"] == 1]
 
-            cols_to_insert = [c for c in columns if c not in primary_keys]
+            cols_to_insert = [c for c in columns if c]
 
             if not cols_to_insert:
 
@@ -658,7 +658,7 @@ class SQLiteORM:
 
             base_query = (
 
-                f"INSERT INTO {table_name} ({', '.join(cols_to_insert)}) "
+                f"INSERT OR IGNORE INTO {table_name} ({', '.join(cols_to_insert)}) "
 
                 f"VALUES ({placeholders})"
 

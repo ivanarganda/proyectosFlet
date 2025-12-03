@@ -26,11 +26,13 @@ PROXY = "http://localhost:3000"
 # UTILS
 # ==========================================
 def safe_get(obj, key, default=None):
+
     """Devuelve obj[key] si existe y obj es dict."""
     return obj.get(key, default) if isinstance(obj, dict) else default
 
 
 def extraer_año_temporada(nombre):
+
     """Extrae año de cadena tipo '2024/25'."""
     if isinstance(nombre, int):
         return 2000 + nombre
@@ -51,11 +53,11 @@ def extraer_año_temporada(nombre):
 
     return None
 
-
 # ==========================================
 # PETICIONES AL PROXY (ADAPTADAS A LALIGA)
 # ==========================================
 def obtener_temporadas_laliga():
+
     """Obtiene todas las temporadas de LaLiga desde el proxy."""
     url = f"{PROXY}/laliga/temporadas"
     data = requests.get(url).json()
@@ -76,8 +78,34 @@ def obtener_temporadas_laliga():
 
     return resultado
 
+def transformar_equipos(data):
+
+    equipos_raw = data.get("teams", [])
+    equipos = []
+    ids = []
+
+    for t in equipos_raw:
+
+        equipos.append((
+            t["id"],
+            t["name"],
+            t["slug"],
+            ""
+        ))
+
+        ids.append(f["id"])
+
+    return ids,equipos
+
+def obtener_equipos(id_temporada):
+
+    url = f"{PROXY}/laliga/equipos/{id_temporada}"
+    data = requests.get(url).json()
+    return data
+
 
 def obtener_jornadas(id_temporada):
+
     """Devuelve la jornada actual y lista de rondas."""
     url = f"{PROXY}/laliga/temporada/{id_temporada}/jornadas"
     data = requests.get(url).json()
@@ -85,6 +113,7 @@ def obtener_jornadas(id_temporada):
 
 
 def obtener_partidos_ronda(id_temporada, ronda):
+
     """Obtiene los partidos de una ronda usando el proxy."""
     url = f"{PROXY}/laliga/temporada/{id_temporada}/jornada/{ronda}"
     resp = requests.get(url).json()
@@ -100,6 +129,7 @@ def obtener_partidos_ronda(id_temporada, ronda):
 # PROCESAMIENTO DE TEMPORADA
 # ==========================================
 def procesar_temporada(id_temporada, nombre_temporada):
+
     """Obtiene 1 partido por ronda exceptuando la ronda actual."""
 
     global partidos
@@ -140,19 +170,81 @@ def procesar_temporada(id_temporada, nombre_temporada):
 # ==========================================
 if __name__ == "__main__":
 
+    # Procesar los del primero grupo 1
+    # equipos, usuarios, temporadas
+
+    """ Temporadas """
     temporadas = obtener_temporadas_laliga()
+    temporadas = list(filter(lambda x: "Division" not in x["nombre"], temporadas))
 
-    for temporada in temporadas:
-        id_temp = temporada["id"]
-        nombre = temporada["nombre"]
+    nuevas_temporadas = []
+    ids_temporadas = []
 
-        print(f"\nProcesando temporada: {nombre}")
+    equipos = []
+    ids_equipos = []
 
-        procesar_temporada(id_temp, nombre)
+    for temp in temporadas:
+        year_start, year_end = temp["nombre"].split(" ")[-1].split("/")
 
-        print("Partidos recopilados:", len(partidos))
+        nuevas_temporadas.append((
+            temp["id"],
+            temp["nombre"],
+            int(year_start),
+            int(year_end),
+            8,
+            db.datetime()
+        ))
+        
+        ids_temporadas.append( temp["id"] )
 
-        df = pd.DataFrame(partidos)
-        print(df)
+    db.insert_many(
+        table_name="temporadas",
+        items=nuevas_temporadas
+    )
 
-        break  # quítalo para procesar TODAS las temporadas
+    """ equipos """
+
+    for id_temporada in ids_temporadas:
+
+        data = obtener_equipos(id_temporada)
+        ids, equipos = transformar_equipos( data )
+        print( f"Equipos de temporada {id_temporada}: {len(equipos)}" )
+
+    db.insert_many(
+        table_name="equipos",
+        items=equipos
+    )   
+
+    # Procesar los del grupo 2
+    # estadios, jornadas, jugadores
+    """ Jugadores """
+
+
+    # Procesar los del grupo 3
+    # partidos
+    # for temporada in temporadas:
+    #     id_temp = temporada["id"]
+    #     nombre = temporada["nombre"]
+
+    #     print(f"\nProcesando temporada: {nombre}")
+
+    #     procesar_temporada(id_temp, nombre)
+
+    #     print("Partidos recopilados:", len(partidos))
+
+    #     df = pd.DataFrame(partidos)
+    #     print(df)
+
+    #     break  # quítalo para procesar TODAS las temporadas
+
+    # Procesar los del grupo 4
+    # stats_equipo_partido
+
+    # Procesar los del grupo 5
+    # stats_jugador_partido
+
+    # Procesar los del grupo 6
+    # reportes
+
+    # Procesar los del grupo 7
+    # reportes_partidos, reportes_jugadores
