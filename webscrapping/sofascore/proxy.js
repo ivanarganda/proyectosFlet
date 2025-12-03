@@ -159,6 +159,35 @@ app.get("/laliga/jugador/:id_jugador/historico", async (req, res) => {
     request_URL(res, { url: `https://api.sofascore.com/api/v1/player/${req.params.id_jugador}/segments/overall` });
 });
 
+// ESTADIOS
+app.get("/laliga/estadios/:id_equipo", async (req, res) => {
+    try {
+        const url = `https://api.sofascore.com/api/v1/team/${req.params.id_equipo}`;
+        
+        request_URL(
+            {
+                json: (data) => {
+
+                    const venue = data.team.venue || {};
+
+                    res.json({
+                        id_estadio: venue.id || null,
+                        nombre: venue.name || null,
+                        ciudad: venue.city || null,
+                        capacidad: venue.capacity || null,
+                        id_equipo: data.id || req.params.id_equipo
+                    });
+                },
+                status: (_) => ({ json: (_) => {} }) // dummy
+            },
+            { url }
+        );
+
+    } catch (err) {
+        res.status(500).json({ error: err.toString() });
+    }
+});
+
 //
 // ===========================================================
 // PARTIDOS

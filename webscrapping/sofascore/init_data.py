@@ -77,7 +77,11 @@ def init_tables():
                 "id_jugador": integer(pk=True),
                 "nombre": text(default="Unknown"),
                 "edad": integer(not_null=True),
-                "sexo": enum(enum_values=["H","M"], not_null=True)
+                "sexo": enum(enum_values=["M","F"], not_null=True),
+                "id_equipo": integer(not_null=True)
+            },
+            {
+                "fk_jugadores_equipos": ("id_equipo", "equipos", "id_equipo")
             }
         ],
         # ============================================================
