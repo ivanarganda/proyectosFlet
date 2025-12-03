@@ -624,9 +624,11 @@ class SQLiteORM:
 
                 raise Exception(f"It could not be obtained table_info PRAGMA from '{table_name}'")
 
-            primary_keys = [col["name"] for col in info if col["pk"] == 1]
+            # TODO check primary keys provided that they are autoincrement
 
-            cols_to_insert = [c for c in columns if c not in primary_keys]
+            # primary_keys = [col["name"] for col in info if col["pk"] == 1]
+
+            cols_to_insert = [c for c in columns if c]
 
             if not cols_to_insert:
 
@@ -1113,12 +1115,7 @@ class SQLiteORM:
 
                     if isinstance( field_source, str ) and isinstance( field_destination, str ): 
 
-                        # TODO: when multiple FK tuples share the same field_destination (e.g., 
-                        #       id_local → equipos.id_equipo and id_visitante → equipos.id_equipo), 
-                        #       generate a per-constraint scoped identifier so the validator does 
-                        #       not overwrite or ignore subsequent FKs. Implement a loop to map 
-                        #       each FK independently and avoid name/type conflicts.
-
+                        print( field_destination )
 
                         # 1. Check that source field exists in the new table definition
                         if field_source not in col_names:
