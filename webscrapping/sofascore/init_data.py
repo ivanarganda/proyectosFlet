@@ -105,9 +105,8 @@ def init_tables():
         # ============================================================
         "jornadas": [
             {
-                "id_jornada": integer(pk=True),
+                "id_jornada": integer(not_null=True),
                 "id_temporada": integer(not_null=True),
-                "numero": integer(not_null=True),
                 "fecha_creacion": numeric(default=db.date())
             },
             {

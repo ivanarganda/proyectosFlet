@@ -12,6 +12,12 @@ import json
 import requests
 from requests.exceptions import ConnectionError, Timeout, RequestException
 
+def tabla_vacia(db, tabla: str) -> bool:
+    sql = f"SELECT COUNT(*) AS total FROM {tabla}"
+    result = db.execute_query(sql).json[0]["total"]
+    print(result)
+    return result == 0
+
 def safe_request(url, timeout=40):
     """
     Realiza una petición segura al proxy y maneja TODOS los errores comunes.
@@ -58,6 +64,7 @@ db.connect_DB()
 
 # Lista global donde guardaremos resultados
 partidos = []
+jornadas = []
 
 # Base del proxy
 PROXY = "http://localhost:3000"
@@ -105,6 +112,37 @@ def transformar_equipos(data):
         ids.append(t["id"])
 
     return ids,equipos
+
+
+def transformar_partidos(id_temporada):
+    # """
+    # Obtiene TODOS los partidos de una temporada.
+    
+    # 1️⃣ Si existe /events → usa modo rápido
+    # 2️⃣ Si no, recorre rondas
+    # 3️⃣ Devuelve una lista unificada y normalizada
+    # """
+
+    # print(f"🔍 Consultando temporada {id_temporada}...")
+
+    # partidos = []
+
+    # for ev in eventos:
+    #     partidos.append({
+    #         "id_partido": ev.get("id"),
+    #         "inicio": ev.get("startTimestamp"),
+    #         "estado": ev.get("status", {}).get("type"),
+    #         "id_local": ev.get("homeTeam", {}).get("id"),
+    #         "id_visitante": ev.get("awayTeam", {}).get("id"),
+    #         "goles_local": ev.get("homeScore", {}).get("current", 0),
+    #         "goles_visitante": ev.get("awayScore", {}).get("current", 0),
+    #         "id_estadio": ev.get("venue", {}).get("id"),
+    #         "nombre_estadio": ev.get("venue", {}).get("stadiumName"),
+    #     })
+
+    # print(f"✅ Total partidos recopilados: {len(partidos)}")
+
+    return []
 
 def obtener_equipos(id_temporada):
 
@@ -162,7 +200,7 @@ def obtener_jornadas(id_temporada):
     """Devuelve la jornada actual y lista de rondas."""
     url = f"{PROXY}/laliga/temporada/{id_temporada}/jornadas"
     data = safe_request(url)
-    return data["currentRound"], data["rounds"]
+    return data
 
 
 def obtener_partidos_ronda(id_temporada, ronda):
@@ -179,46 +217,6 @@ def obtener_partidos_ronda(id_temporada, ronda):
 
 
 # ==========================================
-# PROCESAMIENTO DE TEMPORADA
-# ==========================================
-def procesar_temporada(id_temporada, nombre_temporada):
-
-    """Obtiene 1 partido por ronda exceptuando la ronda actual."""
-
-    global partidos
-
-    año_inicio = extraer_año_temporada(nombre_temporada)
-    año_actual = datetime.now().year
-
-    if año_inicio is None:
-        print("⚠ No se pudo extraer año:", nombre_temporada)
-        return False
-
-    # Solo temporada actual y anterior
-    if año_inicio not in (año_actual, año_actual - 1):
-        print("⏭ Temporada antigua:", nombre_temporada)
-        return False
-
-    current_round, rounds = obtener_jornadas(id_temporada)
-
-    for r in rounds:
-        ronda = safe_get(r, "round")
-
-        if ronda == current_round:
-            continue
-
-        eventos = obtener_partidos_ronda(id_temporada, ronda)
-
-        if not eventos:
-            continue
-
-        # Guardar solo el primer partido de cada ronda
-        partidos.append(eventos[0])
-
-    return True
-
-
-# ==========================================
 # MAIN
 # ==========================================
 if __name__ == "__main__":
@@ -226,93 +224,169 @@ if __name__ == "__main__":
     # Procesar los del primero grupo 1
     # equipos, usuarios, temporadas
 
-    """ Temporadas """
-    temporadas = obtener_temporadas_laliga()
-    temporadas = list(filter(lambda x: "Division" not in x["nombre"], temporadas))
-
-    nuevas_temporadas = []
     ids_temporadas = []
-
-    equipos = []
     ids_equipos = []
+    scrapped_tables = []
+    todos_los_partidos = []
 
-    estadios = []
+    """ Temporadas """
+    if tabla_vacia(db, "temporadas") or tabla_vacia(db, "equipos"):
 
-    for temp in temporadas:
-        year_start, year_end = temp["nombre"].split(" ")[-1].split("/")
+        temporadas = obtener_temporadas_laliga()
+        temporadas = list(filter(lambda x: "Division" not in x["nombre"], temporadas))
 
-        nuevas_temporadas.append((
-            temp["id"],
-            temp["nombre"],
-            int(year_start),
-            int(year_end),
-            8,
-            db.datetime()
-        ))
-        
-        ids_temporadas.append( temp["id"] )
+        nuevas_temporadas = []
+        equipos = []
+        estadios = []
 
-    db.insert_many(
-        table_name="temporadas",
-        items=nuevas_temporadas
-    )
+        for temp in temporadas:
 
-    """ equipos """
-    for id_temporada in ids_temporadas:
+            year_start, year_end = temp["nombre"].split(" ")[-1].split("/")
 
-        data = obtener_equipos(id_temporada)
-        ids, equipos = transformar_equipos( data )
-        if ids not in ids_equipos:
-            ids_equipos.append(ids)
-        print( f"Equipos de temporada {id_temporada}: {len(equipos)}" )
-
-    db.insert_many(
-        table_name="equipos",
-        items=equipos
-    )   
-
-    # Procesar los del grupo 2
-    # estadios, jornadas, jugadores
-    """ Jugadores y estadios ya que comparten el id_quipo """
-    ids_equipos_planned = sorted(set(x for sub in ids_equipos for x in sub))
-    
-    for id_equipo in ids_equipos_planned:
-
-        estadios.append(obtener_estadios( id_equipo ))
-        
-        jugadores = obtener_jugadores( id_equipo )
-
-        print( f"Insertando jugadores del equipo {id_equipo}" )
+            nuevas_temporadas.append((
+                temp["id"],
+                temp["nombre"],
+                int(year_start),
+                int(year_end),
+                8,
+                db.datetime()
+            ))
+            
+            ids_temporadas.append( temp["id"] )
 
         db.insert_many(
-            table_name="jugadores",
-            items=jugadores
+            table_name="temporadas",
+            items=nuevas_temporadas
         )
 
-    estadios = [sublista[0] for sublista in estadios]
+        """ equipos """
+        for id_temporada in ids_temporadas:
 
-    db.insert_many(
-        table_name="estadios",
-        items=estadios
+            data = obtener_equipos(id_temporada)
+            ids, equipos = transformar_equipos( data )
+            if ids not in ids_equipos:
+                ids_equipos.append(ids)
+            print( f"Equipos de temporada {id_temporada}: {len(equipos)}" )
+
+        db.insert_many(
+            table_name="equipos",
+            items=equipos
+        )   
+
+        ids_equipos = sorted(set(x for sub in ids_equipos for x in sub))
+
+    else:
+
+        ids_temporadas = list(
+            i.get("id_temporada") for i in db.execute_query("SELECT DISTINCT id_temporada FROM temporadas").json
+        )
+
+        ids_equipos = list(
+            i.get("id_equipo") for i in db.execute_query("SELECT DISTINCT id_equipo FROM equipos").json
+        )
+
+        scrapped_tables_ = [ "temporadas", "equipos" ]
+        scrapped_tables = scrapped_tables_[:]
+
+        # # Procesar los del grupo 2
+        # # estadios, jornadas, jugadores
+
+    ids_jornadas = []
+    if tabla_vacia(db, "jornadas") or tabla_vacia( db, "jugadores") or tabla_vacia( db, "estadios"):
+
+        """ jornadas """
+        jornadas = []
+        for id_temporada in ids_temporadas:
+            for r in obtener_jornadas(id_temporada)["rounds"]:
+                jornadas.append(( r["round"] , id_temporada, db.datetime() )) 
+                ids_jornadas.append( r["round"] )
+
+        db.insert_many(
+            table_name="jornadas",
+            items=jornadas
+        )
+
+        """ Jugadores y estadios ya que comparten el id_quipo """
+        
+        ids_jornadas = sorted(set(x for sub in ids_jornadas for x in sub))
+        
+        for id_equipo in ids_equipos:
+
+            estadios.append(obtener_estadios( id_equipo ))
+            
+            jugadores = obtener_jugadores( id_equipo )
+
+            print( f"Insertando jugadores del equipo {id_equipo}" )
+
+            db.insert_many(
+                table_name="jugadores",
+                items=jugadores
+            )
+
+        estadios = [sublista[0] for sublista in estadios]
+
+        db.insert_many(
+            table_name="estadios",
+            items=estadios
+        )
+
+    else:
+
+        ids_jornadas = list(
+            i.get("id_jornada") for i in db.execute_query("SELECT DISTINCT id_jornada FROM jornadas").json
+        )
+
+        scrapped_tables_ = scrapped_tables + [ "jornadas", "estadios" , "jugadores" ] if len(scrapped_tables) > 0 else [ "jornadas", "estadios" , "jugadores" ]
+        scrapped_tables = scrapped_tables_[:]
+
+    # En este caso no hace falta recuperar los ids de equipo, estadio o jornada ya que la propio endpoint y las jornadas y temporadas se coge ya de los ids recuperados anteriormente
+    if len(scrapped_tables) > 0:
+        print( f"Tables { ",".join(scrapped_tables) } are already scrapped" )
+
+    print( ids_temporadas , ids_equipos , ids_jornadas )
+    nombre_temporadas = list(
+        i.get("nombre") for i in db.execute_query("SELECT DISTINCT nombre FROM temporadas").json
     )
 
-    # Procesar los del grupo 3
-    # partidos
-    # for temporada in temporadas:
-    #     id_temp = temporada["id"]
-    #     nombre = temporada["nombre"]
+    anios_temporada = list( extraer_año_temporada(i) for i in nombre_temporadas )
+    # # Procesar los del grupo 3
+    # # partidos ( ya podemos sacar consultas porque hay suficientes datos para sacarlo desde consultas sql )
+    id_estadios = list ( i.get("id_estadio") for i in db.execute_query(
+        "SELECT DISTINCT id_estadio FROM estadios"
+    ).json)
 
-    #     print(f"\nProcesando temporada: {nombre}")
+    id_equipos = list( i.get("id_equipo") for i in db.execute_query(
+        "SELECT DISTINCT id_equipo FROM estadios"
+    ).json)
 
-    #     procesar_temporada(id_temp, nombre)
+    print( id_estadios, id_equipos, ids_jornadas )
 
-    #     print("Partidos recopilados:", len(partidos))
-
-    #     df = pd.DataFrame(partidos)
-    #     print(df)
-
-    #     break  # quítalo para procesar TODAS las temporadas
-
+    for id_temporada in ids_temporadas:
+        for ronda in ids_jornadas:
+            partido = obtener_partidos_ronda(id_temporada, ronda)
+            for p in partido:
+                todos_los_partidos.append(
+                    (
+                        p.get("id"),
+                        id_temporada,
+                        ronda,
+                        p.get("id_local"),
+                        p.get("id_visitante"),
+                        id_estadios[ id_equipos.index( p.get("id_local") )],
+                        p.get("inicio"),
+                        p.get("estado_partido"),
+                        p.get("goles_local"),
+                        p.get("goles_visitante")
+                    )
+                )
+                print(f"Partido {p.get("id")} de la jornada {ronda}")
+            print(f"Preparando {ronda}º jornada de la temporada {nombre_temporadas[ids_temporadas.index(id_temporada)]}")   
+      
+    db.insert_many( 
+        table_name="partidos",
+        items=todos_los_partidos 
+    )
+    
     # Procesar los del grupo 4
     # stats_equipo_partido
 
