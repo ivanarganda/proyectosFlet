@@ -12,6 +12,18 @@ import time
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
 
+def _export_handlers(df, path):
+    return {
+        "csv":  lambda: df.to_csv(path, index=False),
+        "json": lambda: df.to_json(path, orient="records"),
+        "xlsx": lambda: df.to_excel(path, index=False),
+        "xls":  lambda: df.to_excel(path, index=False)
+    }
+
+
+def now_ts():
+    return int(datetime.now().timestamp())
+
 def normalize_team_name(name):
     if isinstance(name, str):
         return (
@@ -190,16 +202,16 @@ def read_file(file: str, workers=max_workers):
 
 def export( path, data ):
 
-    extensions = {
-        "csv": pd.DataFrame(data).to_csv( path , index=False ),
-        "json": pd.DataFrame(data).to_json( path , index=False ),
-        "xlsx": pd.DataFrame(data).to_excel( path , index=False ),
-        "xls": pd.DataFrame(data).to_excel( path , index=False )
-    }
+    ext = path.split(".")[-1].lower()
 
-    extension = path.split(".")[-1].lower()
+    df = pd.DataFrame(data)
 
-    extensions[extension]
+    handlers = _export_handlers(df, path)
+
+    if ext not in handlers:
+        raise ValueError(f"Unsupported export format: {ext}")
+
+    handlers[ext]()  # ejecuta SOLO el formato elegido
     
 def init_excel_db(new_file, keys, fields_values, duplicates=True):
 
@@ -225,4 +237,3 @@ def init_excel_db(new_file, keys, fields_values, duplicates=True):
     export(new_file, output)
 
     return output
-

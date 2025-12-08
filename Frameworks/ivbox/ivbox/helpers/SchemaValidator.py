@@ -1,5 +1,5 @@
 from typing import Union
-from helpers.utils import singularOrPlural
+from .utils import singularOrPlural
 
 class SchemaError(Exception):
     pass

@@ -625,8 +625,7 @@ class SQLiteORM:
                 raise Exception(f"It could not be obtained table_info PRAGMA from '{table_name}'")
 
             # TODO check primary keys provided that they are autoincrement
-
-            # primary_keys = [col["name"] for col in info if col["pk"] == 1]
+            primary_keys = self.get_autoincrement_pks( table_name )
 
             cols_to_insert = [c for c in columns if c]
 
@@ -641,7 +640,7 @@ class SQLiteORM:
             # ==========================
             # 3. VALIDATE ROWS LENGTH
             # ==========================
-            expected_cols = len(cols_to_insert)
+            expected_cols = len(cols_to_insert) - len(primary_keys)
 
             for row in items:
 
@@ -710,7 +709,7 @@ class SQLiteORM:
 
             return False
 
-    def insert(self, data: Union[tuple, list], table_name: str )-> bool:
+    def insert(self, table_name: str, data: Union[tuple, list] )-> bool:
 
         try:
 
@@ -720,9 +719,10 @@ class SQLiteORM:
 
                 columns_type_db = [
 
-                    self.execute_query(f"SELECT typeof({col}) as type from {table_name} limit 1")[0]['type']
+                    (self.execute_query(f"SELECT typeof({col}) as type from {table_name} limit 1").json)[0]["type"]
 
                     for col in columns_name_db
+
                 ]
 
                 if len(data) != len(columns_name_db):
@@ -732,7 +732,8 @@ class SQLiteORM:
                 # Detect primary keys because they might be autoincrement amd it is not necessary to provide a value
                 info = self.execute_query(f"PRAGMA table_info({table_name})")
 
-                primary_keys = [col['name'] for col in info if col['pk'] == 1]
+                # TODO primary keys only for autoincrement
+                primary_keys = self.get_autoincrement_pks( table_name )
 
                 placeholders = ", ".join(["?"] * ( len(data) - len(primary_keys) ))
                 
@@ -1355,6 +1356,24 @@ class SQLiteORM:
 
             return False
 
+    def drop_all_tables( self ):
+
+        try:
+            
+            database_tables = [table.get("name") for table in self.get_db_tables()]
+
+            autoincrement_tables = [table.get("name") for table in self.get_db_tables(autoincrement=True)]
+
+            tables_to_drop = list( set( database_tables) - set( autoincrement_tables ) )
+
+            self.drop_tables( tables_to_drop )
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+        
     def rename_table( self, current_table:str, new_table: str ) -> bool:
 
         try:
@@ -2322,13 +2341,15 @@ class SQLiteORM:
 
             return False
     
-    def get_db_tables( self ) -> Union[list, bool]:
+    def get_db_tables( self, **args ) -> Union[list, bool]:
 
         try:
 
-            return self.execute_query( """
+            autoincrement = args.get("autoincrement", False)
 
-                SELECT name FROM sqlite_master WHERE type='table'
+            return self.execute_query( f"""
+
+                SELECT name FROM sqlite_master WHERE type='table' { "AND name LIKE 'sqlite_%' AND sql NOT LIKE '%AUTOINCREMENT%'" if autoincrement else "" }
 
             """ ).json
 
@@ -2437,6 +2458,22 @@ class SQLiteORM:
         return constraints
 
 
+    def get_autoincrement_pks(self, table_name:str) -> list:
+        # Paso 1: obtener PKs
+        pk_cols = [ pk.get("name") for pk in self.get_pk( table_name ) ]
+        # Paso 2: leer SQL original
+        _,_,sql = self.get_table_info(table_name)
+
+        sql_upper = sql.upper()
+
+        # Paso 3: solo devolver PKs con AUTOINCREMENT
+        autoinc_pks = []
+        for col in pk_cols:
+            pattern = rf'["\[]?{col.upper()}["\]]?\s+INTEGER\s+PRIMARY\s+KEY(?:\s+NOT\s+NULL)?\s+AUTOINCREMENT'
+            if re.search(pattern, sql_upper):
+                autoinc_pks.append(col)
+
+        return autoinc_pks
 
 
     def get_table_info( self, table_name ):
