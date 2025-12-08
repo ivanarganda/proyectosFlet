@@ -6,8 +6,9 @@ import re
 import requests
 from datetime import datetime
 import time
+from params import DB
 
-db = SQLiteORM("futbol.db")
+db = SQLiteORM(DB)
 
 db.connect_DB()
 
@@ -46,9 +47,6 @@ def init_tables():
 
     db.create_tables({
 
-        # ============================================================
-        # TEMPORADAS
-        # ============================================================
         "temporadas": [
             {
                 "id_temporada": integer(pk=True),
@@ -60,9 +58,6 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # EQUIPOS
-        # ============================================================
         "equipos": [
             {
                 "id_equipo": integer(pk=True),
@@ -72,26 +67,34 @@ def init_tables():
             }
         ],
 
+        "posiciones": [
+            {
+                "id_posicion": integer(pk=True),
+                "nombre": text(not_null=True)
+            }
+        ],
+
         "jugadores": [
             {
                 "id_jugador": integer(pk=True),
                 "nombre": text(default="Unknown"),
                 "edad": integer(not_null=True),
                 "sexo": enum(enum_values=["M","F"], not_null=True),
+                "id_posicion": integer(not_null=True),
                 "id_equipo": integer(not_null=True)
             },
             {
-                "fk_jugadores_equipos": ("id_equipo", "equipos", "id_equipo")
+                "fk_jugadores_equipos": ("id_equipo", "equipos", "id_equipo"),
+                "fk_jugadores_posiciones": ("id_posicion", "posiciones", "id_posicion"),
             }
         ],
-        # ============================================================
-        # ESTADIOS
-        # ============================================================
+
         "estadios": [
             {
                 "id_estadio": integer(pk=True),
                 "nombre": text(not_null=True),
-                "ciudad": text(),
+                "latitud": text(),
+                "longitud": text(),
                 "capacidad": integer(),
                 "id_equipo": integer()
             },
@@ -100,9 +103,7 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # JORNADAS
-        # ============================================================
+
         "jornadas": [
             {
                 "id_jornada": integer(not_null=True),
@@ -114,9 +115,6 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # PARTIDOS
-        # ============================================================
         "partidos": [
             {
                 "id_partido": integer(pk=True),
@@ -139,57 +137,29 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # STAT EQUIPO PARTIDO
-        # ============================================================
-        "stats_equipo_partido": [
-            {
-                "id_stats": integer(pk=True),
-                "id_partido": integer(not_null=True),
-                "id_equipo": integer(not_null=True),
-                "posesion": real(),
-                "tiros_total": integer(),
-                "tiros_puerta": integer(),
-                "xg": real(),
-                "pases": integer(),
-                "faltas": integer(),
-                "tarjetas_amarillas": integer(),
-                "tarjetas_rojas": integer()
-            },
-            {
-                "fk_stats_equipo_partido_partidos": ("id_partido", "partidos", "id_partido"),
-                "fk_stats_equipo_partido_equipos": ("id_equipo", "equipos", "id_equipo")
-            }
-        ],
-
-        # ============================================================
-        # STAT JUGADOR PARTIDO
-        # ============================================================
         "stats_jugador_partido": [
             {
-                "id_registro": integer(pk=True),
-                "id_partido": integer(not_null=True),
+                "id_estadistica_jugadores": integer(pk=True, autoincrement=True),
                 "id_jugador": integer(not_null=True),
-                "minutos_jugados": real(),
-                "goles": integer(),
-                "asistencias": integer(),
-                "tiros": integer(),
-                "tiros_puerta": integer(),
-                "xg": real(),
-                "pases": integer(),
-                "pases_clave": integer(),
-                "regates": integer(),
-                "duelos_ganados": integer(),
-                "valoracion": real()
+                "id_equipo": integer(not_null=True),
+                "id_partido": integer(not_null=True),
+                "id_jornada": integer(),
+                "minutesPlayed": real(),
+                "rating": real(),
+                "touches": integer(),
+                "position": text(),
+                "saves": integer(),
+                "penaltySave": integer(),
+                "goals": integer(),
+                "expectedGoals": real(),
+                "totalShots": integer()
             },
             {
-                "fk_stats_jugador_partido_partidos": ("id_partido", "partidos","id_partido"),
+                "fk_stats_jugador_partido_jugadores": ("id_jugador", "jugadores", "id_jugador"),
+                "fk_stats_jugador_partido_partidos": ("id_partido", "partidos", "id_partido")
             }
         ],
 
-        # ============================================================
-        # USUARIOS
-        # ============================================================
         "usuarios": [
             {
                 "id_usuario": integer(pk=True),
@@ -201,9 +171,6 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # REPORTES
-        # ============================================================
         "reportes": [
             {
                 "id_reporte": integer(pk=True),
@@ -218,9 +185,6 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # REPORTES_PARTIDOS
-        # ============================================================
         "reportes_partidos": [
             {
                 "id": integer(pk=True),
@@ -234,9 +198,6 @@ def init_tables():
             }
         ],
 
-        # ============================================================
-        # REPORTES_JUGADORES
-        # ============================================================
         "reportes_jugadores": [
             {
                 "id": integer(pk=True),
@@ -254,3 +215,7 @@ def init_tables():
 drop_all_tables()
 time.sleep(1)
 init_tables()
+
+db.execute_query(
+    "VACUUM"
+)
