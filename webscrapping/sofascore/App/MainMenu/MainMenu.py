@@ -2,7 +2,7 @@ import os
 import flet as ft
 import json
 import asyncio
-from params import ICONS, REQUEST_URL, HEADERS
+from params import *
 from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago, convert_seconds
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
@@ -15,6 +15,8 @@ footer = None
 modal_games = None
 games = []
 
+sidebar_ref = ft.Ref[ft.Container]()
+
 current_path = {
     "path": os.path.abspath(__file__),
     "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
@@ -26,16 +28,26 @@ headers = HEADERS
 # ===========================================================
 # MENÚ: BOTONES PRINCIPALES
 # ===========================================================
-def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, text_size: int= 20, size: int = 40):
+def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callback=False, text_size: int=18, size: int = 55):
     try:
         return ft.Column(
             [
                 ft.Container(
-                    width=size + 40,
-                    height=size + 40,
-                    bgcolor="#F7F7F7",
-                    border_radius=40,
-                    content=ft.Image(src=icon_url, width=size + 30, height=size + 30),
+                    width=size + 30,
+                    height=size + 30,
+                    border_radius=20,
+                    bgcolor=SOFA_GRAY,
+                    shadow=ft.BoxShadow(
+                        blur_radius=12,
+                        color=ft.colors.with_opacity(0.15, "black"),
+                        offset=ft.Offset(0, 3),
+                    ),
+                    content=ft.Image(
+                        src=icon_url,
+                        width=size,
+                        height=size,
+                        fit=ft.ImageFit.CONTAIN
+                    ),
                     alignment=ft.alignment.center,
                     on_click=lambda _: (
                         safe_route(page, route)
@@ -44,21 +56,56 @@ def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callbac
                         if on_callback == "modal"
                         else None
                     ),
+                    animate_scale=ft.Animation(150, "easeOut"),
+                    on_hover=lambda e: setattr(e.control, "scale", 1.07 if e.data == "true" else 1),
                 ),
-                ft.Text(label, size=text_size, color="#636363"),
+                ft.Text(label, size=text_size, color=SOFA_TEXT, weight=ft.FontWeight.W_600),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=8,
         )
     except Exception as e:
-        log_error(f"menu_button({label})", e)
-        return ft.Text(f"⚠️ Error en {label}")
+        log_error("menu_button", e)
+        return ft.Text("⚠️ Error")
 
+def sidebar_item(label: str, icon: str, on_click):
+    return ft.Container(
+        padding=10,
+        border_radius=10,
+        content=ft.Row(
+            [
+                ft.Icon(icon, size=22, color="white"),
+                ft.Text(label, color="white", size=16),
+            ],
+            spacing=12
+        ),
+        on_click=on_click,
+        on_hover=lambda e: setattr(
+            e.control,
+            "bgcolor",
+            "#1E2530" if e.data == "true" else None
+        ),
+        animate_scale=300
+    )
 
+def update_sidebar_height(page:ft.Page):
+    if footer:
+        sidebar_ref.current.height = page.window_height - ( footer.height * 2 )
 
 # ===========================================================
 # MENÚ: CONTENIDO PRINCIPAL
 # ===========================================================
 def list_menu_items(page: ft.Page):
+
+    avatar = ft.CircleAvatar(
+            content=ft.Image(
+                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                fit=ft.ImageFit.COVER,
+            ),
+            height=60,
+            width=60,
+            radius=100,
+        )
     
     try:
         # === BOTÓN LOGOUT =======================================================
@@ -83,16 +130,6 @@ def list_menu_items(page: ft.Page):
         )
 
         # === AVATAR + INFO ======================================================
-        avatar = ft.CircleAvatar(
-            content=ft.Image(
-                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
-                fit=ft.ImageFit.COVER,
-            ),
-            height=60,
-            width=60,
-            radius=100,
-        )
-
         menu_section = ft.Column(
             [
                 ft.Container(content=avatar, alignment=ft.alignment.center, padding=ft.padding.only(left=20, top=20)),
@@ -106,100 +143,208 @@ def list_menu_items(page: ft.Page):
 
         # === SIDEBAR ============================================================
         sidebar = ft.Container(
-            width=200,
-            height=page.window_height - (footer.height + 60),
-            bgcolor=ft.colors.with_opacity(0.85, "#FFFFFF"),
+            ref=sidebar_ref,
+            width=220,
+            height=( page.window.height - ( footer.height * 2 ) ),
+            bgcolor=SOFA_DARK,
             border_radius=ft.border_radius.only(top_right=30, bottom_right=30),
-            shadow=ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=25,
-                color=ft.colors.with_opacity(0.25, "#000000"),
-                offset=ft.Offset(0, 4),
-            ),
-            padding=ft.padding.symmetric(horizontal=16, vertical=25),
+            padding=20,
             content=ft.Column(
                 [
-                    ft.Container(
-                        content=menu_section,
-                    ),
+                    avatar,
+                    ft.Divider(color="white", height=20),
+                    ft.Text(username or "Guest", color="white", size=18, weight="bold"),
+                    ft.Text(email or "", color="#A9A9A9", size=14),
+                    ft.Container(height=20),
+
+                    ft.Text("Navigation", size=14, color="#CCCCCC"),
+
+                    ft.Container(height=10),
+                    
+                    sidebar_item("Partidos", ft.Icons.SPORTS_SOCCER, lambda _: safe_route(page, "/partidos")),
+                    sidebar_item("Jugadores", ft.Icons.PERSON, lambda _: safe_route(page, "/jugadores")),
+                    sidebar_item("Estadios", ft.Icons.STADIUM, lambda _: safe_route(page, "/estadios")),
+                    sidebar_item("Equipos", ft.Icons.GROUP, lambda _: safe_route(page, "/equipos")),
+                    sidebar_item("Selecciones", ft.Icons.PUBLIC, lambda _: safe_route(page, "/selecciones")),
+
                     ft.Container(expand=True),
+
                     ft.Container(
-                        width=150,
-                        height=46,
-                        border_radius=ft.border_radius.all(12),
-                        gradient=ft.LinearGradient(
-                            begin=ft.Alignment(-1, 0),
-                            end=ft.Alignment(1, 0),
-                            colors=["#667eea", "#764ba2"],
-                        ),
+                        bgcolor=SOFA_BLUE,
+                        padding=12,
+                        border_radius=12,
                         content=ft.Row(
                             [
-                                ft.Icon(ft.Icons.LOGOUT_ROUNDED, color="white", size=22),
-                                ft.Text("Log out", color="white", size=15, weight=ft.FontWeight.W_500),
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            spacing=8,
+                                ft.Icon(ft.Icons.LOGOUT, color="white"),
+                                ft.Text("Cerrar sesión", color="white", weight="bold"),
+                            ]
                         ),
-                        on_click=lambda _: handle_logout(page),
-                        shadow=ft.BoxShadow(blur_radius=12, color=ft.colors.with_opacity(0.2, "#000000")),
-                        alignment=ft.alignment.center,
-                        animate_scale=ft.Animation(200, "ease_in_out"),
-                        on_hover=lambda e: setattr(e.control, "scale", 1.05 if e.data == "true" else 1),
+                        on_click=lambda _: handle_logout(page)
                     ),
                 ],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=14
             ),
-            animate_offset=ft.Animation(350, "ease_in_out"),
             offset=ft.Offset(-1, 0),
-            left=0,
-            top=0,
-            visible=False
+            visible=False,
+            animate_offset=ft.Animation(350, "easeInOut")
         )
+
 
 
         # === HEADER =============================================================
-        header = ft.Row(
-            [
-                ft.Container(content=avatar, alignment=ft.alignment.top_left, padding=ft.padding.only(left=20, top=20)),
-                ft.Container(
-                    content=ft.IconButton(
-                        icon=ft.Icons.APPS,
-                        icon_size=28,
-                        icon_color="black",
-                        on_click=lambda _: toggle_sidebar(page, sidebar),
+        header = ft.Container(
+            padding=ft.padding.only(left=20, right=20, top=20, bottom=10),
+            content=ft.Row(
+                [
+                    # Avatar del usuario
+                    ft.Container(
+                        content=ft.CircleAvatar(
+                            content=ft.Image(
+                                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar_man.png",
+                                fit=ft.ImageFit.COVER,
+                            ),
+                            radius=28,
+                        ),
+                        on_click=lambda _: None,  # futura navegación a perfil si quieres
+                        animate_scale=ft.Animation(200, "easeOut"),
+                        on_hover=lambda e: setattr(e.control, "scale", 1.07 if e.data == "true" else 1),
                     ),
-                    alignment=ft.alignment.top_right,
-                    padding=ft.padding.only(right=20, top=20),
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            expand=True,
+
+                    # Título central
+                    ft.Text(
+                        "Football Hub",
+                        size=26,
+                        weight=ft.FontWeight.W_700,
+                        color=SOFA_TEXT,
+                    ),
+
+                    # Botón menú lateral
+                    ft.Container(
+                        content=ft.Icon(
+                            ft.Icons.MENU,
+                            size=32,
+                            color=SOFA_TEXT
+                        ),
+                        padding=ft.padding.all(6),
+                        border_radius=20,
+                        on_click=lambda _: toggle_sidebar(page, sidebar),
+                        animate_scale=ft.Animation(200, "easeOut"),
+                        on_hover=lambda e: setattr(e.control, "scale", 1.15 if e.data == "true" else 1),
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+            )
         )
+
+
 
         # === TITULAR ============================================================
         title = ft.Container(
+            padding=ft.padding.only(left=25, top=10, right=20),
             content=ft.Column(
                 [
-                    ft.Text("Welcome back,", size=28, color="black"),
-                    ft.Text(f"{username or 'Guest'}", size=28, color="black"),
-                    ft.Text("Let's Play & Joy!", size=34, weight=ft.FontWeight.BOLD, color="black"),
+                    # Animación de entrada del título
+                    ft.AnimatedSwitcher(
+                        ft.Row(
+                            [
+                                ft.Image(
+                                    src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/ball_blue.png",
+                                    width=40,
+                                    height=40
+                                ),
+                                ft.Text(
+                                    "Football Analytics",
+                                    size=32,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=SOFA_BLUE,
+                                ),
+                            ],
+                            spacing=12,
+                            alignment=ft.MainAxisAlignment.START,
+                        ),
+                        transition=ft.AnimatedSwitcherTransition.FADE,
+                        duration=300,
+                    ),
+
+                    # Subtítulo animado
+                    ft.AnimatedSwitcher(
+                        content=ft.Text(
+                            "Insights powered by SofaScore",
+                            size=18,
+                            color="#6C6C6C",
+                        ),
+                        opacity=1,
+                        duration=450,
+                    ),
+
+                    # Barra animada inferior estilo estadística SofaScore
+                    ft.Container(
+                        width=180,
+                        height=6,
+                        border_radius=20,
+                        gradient=ft.LinearGradient(
+                            colors=[SOFA_BLUE, "#4BA3FF"],
+                            begin=ft.Alignment(-1, 0),
+                            end=ft.Alignment(1, 0),
+                        ),
+                        animate_size=ft.Animation(350, "easeOut"),
+                        margin=ft.margin.only(top=8),
+                    ),
                 ],
+                spacing=6,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
-                spacing=0,
             ),
-            padding=ft.padding.only(left=25, top=20),
         )
 
         # === BOTONES DE MENÚ ====================================================
         menu_grid = ft.Column(
             [
-                ft.Row(
-                    [
-                        menu_button(page, ICONS.get("tasks", ""), "Scrapping", "/scrapping", size=35)
+                ft.ResponsiveRow(
+                    controls=[
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("dashboard", ""), "Panel de control", "/scrapping", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ) if role == "admin" else None,
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/stats", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ) if role == "admin" else None,
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("football_match", ""), "Partidos", "/info/partidos", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("football_shield", ""), "Equipos", "/info/equipos", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
+
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("football_ranking", ""), "Clasificaciones", "/info/clasificaciones", size=35),
+                            col={"xs": 6, "sm": 4, "md": 3}
+                        ),
                     ],
-                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                    run_spacing=15,
+                    spacing=15,
                 )
+
             ],
             spacing=25,
             alignment=ft.MainAxisAlignment.CENTER,
@@ -211,33 +356,38 @@ def list_menu_items(page: ft.Page):
             padding=ft.padding.only(bottom=20),
         )
 
-        white_card = ft.Stack(
-            [
-                ft.Container(
-                    bgcolor="white",
-                    width=360,
-                    height=740,
-                    border_radius=ft.border_radius.all(50),
-                    alignment=ft.alignment.top_center,
-                    content=ft.Column(
-                        [
-                            header,
-                            ft.Container(height=10),
-                            title,
-                            ft.Container(height=30),
-                            menu_grid,
-                            ft.Container(expand=True),
-                            arrow_down,
-                        ],
-                        alignment=ft.MainAxisAlignment.START,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        white_card = ft.Container(
+            bgcolor="white",
+            expand=True,  # ⬅⬅⬅ Ocupa TODO el contenedor
+            border_radius=40,
+            shadow=ft.BoxShadow(
+                blur_radius=30,
+                color=ft.colors.with_opacity(0.25, "black")
+            ),
+            content=ft.Stack(
+                [
+                    # === CONTENIDO PRINCIPAL DEL MENÚ ===
+                    ft.Container(
+                        expand=True,
+                        padding=ft.padding.all(0),
+                        content=ft.Column(
+                            [
+                                header,
+                                ft.Container(height=10),
+                                title,
+                                ft.Container(height=30),
+                                menu_grid,
+                            ],
+                            expand=True
+                        )
                     ),
-                    shadow=ft.BoxShadow(blur_radius=20, color="#E0E0E0"),
-                ),
-                sidebar
-            ],
-            expand=True,
+
+                    sidebar
+                   
+                ]
+            )
         )
+
 
         return [
             ft.Container(
@@ -256,40 +406,6 @@ def list_menu_items(page: ft.Page):
 # ===========================================================
 # FUNCIONES AUXILIARES
 # ===========================================================
-def swipper_games_modal(page):
-    global modal_games
-
-    modal_games.visible = not modal_games.visible
-
-    if modal_games.visible:
-        # 🔁 recargar juegos al abrir el modal
-        new_games = asyncio.run(render_games(page))
-
-        # Buscar el Column dentro del modal
-        stack = modal_games.content  # Stack
-        if not isinstance(stack, ft.Stack):
-            return
-
-        # Buscar el Container principal dentro del Stack
-        container_main = None
-        for ctrl in stack.controls:
-            if isinstance(ctrl, ft.Container) and isinstance(ctrl.content, ft.Column):
-                container_main = ctrl
-                break
-
-        if container_main:
-            column_main = container_main.content
-            # Buscar el Row donde están los juegos
-            for ctrl in column_main.controls:
-                if isinstance(ctrl, ft.Row):
-                    ctrl.controls = new_games
-                    break
-
-        page.update()
-    else:
-        page.update()
-
-
 def safe_route(page, route):
     """Protege el cambio de ruta para evitar errores de navegación."""
     try:
@@ -328,7 +444,7 @@ def renderMainMenu(page: ft.Page):
     token = session.get("token")
     headers["Authorization"] = f"Bearer {token}"
 
-    username = user.get("username", "Guest")
+    username = user.get("nombre", "Guest")
     id_user = int(user.get("id", 0))
     role = user.get("role")
     expired = user.get("exp")
@@ -336,15 +452,21 @@ def renderMainMenu(page: ft.Page):
 
     # === CONFIGURACIÓN DE LA PÁGINA ===
     page.title = "Main Menu"
-    page.window_width = 550
+    page.window_width = 800
     page.window_height = 800
     page.window_resizable = False
-    page.bgcolor = "#F6F4FB"
+    page.bgcolor = "#EDF1F5"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
+    def on_resize(e):
+        update_sidebar_height(page)
+        page.update()
+
+    update_sidebar_height(page)
+    page.on_resize = on_resize
+
     # === CREACIÓN DE MODAL Y FOOTER ===
-    modal_games = create_modal_games(page)
     footer = footer_navbar(page=page, current_path=current_path, dispatches={})
 
     page.update()
@@ -357,7 +479,6 @@ def renderMainMenu(page: ft.Page):
         [
             *main_content,  # menú principal
             footer,         # footer al fondo
-            modal_games,    # 🔥 modal encima de todo
         ],
         expand=True,
     )

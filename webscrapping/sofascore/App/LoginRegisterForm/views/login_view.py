@@ -29,7 +29,7 @@ def renderLoginView(page: ft.Page, forgot_password:ft.Container, email_field: ft
     return ft.Stack([
         ft.Container(
             expand=True,
-            image_src=WALLPAPERS["login"],
+            image_src=WALLPAPERS["grass_ball"],
             image_fit=ft.ImageFit.COVER
         ),
         ft.Container(

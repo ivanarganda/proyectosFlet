@@ -1,13 +1,20 @@
+import os
 import flet as ft
 from helpers.utils import addElementsPage
 import threading
 import time
 import requests
+from footer_navegation.navegation import footer_navbar
 from datetime import datetime
 from pathlib import Path
 from params import *
 import glob
 
+current_path = {
+    "path": os.path.abspath(__file__),
+    "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
+    "file": __file__.split("\\")[-1],
+}
 
 def RenderScrapper(page: ft.Page):
 
@@ -106,6 +113,7 @@ def RenderScrapper(page: ft.Page):
 
                     progress_bar.value = current / total if total else 0
                     status_text.value = step
+                    log(step)
                     page.update()
 
                     if r.get("finished"):
@@ -152,8 +160,10 @@ def RenderScrapper(page: ft.Page):
     # ------------------------------------------------------------
     # LAYOUT FINAL (LIGHT DASHBOARD)
     # ------------------------------------------------------------
-    content = ft.Row(
-        [
+    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+
+    main_content = ft.Container(
+        content= ft.Row([
             # PANEL IZQUIERDO
             ft.Column(
                 [
@@ -175,7 +185,7 @@ def RenderScrapper(page: ft.Page):
                         border_radius=10,
                         border=ft.border.all(1, ft.colors.GREY_300),
                         width=330,
-                        height=400
+                        height=350
                     ),
                 ],
                 spacing=16,
@@ -190,17 +200,26 @@ def RenderScrapper(page: ft.Page):
                     ft.Text("Logs del proceso", size=18, weight="bold"),
                     ft.Container(
                         content=logs,
-                        expand=True,
+                        
                         bgcolor=ft.colors.GREY_50,
                         border_radius=10,
                         border=ft.border.all(1, ft.colors.GREY_300),
-                        padding=12
+                        padding=12,
+                        height=610
                     )
                 ],
-                expand=True
+                expand=True,
             )
-        ],
+        ]),
         expand=True
     )
 
-    return addElementsPage(page, [content])
+    stack = ft.Stack(
+        [
+            main_content,  # menú principal
+            footer,         # footer al fondo
+        ],
+        expand=True,
+    )
+
+    return addElementsPage(page, [stack])

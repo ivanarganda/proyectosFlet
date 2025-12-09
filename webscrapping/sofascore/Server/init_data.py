@@ -1,6 +1,7 @@
 import os
 import sys
 from ivbox.SQLiteORM import *
+from helpers.sofa_utils import *
 import re
 import requests
 from datetime import datetime
@@ -13,11 +14,11 @@ def init_tables():
 
     db.connect_DB()
 
-    def drop_all_tables(exceptions: list=[]) -> bool:
+    def drop_all_tables(exceptions: list=["usuarios", "reportes","reportes_jugadores","reportes_partidos"]) -> bool:
 
         try:
 
-            tables = [ table.get("name") for table in db.get_db_tables() if table.get("name") != "sqlite_sequence"]
+            tables = [ table.get("name") for table in db.get_db_tables() if table.get("name") != "sqlite_sequence" and table.get("name") not in exceptions]
 
             if not tables:
 
@@ -242,7 +243,7 @@ def init_tables():
 
             "usuarios": [
                 {
-                    "id_usuario": integer(pk=True),
+                    "id_usuario": integer(pk=True, autoincrement=True, not_null=True),
                     "nombre": text(not_null=True),
                     "email": text(not_null=True),
                     "password": text(not_null=True),
@@ -293,7 +294,7 @@ def init_tables():
 
         })
 
-    drop_all_tables(exceptions=["usuarios", "reportes","reportes_jugadores","reportes_partidos"])
+    drop_all_tables()
     time.sleep(1)
     playload_tables()
 
@@ -304,6 +305,13 @@ def init_tables():
     user_admin = os.getenv("ADMIN_USER")
     email_admin = os.getenv("ADMIN_EMAIL")
     password_admin = os.getenv("PASSWORD_USER")
+
+    if ( db.execute_query( "SELECT COUNT(*) as usuario FROM USUARIOS WHERE nombre = ? OR email = ?", (user_admin, email_admin,) ).json )[0]["usuario"] == 0:
+
+        db.insert_many(
+            table_name="usuarios",
+            items=[ ( None, user_admin, email_admin, password_admin , 'admin', '', now_ts() ) ]
+        )
 
 if __name__ == "__main__":
     init_tables()

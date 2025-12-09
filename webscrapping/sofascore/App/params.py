@@ -1,20 +1,26 @@
 SCRAPPING_FOLDER="scrapping_docs/"
 INITTED_FOLDER="files_initted/"
 
+SOFA_BLUE = "#0A84FF"
+SOFA_GREEN = "#28A745"
+SOFA_DARK = "#0F131A"
+SOFA_GRAY = "#F4F6F8"
+SOFA_TEXT = "#1C1C1C"
+
 # REQUEST_URL = "http://127.0.0.1:5000"
 REQUEST_URL = "http://127.0.0.1:5000"
 HEADERS = { 'Content-Type': 'application/json'}
 ICONS = {
-    "tasks": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_tasks.png",
-    "games":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/icon_game.png",
-    "dataMind":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/dataMind.png",
-    "foro":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/foro.png",
-    "gameRandomNumber":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/gameRandomNumber.png",
-    "tetris":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/tetris.png",
-    "chess":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/chess.png"
+    "dashboard": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/dashboard.png",
+    "log_out": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log_out.png",
+    "mind_stat": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/mind_stat.png",
+    "football_world": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_world.png",
+    "football_shield": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_shield.jpg",
+    "venue": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/venue.jpeg",
+    "football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_player.jpeg",
+    "football_match": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_match.jpeg",
+    "football_ranking": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_ranking.jpeg",
 }
 WALLPAPERS = {
-    "login":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
-    "register":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/login-wallpaper.png",
-    "ch_password":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/security_wallpaper.png"
+    "grass_ball":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/grass_ball_wallpaper.jpg"
 }

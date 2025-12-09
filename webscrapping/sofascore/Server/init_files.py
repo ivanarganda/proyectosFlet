@@ -8,13 +8,23 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
 
-def run_init_files():
+def run_init_files( progress_cb = None ):
+
+    TOTAL_STEPS = 6
+    current_step = 0
+
+    def update(step_name):
+        nonlocal current_step
+        current_step += 1
+        if progress_cb:
+            progress_cb(step_name, current_step, TOTAL_STEPS)
 
     scraping_folder = SCRAPPING_FOLDER
 
     # ==========================================================
     # 1. CARGA DE FICHEROS BASE
     # ==========================================================
+    update("Cargando ficheros base")
     path_jornadas_info = f"{scraping_folder}jornadas_00_14_info.xlsx"
     path_estadisticas_jugadores_por_jornada = f"{scraping_folder}estadisticas_jugadores_por_jornada_01_14.xlsx"
 
@@ -25,8 +35,9 @@ def run_init_files():
     df_jugadores_stats = read_file(new_path_folder_jugadores_stats)
 
     # ==========================================================
-    # 3. EQUIPOS BÁSICOS (ID, NOMBRE, SLUG)
+    # 2. PROCESAR EQUIPOS
     # ==========================================================
+    update("Procesando equipos")
     df_equipos = df_jugadores_stats[["teamId", "teamName"]].drop_duplicates()
 
     id_equipos = df_equipos["teamId"].tolist()
@@ -36,7 +47,7 @@ def run_init_files():
     equipos_dict = dict(zip(name_equipos, id_equipos))
 
     # ==========================================================
-    # 4. CARGAR ESCUDOS
+    # 3. CARGAR ESCUDOS
     # ==========================================================
     df_escudos = read_file(f"{SCRAPPING_FOLDER}escudos_equipo.xlsx")
 
@@ -51,7 +62,7 @@ def run_init_files():
     }
 
     # ==========================================================
-    # 5. NORMALIZAR NOMBRES DE EQUIPOS PARA EMPAREJAR ESCUDOS
+    # 4. NORMALIZAR NOMBRES DE EQUIPOS PARA EMPAREJAR ESCUDOS
     # ==========================================================
     df_equipos["norm_name"] = df_equipos["teamName"].apply(normalize_team_name)
 
@@ -61,7 +72,7 @@ def run_init_files():
     escudos = df_equipos["escudo"].tolist()
 
     # ==========================================================
-    # 6. GENERAR EXCEL DE EQUIPOS (ID + NOMBRE + SLUG + ESCUDO)
+    # 5. GENERAR EXCEL DE EQUIPOS (ID + NOMBRE + SLUG + ESCUDO)
     # ==========================================================
     equipos = init_excel_db(
         f"{INITTED_FOLDER}equipos_info_db.xlsx",
@@ -71,8 +82,9 @@ def run_init_files():
     )
 
     # ==========================================================
-    # 7. ESTADIOS
+    # 6. ESTADIOS
     # ==========================================================
+    update("Procesando estadios")
 
     df_estadios = df_partidos_info[
         ["Estadio", "Capacidad", "Latitud", "Longitud", "Local"]
@@ -102,8 +114,10 @@ def run_init_files():
     )
 
     # ==========================================================
-    # 8. PARTIDOS
+    # 7. PARTIDOS
     # ==========================================================
+    update("Procesando partidos")
+
     df_partidos_info = df_partidos_info.merge(
         df_estadios[["Estadio", "id_estadio"]],
         on="Estadio",
@@ -133,7 +147,7 @@ def run_init_files():
     ]
 
     # ==========================================================
-    # 9. GUARDAR PARTIDOS
+    # 8. GUARDAR PARTIDOS
     # ==========================================================
     obj_path_partidos_info = init_path_object(new_path_folder_partidos_info)
     path_partidos_info_for_db = f"{obj_path_partidos_info['folder']}{obj_path_partidos_info['filename']}_db.{obj_path_partidos_info['extension']}"
@@ -141,8 +155,9 @@ def run_init_files():
     df_partidos_info.to_excel(path_partidos_info_for_db, index=False)
 
     # ==========================================================
-    # 10. JORNADAS
+    # 9. JORNADAS
     # ==========================================================
+    update("Generando jornadas")
     df_jorn = df_partidos_info[["id_jornada", "id_temporada"]].drop_duplicates()
 
     jornadas = init_excel_db(
@@ -152,8 +167,9 @@ def run_init_files():
     )
 
     # ==========================================================
-    # 11. TEMPORADAS
+    # 10. TEMPORADAS
     # ==========================================================
+    update("Generando temporadas")
     df_partidos_info["year"] = df_partidos_info["inicio"].apply(lambda x: x.split(" ")[0].split("/")[-1])
 
     years          = df_partidos_info["year"].tolist()
@@ -168,8 +184,9 @@ def run_init_files():
     )
 
     # ==========================================================
-    # 12. JUGADORES
+    # 11. JUGADORES
     # ==========================================================
+    update("Procesando jugadores")
     df_jugadores_stats["age"] = df_jugadores_stats["dateOfBirthTimestamp"].apply(edad_from_timestamp)
 
     df_jugadores_stats["id_jugador"] = df_jugadores_stats.apply(
@@ -199,6 +216,10 @@ def run_init_files():
     # ==========================================================
     # APARTADO DE ESTADISTICAS
     # ==========================================================
+    # ==========================================================
+    # 12. PROCESAR ESTADÍSTICAS FINALES
+    # ==========================================================
+    update("Procesando ficheros")
     df_stats = pd.read_excel(f"{INITTED_FOLDER}jugadores_stats.xlsx")
     df_info  = pd.read_excel(f"{INITTED_FOLDER}jugadores_info_db.xlsx")
 
@@ -291,6 +312,9 @@ def run_init_files():
     df_info = df_info[["id_jugador","nombre","edad","sexo","country_name","id_posicion","id_equipo"]]
 
     export(f"{INITTED_FOLDER}jugadores_info_db.xlsx", df_info)
+
+    # FIN DEL PIPELINE
+    update("Completado")
 
 if __name__ == "__main__":
 

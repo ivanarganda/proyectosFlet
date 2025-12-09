@@ -4,7 +4,7 @@ def renderRegisterView(page: ft.Page, username_field: ft.TextField, email_field:
     return ft.Stack([
         ft.Container(
             expand=True,
-            image_src=WALLPAPERS["register"],
+            image_src=WALLPAPERS["grass_ball"],
             image_fit=ft.ImageFit.COVER
         ),
         ft.Container(

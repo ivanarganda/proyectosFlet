@@ -4,10 +4,27 @@ from middlewares.auth import show_session_expired_dialog
 from middlewares.dev import show_development_dialog
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
-from MainMenu.Views.scraper_ui import RenderScrapper
+from MainMenu.Views.ControlPanel.scraper_ui import RenderScrapper
 from params import REQUEST_URL, HEADERS
 import requests_async as request
 import asyncio
+
+from MainMenu.Views.Info.partidos import RenderPartidos
+from MainMenu.Views.Info.jugadores import RenderJugadores
+from MainMenu.Views.Info.estadios import RenderEstadios
+from MainMenu.Views.Info.equipos import RenderEquipos
+from MainMenu.Views.Info.selecciones import RenderSelecciones
+from MainMenu.Views.Info.clasificaciones import RenderClasificaciones
+
+# Mapa de ruta → componente
+INFO_VIEWS = {
+    "/info/partidos": RenderPartidos,
+    "/info/jugadores": RenderJugadores,
+    "/info/estadios": RenderEstadios,
+    "/info/equipos": RenderEquipos,
+    "/info/selecciones": RenderSelecciones,
+    "/info/clasificaciones": RenderClasificaciones
+}
 
 # ==========================================================
 # CARGA DE PUNTUACIONES CON MANEJO DE ERRORES
@@ -69,6 +86,26 @@ def route_change(e: ft.RouteChangeEvent):
             else:
                 page.views.append(ft.View("/scrapping", controls=[RenderScrapper(page)]))
             page.update()
+        
+        # === INFO ===
+        elif "/info" in route:
+            routes_info = [ "/info/partidos", "/info/jugadores", "/info/estadios", "/info/equipos" , "/info/selecciones", "/info/clasificaciones" ]
+
+            if route not in routes_info:
+                page.views.append(ft.View("/404", [ft.Text("Página no encontrada")]))
+                return
+
+            page.views.clear()
+
+            if not is_logged_in:
+                page.views.append(ft.View(route, controls=[ft.Text("")]))
+                show_session_expired_dialog(page)
+            else:
+                print(route)
+                page.views.append(ft.View(route, controls=[INFO_VIEWS.get(route)(page)]))
+
+            page.update()
+
         # === 404 ===
         else:
             page.views.append(ft.View("/404", [ft.Text("Página no encontrada")]))
@@ -95,10 +132,10 @@ def main(page: ft.Page):
 
     if is_logged_in:
         print("✅ Sesión activa. Cargando menú principal...")
-        page.go("/scrapping")
+        page.go("/menu")
     else:
         print("⚠️ No hay sesión activa. Redirigiendo al login...")
-        page.go("/scrapping")
+        page.go("/")
 
 # ==========================================================
 # INICIO DE APLICACIÓN

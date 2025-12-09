@@ -30,7 +30,7 @@ def renderChangePasswordView( page: ft.Page, email_field: ft.TextField, password
     return ft.Stack([
         ft.Container(
             expand=True,
-            image_src=WALLPAPERS["ch_password"],
+            image_src=WALLPAPERS["grass_ball"],
             image_fit=ft.ImageFit.COVER
         ),
         ft.Container(

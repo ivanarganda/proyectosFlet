@@ -3,12 +3,15 @@ from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
 from init_data import init_tables
+from init_files import run_init_files
 from params import DB,INITTED_FOLDER
 from scrapping_state import SCRAPING_STATUS
 from scrap import run_scrapping
 import glob
 from pathlib import Path
 import time
+import datetime
+import random
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -28,6 +31,14 @@ app = FastAPI(
 )
 
 db: SQLiteORM | None = None
+
+def get_db():
+    db = SQLiteORM(DB)
+    db.connect_DB()
+    try:
+        yield db
+    finally:
+        db.close_connection()
 
 # --------------------------------------------------------------------
 # STARTUP EVENT  (equivalente a handle_server)
@@ -55,6 +66,92 @@ def parse_json_response(message, status: int = 200):
         "status": status
     }
 
+def init_progress_cb(step, current, total):
+    global_progress_adapter(
+        module="Init",
+        step=step,
+        current=current,
+        total=total,
+        weight=40,   # Ocupa de 0% a 40%
+        offset=0
+    )
+
+def scrap_progress_cb(step, current, total):
+    global_progress_adapter(
+        module="Scraping",
+        step=step,
+        current=current,
+        total=total,
+        weight=60,   # Ocupa del 40% al 100%
+        offset=40
+    )
+
+
+
+def scrapping_progress_cb(step, current, total):
+    # scraping ocupa 60% del progreso total
+    global_progress_adapter(
+        module="Scraping",
+        step=step,
+        current=current,
+        total=total,
+        weight=60,     # 40% a 100%
+        offset=40
+    )
+
+
+def global_progress_adapter(module, step, current, total, weight, offset):
+    if total is None or total == 0:
+        local_ratio = 0
+    else:
+        local_ratio = current / total  
+
+    module_progress = local_ratio * weight
+    global_progress = offset + module_progress
+
+    if global_progress > 100:
+        global_progress = 100
+
+    # 👉 Forzamos variación mínima para que Flet refresque
+    SCRAPING_STATUS["current"] = round(global_progress, 2) + random.random() * 0.0001
+    SCRAPING_STATUS["total"] = 100
+
+    SCRAPING_STATUS["step"] = f"{module}: {step}"
+
+def full_scraping_task():
+
+    try:
+        SCRAPING_STATUS.update({
+            "running": True,
+            "finished": False,
+            "current": 0,
+            "total": 100,
+            "step": "Inicializando...",
+            "error": None
+        })
+
+        # 1) INIT FILES 0% → 40%
+        run_init_files(init_progress_cb)
+
+        # 2) SCRAP 40% → 100%
+        run_scrapping(scrap_progress_cb)
+
+        SCRAPING_STATUS["running"] = False
+        SCRAPING_STATUS["finished"] = True
+
+        global_progress_adapter(
+            step="Completado",
+            current=1,
+            total=1,
+            module="Finish",
+            weight=1,
+            offset=99
+        )
+
+    except Exception as e:
+        SCRAPING_STATUS["error"] = str(e)
+        SCRAPING_STATUS["running"] = False
+
 def progress_callback(step, current=None, total=None):
 
     SCRAPING_STATUS["running"] = True
@@ -75,7 +172,7 @@ def progress_callback(step, current=None, total=None):
 # AUTHORIZATION DEPENDENCY
 # --------------------------------------------------------------------
 
-def check_authorization(request: Request):
+def check_authorization(request: Request, db: SQLiteORM = Depends(get_db)):
     auth_header = request.headers.get("Authorization")
 
     if not auth_header or "Bearer " not in auth_header:
@@ -121,13 +218,13 @@ def protected_route(auth: bool = Depends(check_authorization)):
 
 @app.get("/scrapping/status")
 def scrapping_status():
+    print(SCRAPING_STATUS)
     return SCRAPING_STATUS
 
 @app.post("/scrapping/start")
 def start_scrapping(background_tasks: BackgroundTasks):
 
     init_data()
-
     time.sleep(1)
 
     if SCRAPING_STATUS["running"]:
@@ -142,7 +239,8 @@ def start_scrapping(background_tasks: BackgroundTasks):
         "error": None
     })
 
-    background_tasks.add_task(run_scrapping, progress_callback) # permite ejecutar en segundo plano scrap.py para que vaya llamando al callback que es progress_cb
+    # Una única tarea → controla todo el pipeline
+    background_tasks.add_task(full_scraping_task)
 
     return parse_json_response("Scraping started ✅")
 
@@ -158,11 +256,11 @@ def list_db_files():
 # USERS
 # ===================
 @app.post("/users/login")
-def login():
+async def login( request: Request, db: SQLiteORM = Depends(get_db) ):
 
     try:
 
-        json_data = request.json
+        json_data = await request.json()
 
         # logging.debug(json_data) 
 
@@ -174,7 +272,7 @@ def login():
 
         result = db.execute_query(
             """ 
-                SELECT id_usuario, username, email,password from users where email = ?
+                SELECT id_usuario, nombre, email,password from usuarios where email = ?
             """,
             ( email, )
         ).json
@@ -196,7 +294,7 @@ def login():
             """ 
                SELECT
                     u.id_usuario,
-                    u.username,
+                    u.nombre,
                     u.email,
                     u.rol as role
                 from usuarios u
@@ -238,3 +336,29 @@ def login():
         logging.debug(e)
         
         return parse_json_response( str(e) , 400 )
+
+# INFO 
+# Partidos
+@app.get("/info/partidos")
+def api_get_partidos( db: SQLiteORM = Depends(get_db) ):
+    sql = """
+        SELECT 
+            p.id_partido,
+            p.id_temporada,
+            p.id_jornada,
+            e1.nombre AS local,
+            e2.nombre AS visitante,
+            es.nombre AS estadio,
+            p.inicio,
+            p.goles_local,
+            p.goles_visitante,
+            p.estado
+        FROM partidos p
+        LEFT JOIN equipos e1 ON p.id_local = e1.id_equipo
+        LEFT JOIN equipos e2 ON p.id_visitante = e2.id_equipo
+        LEFT JOIN estadios es ON p.id_estadio = es.id_estadio
+        ORDER BY p.id_partido
+    """
+
+    data = db.execute_query(sql).json
+    return {"data": data}

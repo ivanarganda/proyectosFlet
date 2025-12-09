@@ -9,12 +9,6 @@ from components.PopupMenu import PopupMenuButton # TODO for testing
 # from flet_popupmenu import PopupMenuButton # TODO for production
 from params import HEADERS, REQUEST_URL
 
-states = {
-    0: {"color":"#FFA500", "label":"Pending", "label_color":"#000000", "icon": ft.icons.HOURGLASS_EMPTY , "bg_icon": "#FFB740"},      # Orange
-    1: {"color":"#32CD32", "label":"Completed", "label_color":"#000000", "icon": ft.icons.CHECK_CIRCLE, "bg_icon": "#91D998"},    # Lime Green
-    2: {"color":"#1E90FF", "label":"In progress", "label_color":"#000000", "icon": ft.icons.PLAY_ARROW, "bg_icon": "#54B0FF" }   # Dodger Blue
-}
-
 # ESPECIAL FUNCTIONS
 def get_hostname():
     return platform.node()
@@ -146,278 +140,6 @@ def clamp(v, lo=0, hi=255): return max(lo, min(hi, int(v)))
 def rgb_to_hex(r, g, b):
     return f"#{clamp(r):02X}{clamp(g):02X}{clamp(b):02X}"
 
-def hex_to_rgb(hx, default=(90, 45, 156)):  # "#5A2D9C" por defecto
-    try:
-        h = hx.strip().lstrip("#")
-        if len(h) == 3:
-            h = "".join(c*2 for c in h)
-        if len(h) != 6:
-            return default
-        r = int(h[0:2], 16)
-        g = int(h[2:4], 16)
-        b = int(h[4:6], 16)
-        return (r, g, b)
-    except:
-        return default
-
-def open_bg_picker(e):
-        def on_pick(color_hex):
-            bg_color_field.value = color_hex
-            bg_color_field.update()
-            update_preview()
-        page.dialog = build_color_dialog("Pick background color", bg_color_field.value, on_pick)
-        page.dialog.open = True
-        page.update()
-
-def open_text_picker(e):
-    def on_pick(color_hex):
-        text_color_field.value = color_hex
-        text_color_field.update()
-        update_preview()
-    page.dialog = build_color_dialog("Pick text color", text_color_field.value, on_pick)
-    page.dialog.open = True
-    page.update()
-
-def build_color_dialog(title: str, initial_hex: str, on_pick):
-    # Paleta base (puedes ampliar)
-    palette = [
-        "#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF",
-        "#9D4EDD", "#F72585", "#FF9E00", "#00B4D8",
-        "#F0F0FF", "#EAEAEA", "#1A1A1A", "#5A2D9C",
-    ]
-
-    # Estado interno
-    r, g, b = hex_to_rgb(initial_hex or "#5A2D9C")
-    hex_field = ft.TextField(label="HEX", value=rgb_to_hex(r, g, b), width=140)
-    swatch = ft.Container(width=36, height=36, bgcolor=rgb_to_hex(r, g, b), border_radius=8)
-
-    r_slider = ft.Slider(min=0, max=255, divisions=255, value=r, label="{value}", expand=True)
-    g_slider = ft.Slider(min=0, max=255, divisions=255, value=g, label="{value}", expand=True)
-    b_slider = ft.Slider(min=0, max=255, divisions=255, value=b, label="{value}", expand=True)
-
-    def apply_color_from_rgb():
-        hx = rgb_to_hex(r_slider.value, g_slider.value, b_slider.value)
-        hex_field.value = hx
-        swatch.bgcolor = hx
-        hex_field.update()
-        swatch.update()
-        # Callback inmediato para previsualizar “en vivo”
-        on_pick(hx)
-
-    def apply_color_from_hex():
-        nonlocal r, g, b
-        rr, gg, bb = hex_to_rgb(hex_field.value)
-        r_slider.value, g_slider.value, b_slider.value = rr, gg, bb
-        swatch.bgcolor = rgb_to_hex(rr, gg, bb)
-        r_slider.update(); g_slider.update(); b_slider.update(); swatch.update()
-        on_pick(swatch.bgcolor)
-
-    def on_palette_click(col):
-        hex_field.value = col
-        apply_color_from_hex()
-
-    r_slider.on_change = lambda e: apply_color_from_rgb()
-    g_slider.on_change = lambda e: apply_color_from_rgb()
-    b_slider.on_change = lambda e: apply_color_from_rgb()
-    hex_field.on_change = lambda e: apply_color_from_hex()
-
-    palette_controls = [
-        ft.Container(
-            width=32, height=32, bgcolor=c, border_radius=16,
-            on_click=lambda e, col=c: on_palette_click(col),
-            margin=4, shadow=ft.BoxShadow(blur_radius=6, color=ft.colors.GREY_300),
-        ) for c in palette
-    ]
-
-    # Custom section (HEX + RGB sincronizados)
-    custom_section = ft.Column(
-        [
-            ft.Row([hex_field, swatch], alignment=ft.MainAxisAlignment.START, spacing=12),
-            ft.Row([ft.Text("R", width=16), r_slider]),
-            ft.Row([ft.Text("G", width=16), g_slider]),
-            ft.Row([ft.Text("B", width=16), b_slider]),
-        ],
-        spacing=10,
-    )
-
-    dlg = ft.AlertDialog(
-        title=ft.Text(title, weight=ft.FontWeight.BOLD),
-        content=ft.Column(
-            [
-                ft.Text("Palette", size=14, color="#666"),
-                ft.Row(
-                    controls=palette_controls,
-                    spacing=8,
-                    scroll=ft.ScrollMode.AUTO,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                ft.Divider(height=24, color="#DDD"),
-                ft.Text("Custom color", size=14, color="#666"),
-                custom_section,
-            ],
-            width=340,
-            height=320,
-            scroll=ft.ScrollMode.AUTO
-        ),
-        actions=[
-            ft.TextButton("Close", on_click=lambda e: close_dialog(e))
-        ],
-    )
-    return dlg
-
-def setCarrousel(page, nodes, on_view_category, on_add_task, on_callbacks={}):
-    
-    items = []
-
-    headers = HEADERS.copy()
-    token = getSession(page.client_storage.get("user") or "{}").get("token", "")
-    headers["Authorization"] = f"Bearer {token}"
-
-    for node in nodes:
-        # ---------- 1. Validar y parsear content ----------
-        content = node.get("content", {})
-
-        # Si el content viene como string JSON -> convertirlo
-        if isinstance(content, str):
-            try:
-                content = json.loads(content)
-            except json.JSONDecodeError:
-                print(f"⚠️ No se pudo parsear el content del nodo: {content}")
-                content = {}
-
-        if not isinstance(content, dict):
-            print(f"⚠️ Formato inesperado en content: {type(content)}")
-            continue
-
-        # ---------- 2. Crear los textos ----------
-        parts = []
-        for k, data in content.items():
-            # Saltar bg_color porque no se renderiza como texto
-            if k == "bg_color":
-                continue
-
-            # data podría no ser dict (seguridad)
-            if not isinstance(data, dict):
-                print(f"⚠️ Valor inesperado en '{k}': {data}")
-                continue
-
-            text_value = data.get("title", "")
-            if not text_value:
-                continue
-
-            text_kwargs = {
-                key: data[key]
-                for key in ["size", "width", "color", "weight"]
-                if key in data
-            }
-            parts.append(ft.Text(text_value, **text_kwargs))
-
-        # ---------- 2. Contador de tareas ----------
-        tasks = node.get("tasks", 0).get("total", 0)
-        parts.append(ft.Text(f"{tasks} tasks", size=12, color="black"))
-
-        # ---------- 3. Botón de añadir tarea ----------
-        id_category_task = node.get("id_category", {}).get("id", None)
-        category_name = node.get("category", {}).get("name", None)
-
-        item_to_edit = {
-            "id": {
-                "value": id_category_task,
-                "type": "identifier",
-                "required": True,
-                "disabled": True
-            },
-            "category": {
-                "value": category_name,
-                "type": "text",
-                "disabled": False
-            }
-        }
-
-        parts.append(
-            ft.Row(
-                [
-                    ft.Container(
-                        content=ft.IconButton(
-                            icon=ft.Icons.ADD,
-                            icon_size=28,
-                            icon_color="gray",
-                            on_click=lambda _, id=id_category_task: on_add_task(page, id) if on_add_task else None
-                        ),
-                        alignment=ft.alignment.center,
-                    ),
-                    ft.Container(
-                        content=ft.IconButton(
-                            icon=ft.Icons.REMOVE_RED_EYE_OUTLINED,
-                            icon_size=28,
-                            icon_color="gray",
-                            on_click=lambda _, category=f'{{"id": "{id_category_task}", "name": "{category_name}"}}': on_view_category(
-                                page=page,
-                                t="AllTasks",
-                                category=category
-                            ) if on_view_category else None
-
-                        ),
-                        alignment=ft.alignment.center,
-                    )
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            )
-        )
-
-        # ---------- 4. Construir la tarjeta ----------
-        bg_color = content.get("bg_color", {}).get("title", "#F0F0F0")  # valor por defecto
-        card = ft.Container(
-            width=160,
-            height=200,
-            bgcolor=bg_color,
-            border_radius=20,
-            padding=15,
-            shadow=ft.BoxShadow(blur_radius=8, color=ft.colors.GREY_300),
-            content=ft.Stack(
-                [
-                    ft.Column(
-                        controls=parts,
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=5,
-                    ),
-                    PopupMenuButton(
-                        page=page,
-                        id=id_category_task,
-                        item_to_edit=item_to_edit,
-                        alias=f"Category {id_category_task}",
-                        request_url = {
-                            "edit": {
-                                "url":f"{REQUEST_URL}/tasks/categories?id={id_category_task}",
-                                "headers":headers,
-                            },
-                            "delete": { 
-                                "url":f"{REQUEST_URL}//tasks/categories?id={id_category_task}",
-                                "headers":headers,
-                            }
-                        },
-                        callback=None,
-                        callbacks=on_callbacks,
-                        layout={
-                            "top":-10,
-                            "right":-10
-                        }
-                    )
-                ]
-            )
-        )
-        items.append(card)
-
-    # ---------- 5. Devolver la fila con scroll horizontal ----------
-    return ft.Row(
-        controls=items,
-        scroll=ft.ScrollMode.ALWAYS,
-        spacing=15,
-        alignment=ft.MainAxisAlignment.START,
-    )
-
-
 def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" , border_color = "#E0E0E0" , focused_border_color = "#808080" ):
     defaultTextField = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
     return {
@@ -436,7 +158,6 @@ def handle_logout(page: ft.Page):
     page.session.clear()
     page.client_storage.clear()
     page.go("/")
-
 
 def getSession( data , decrypt=False ):
 
@@ -618,3 +339,21 @@ def safe_exec(func, context="operation"):
     except Exception as e:
         log_error(context, e)
         return None
+
+# ABOUT TABLES
+
+def safe_cell(value):
+    return ft.DataCell(
+        ft.Container(
+            ft.Text("" if value is None else str(value), size=13, color="#2B2B2B"),
+            expand=True,                      # <🔥 ancho completo de columna
+            alignment=ft.alignment.center,    # opcional
+        )
+    )
+
+
+def build_row(item, index, columns):
+    return ft.DataRow(
+        cells=[safe_cell(item.get(col)) for col in columns],
+        color=ft.colors.BLUE_50 if index % 2 == 0 else None,
+    )
