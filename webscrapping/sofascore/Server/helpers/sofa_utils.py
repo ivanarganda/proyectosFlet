@@ -182,21 +182,17 @@ def _read(file):
 
 def read_file(file: str, workers=max_workers):
 
-    result = {}
-
     with ThreadPoolExecutor(max_workers=workers) as executor:
 
-        futures = {executor.submit(_read, file)}
+        future = executor.submit(_read, file)
 
-        for future in as_completed(futures):
+        try:
 
-            try:
+            return future.result()
 
-                result = future.result()
+        except Exception as e:
 
-            except Exception as e:
-
-                result = f"ERROR: {e}"
+            raise RuntimeError(f"ERROR: {e}") from e
 
     return result
 

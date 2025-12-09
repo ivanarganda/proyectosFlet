@@ -79,6 +79,8 @@ def run_scrapping(progress_cb=None):
 
             path = f"{folder}{file}"
 
+            print( path )
+
             obj_path = init_path_object( path )
             
             tables[ obj_path.get("filename").replace(delimiter,"") ] = {

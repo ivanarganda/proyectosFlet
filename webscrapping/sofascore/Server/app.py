@@ -154,12 +154,10 @@ def list_db_files():
 # ===================
 # USERS
 # ===================
-@app.route("/users/login", methods=["POST"])
+@app.post("/users/login")
 def login():
 
     try:
-
-        handle_server()
 
         json_data = request.json
 
