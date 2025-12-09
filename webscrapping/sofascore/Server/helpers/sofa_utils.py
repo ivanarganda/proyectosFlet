@@ -38,6 +38,10 @@ def normalize_team_name(name):
         )
     return name
 
+def make_stadium_id(nombre: str, lat: float, lon: float) -> int:
+    base = f"{nombre}_{lat}_{lon}".lower().strip()
+    return int(hashlib.md5(base.encode()).hexdigest()[:12], 16)
+
 def make_player_id(name, teamId, dateBirth):
 
     raw = f"{name}-{teamId}-{dateBirth}".lower().strip()

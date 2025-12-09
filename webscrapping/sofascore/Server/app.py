@@ -8,6 +8,7 @@ from scrapping_state import SCRAPING_STATUS
 from scrap import run_scrapping
 import glob
 from pathlib import Path
+import time
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -126,6 +127,8 @@ def scrapping_status():
 def start_scrapping(background_tasks: BackgroundTasks):
 
     init_data()
+
+    time.sleep(1)
 
     if SCRAPING_STATUS["running"]:
         return parse_json_response("Scraping already running", 409)

@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from params import *
 from datetime import datetime
+from helpers.player_stats_fields import PLAYER_STATS_FIELDS
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
@@ -72,35 +73,49 @@ def run_init_files():
     # ==========================================================
     # 7. ESTADIOS
     # ==========================================================
-    df_partidos_info["id_local_temp"] = df_partidos_info["Local"].map(equipos_dict) * 100
 
     df_estadios = df_partidos_info[
-        ["Estadio", "Capacidad", "Latitud", "Longitud", "id_local_temp"]
+        ["Estadio", "Capacidad", "Latitud", "Longitud", "Local"]
     ].drop_duplicates()
+
+    df_estadios["id_equipo"] = df_estadios["Local"].map(equipos_dict)
+
+    df_estadios["id_estadio"] = df_estadios.apply(
+        lambda r: make_stadium_id(
+            r["Estadio"], r["Latitud"], r["Longitud"]
+        ),
+        axis=1
+    )
 
     estadios = init_excel_db(
         f"{INITTED_FOLDER}estadios_info_db.xlsx",
         ["id_estadio", "nombre", "latitud", "longitud", "capacidad", "id_equipo"],
         [
-            df_estadios["id_local_temp"].tolist(),
+            df_estadios["id_estadio"].tolist(),
             df_estadios["Estadio"].tolist(),
             df_estadios["Latitud"].tolist(),
             df_estadios["Longitud"].tolist(),
             df_estadios["Capacidad"].tolist(),
-            (df_estadios["id_local_temp"] // 100).tolist()
+            df_estadios["id_equipo"].tolist()
         ],
-        duplicates=["nombre"]
+        duplicates=["id_estadio"]
     )
 
     # ==========================================================
     # 8. PARTIDOS
     # ==========================================================
+    df_partidos_info = df_partidos_info.merge(
+        df_estadios[["Estadio", "id_estadio"]],
+        on="Estadio",
+        how="left"
+    )
+
     df_partidos_info["id_temporada"] = 1
     df_partidos_info["id_partido"]   = df_partidos_info["id"]
     df_partidos_info["id_jornada"]   = df_partidos_info["Jornada"]
     df_partidos_info["id_local"]     = df_partidos_info["Local"].map(equipos_dict)
     df_partidos_info["id_visitante"] = df_partidos_info["Visitante"].map(equipos_dict)
-    df_partidos_info["id_estadio"]   = df_partidos_info["id_local"] * 100
+    # df_partidos_info["id_estadio"]   = df_partidos_info["id_local"] * 100
 
     df_partidos_info["inicio"] = pd.to_datetime(
         df_partidos_info["Fecha"].astype(str) + " " + df_partidos_info["Hora"].astype(str),
@@ -162,18 +177,19 @@ def run_init_files():
         axis=1
     )
 
-    df_jug = df_jugadores_stats[["id_jugador", "name", "age", "gender", "teamId","dateOfBirthTimestamp"]].drop_duplicates()
+    df_jug = df_jugadores_stats[["id_jugador", "name", "age", "gender", "country_alpha3", "teamId","dateOfBirthTimestamp"]].drop_duplicates()
 
     df_jug["id_jugador_"] = df_jug["id_jugador"].astype(str) + df_jug["teamId"].astype(str) + df_jug["dateOfBirthTimestamp"].astype(str)
 
     jugadores = init_excel_db(
         f"{INITTED_FOLDER}jugadores_info_db.xlsx",
-        ["id_jugador", "nombre", "edad", "sexo", "id_equipo","fecha_nacimiento"],
+        ["id_jugador", "nombre", "edad", "sexo", "country_name", "id_equipo","fecha_nacimiento"],
         [
             df_jug["id_jugador_"].tolist(),
             df_jug["name"].tolist(),
             df_jug["age"].tolist(),
             df_jug["gender"].tolist(),
+            df_jug["country_alpha3"].tolist(),
             df_jug["teamId"].tolist(),
             df_jug["dateOfBirthTimestamp"].tolist()
         ],
@@ -203,55 +219,40 @@ def run_init_files():
     # ==========================================================
     # 3. LISTA DE ESTADÍSTICAS IMPORTANTES
     # ==========================================================
-    extra_stats = [
-        "minutesPlayed",
-        "rating",
-        "touches",
-        "position",
-        "saves",
-        "penaltySave",
-        "goals",
-        "expectedGoals",
-        "totalShots"
-    ]
-
-    # Mantener solo las columnas que existan realmente
-    extra_stats = [col for col in extra_stats if col in df_merged.columns]
+    extra_stats = PLAYER_STATS_FIELDS
 
     # ==========================================================
     # 4. CONSTRUIR DATAFRAME FINAL
     # ==========================================================
-    essential_cols = [
-        "id_jugador",
-        "teamId",
-        "Partido",     # id_partido
-        "Jornada"
-    ] + extra_stats
 
-    df_final = df_merged[essential_cols].copy()
+    # ==========================================================
+    # 5. CREAR ID AUTOINCREMENT
+    # ==========================================================
+    
+    df_final = df_merged.copy()
+
+    df_final.insert(0, "id_estadistica_jugadores", range(1, len(df_final) + 1))
 
     df_final["id_equipo"] = df_final["teamId"] 
     df_final["id_partido"] = df_final["Partido"] 
     df_final["id_jornada"] = df_final["Jornada"] 
 
-    # ==========================================================
-    # 5. CREAR ID AUTOINCREMENT
-    # ==========================================================
-    df_final.insert(0, "id_estadistica_jugadores", range(1, len(df_final) + 1))
-
-    df_final = df_final[
-        [
-            "id_estadistica_jugadores",
-            "id_jugador",
-            "id_equipo",
-            "id_partido",     # id_partido
-            "id_jornada"
-        ] + extra_stats
+    essential_cols = [
+        "id_estadistica_jugadores",
+        "id_jugador",
+        "id_equipo",
+        "id_partido",
+        "id_jornada"
     ]
+
+    extra_stats = PLAYER_STATS_FIELDS
+
+    all_cols = essential_cols + extra_stats
+    df_final = df_final[all_cols]
 
     df_final = df_final.reset_index(drop=True)
 
-    df_final = df_final.where(pd.notnull(df_final), None)
+    df_final = df_final.where(pd.notnull(df_final), 0)
 
     output_path = f"{INITTED_FOLDER}jugadores_stats_info_db.xlsx"
 
@@ -287,7 +288,7 @@ def run_init_files():
 
     df_info["id_posicion"] = df_info["position"].map(posiciones)
 
-    df_info = df_info[["id_jugador","nombre","edad","sexo","id_posicion","id_equipo"]]
+    df_info = df_info[["id_jugador","nombre","edad","sexo","country_name","id_posicion","id_equipo"]]
 
     export(f"{INITTED_FOLDER}jugadores_info_db.xlsx", df_info)
 

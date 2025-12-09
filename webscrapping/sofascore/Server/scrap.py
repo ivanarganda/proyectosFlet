@@ -58,6 +58,8 @@ def run_scrapping(progress_cb=None):
 
             path = f"{folder}{file}"
 
+            print( table )
+
             db.insert_many(
 
                 table,
@@ -78,8 +80,6 @@ def run_scrapping(progress_cb=None):
         for file in files:
 
             path = f"{folder}{file}"
-
-            print( path )
 
             obj_path = init_path_object( path )
             
