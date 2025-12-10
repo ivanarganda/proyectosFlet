@@ -18,6 +18,7 @@ def footer_navbar(page: ft.Page, current_path = {} , dispatches = {} ):
                 ft.IconButton(ft.icons.HOME, on_click=lambda _: page.go("/menu"), icon_color="#4e73df"),
                 ft.IconButton(ft.icons.SEARCH, icon_color="#4e73df"),
                 ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'ControlPanel') ),
+                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'Info') ),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
                 ft.IconButton(ft.icons.PERSON, icon_color="#4e73df", visible= folder != 'Profile'),
             ],

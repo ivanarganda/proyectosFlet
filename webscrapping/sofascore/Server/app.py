@@ -1,5 +1,6 @@
+import os
 import logging
-from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks, Response
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
 from init_data import init_tables
@@ -12,6 +13,7 @@ from pathlib import Path
 import time
 import datetime
 import random
+import requests
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -39,6 +41,15 @@ def get_db():
         yield db
     finally:
         db.close_connection()
+
+def date_field( date_field ):
+    return f"""datetime(
+            substr({date_field}, 7, 4) || '-' || 
+            substr({date_field}, 4, 2) || '-' || 
+            substr({date_field}, 1, 2) || ' ' || 
+            substr({date_field}, 12)
+        )"""
+
 
 # --------------------------------------------------------------------
 # STARTUP EVENT  (equivalente a handle_server)
@@ -341,13 +352,17 @@ async def login( request: Request, db: SQLiteORM = Depends(get_db) ):
 # Partidos
 @app.get("/info/partidos")
 def api_get_partidos( db: SQLiteORM = Depends(get_db) ):
-    sql = """
+    sql = f"""
         SELECT 
             p.id_partido,
             p.id_temporada,
             p.id_jornada,
+            e1.id_equipo as id_equipo_local,
+            e2.id_equipo as id_equipo_visitante,
             e1.nombre AS local,
             e2.nombre AS visitante,
+            e1.escudo AS escudo_local,
+            e2.escudo AS escudo_visitante,
             es.nombre AS estadio,
             p.inicio,
             p.goles_local,
@@ -357,7 +372,27 @@ def api_get_partidos( db: SQLiteORM = Depends(get_db) ):
         LEFT JOIN equipos e1 ON p.id_local = e1.id_equipo
         LEFT JOIN equipos e2 ON p.id_visitante = e2.id_equipo
         LEFT JOIN estadios es ON p.id_estadio = es.id_estadio
-        ORDER BY p.id_partido
+        ORDER BY {date_field("p.inicio")} ASC;
+    """
+
+    data = db.execute_query(sql).json
+    return {"data": data}
+
+
+
+# ESTADIOS
+# info estadios
+@app.get("/info/estadios")
+def api_get_estadios( db: SQLiteORM = Depends(get_db) ):
+    sql = f"""
+        SELECT 
+            es.id_estadio,
+            es.nombre,
+            es.latitud,
+            es.longitud,
+            es.capacidad,
+            (select nombre from equipos where id_equipo = es.id_equipo) as equipo
+        FROM estadios es
     """
 
     data = db.execute_query(sql).json
