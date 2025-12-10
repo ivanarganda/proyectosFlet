@@ -1,6 +1,11 @@
-# Init main
-from App.main import init_app
+import os
+import sys
+import flet as ft
 
-if __name__ == "__main__":
-    init_app()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+APP_DIR = os.path.join(BASE_DIR, "App")
+sys.path.insert(0, APP_DIR)
 
+from main import main
+
+ft.app(target=main)

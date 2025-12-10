@@ -20,11 +20,10 @@ def build_card_estadios( item ):
                 ft.Row(
                     [
                         ft.Column([
-                            ft.Text(f"🏟 {item['nombre']}", color="grey", size=12),
-                            ft.Text(f"⏱ {item['latitud']}", color="grey", size=12),
-                            ft.Text(f"⏱ {item['longitud']}", color="grey", size=12),
-                            ft.Text(f"⏱ {item['capacidad']}", color="grey", size=12),
-                            ft.Text(f"⏱ {item['equipo']}", color="grey", size=12),
+                            ft.Text(f"🏟️ {item['nombre']}", color="grey", size=12),
+                            ft.Text(f"🌍 {item['lugar']}", color="grey", size=12),
+                            ft.Text(f"⚖️ {item['capacidad']}", color="grey", size=12),
+                            ft.Text(f"🛗 {item['equipo']}", color="grey", size=12),
                         ])
                         
                     ],

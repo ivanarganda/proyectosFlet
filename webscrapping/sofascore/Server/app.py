@@ -390,6 +390,7 @@ def api_get_estadios( db: SQLiteORM = Depends(get_db) ):
             es.nombre,
             es.latitud,
             es.longitud,
+            es.lugar,
             es.capacidad,
             (select nombre from equipos where id_equipo = es.id_equipo) as equipo
         FROM estadios es

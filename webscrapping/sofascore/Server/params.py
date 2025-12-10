@@ -6,4 +6,5 @@ load_dotenv()
 DB="conf/futbol.db"
 SCRAPPING_FOLDER="scrapping_docs/"
 INITTED_FOLDER="files_initted/"
+LOCATIONIQ_API_KEY = os.getenv("LOCATIONIQ_API_KEY")
 

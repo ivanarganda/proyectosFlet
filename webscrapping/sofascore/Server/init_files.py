@@ -99,14 +99,21 @@ def run_init_files( progress_cb = None ):
         axis=1
     )
 
+    # Obtener ciudad
+    df_estadios["Lugar"] = df_estadios.apply(
+        lambda row: get_place(row["Latitud"], row["Longitud"]),
+        axis=1
+    )
+
     estadios = init_excel_db(
         f"{INITTED_FOLDER}estadios_info_db.xlsx",
-        ["id_estadio", "nombre", "latitud", "longitud", "capacidad", "id_equipo"],
+        ["id_estadio", "nombre", "latitud", "longitud", "lugar", "capacidad", "id_equipo"],
         [
             df_estadios["id_estadio"].tolist(),
             df_estadios["Estadio"].tolist(),
             df_estadios["Latitud"].tolist(),
             df_estadios["Longitud"].tolist(),
+            df_estadios["Lugar"].tolist(),
             df_estadios["Capacidad"].tolist(),
             df_estadios["id_equipo"].tolist()
         ],

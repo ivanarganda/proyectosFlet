@@ -1,6 +1,7 @@
 import os
 import sys
 import polars as pl
+import requests
 from typing import Union, List, Tuple, Optional
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -9,6 +10,7 @@ import csv
 import hashlib
 import random
 import time
+from params import LOCATIONIQ_API_KEY
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
 
@@ -37,6 +39,34 @@ def normalize_team_name(name):
                 .strip()
         )
     return name
+
+import requests
+import time
+
+def get_place(lat, lon):
+    try:
+        url = (
+            f"https://eu1.locationiq.com/v1/reverse"
+            f"?key={LOCATIONIQ_API_KEY}&lat={lat}012&lon={lon}012&format=json&zoom=10"
+        )
+
+        r = requests.get(url, timeout=10)
+        data = r.json()
+
+        if "display_name" in data:
+            return data["display_name"]
+
+        address = data.get("address", {})
+        return (
+            address.get("city")
+            or address.get("state")
+            or address.get("country")
+            or "Desconocido"
+        )
+
+    except Exception:
+        return "Desconocido"
+
 
 def make_stadium_id(nombre: str, lat: float, lon: float) -> int:
     base = f"{nombre}_{lat}_{lon}".lower().strip()

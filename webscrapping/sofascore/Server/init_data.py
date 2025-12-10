@@ -102,6 +102,7 @@ def init_tables():
                     "nombre": text(not_null=True),
                     "latitud": text(),
                     "longitud": text(),
+                    "lugar": varchar(size=200),
                     "capacidad": integer(),
                     "id_equipo": integer()
                 },
