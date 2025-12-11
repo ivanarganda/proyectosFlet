@@ -307,7 +307,7 @@ def list_menu_items(page: ft.Page):
                         ) if role == "admin" else None,
 
                         ft.Container(
-                            content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/stats", size=35),
+                            content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/estadisticas_jugador", size=35),
                             col={"xs": 6, "sm": 4, "md": 3}
                         ) if role == "admin" else None,
 
@@ -467,7 +467,7 @@ def renderMainMenu(page: ft.Page):
     page.on_resize = on_resize
 
     # === CREACIÓN DE MODAL Y FOOTER ===
-    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+    footer = footer_navbar(page=page, current_path=current_path, dispatches={}, absolute=True)
 
     page.update()
 

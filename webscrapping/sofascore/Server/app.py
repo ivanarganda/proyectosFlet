@@ -398,3 +398,85 @@ def api_get_estadios( db: SQLiteORM = Depends(get_db) ):
 
     data = db.execute_query(sql).json
     return {"data": data}
+
+# EQUIPOS
+# info equipos
+@app.get("/info/equipos")
+def api_get_equipos( db: SQLiteORM = Depends(get_db) ):
+
+    sql = f"""
+        SELECT 
+            id_equipo,
+            (select nombre from estadios where id_equipo = e.id_equipo) as estadio,
+            e.nombre,
+            e.escudo
+        FROM equipos e
+    """
+
+    data = db.execute_query(sql).json
+    return {"data": data}
+
+@app.get("/info/jugadores")
+def get_jugadores( db: SQLiteORM = Depends(get_db) ):
+    sql = """
+        SELECT
+            j.id_jugador,
+            j.nombre,
+            ( select nombre from posiciones where j.id_posicion = id_posicion ) as posicion,
+            j.edad,
+            eq.nombre AS equipo,
+            eq.id_equipo,
+            eq.escudo
+        FROM jugadores j
+        LEFT JOIN equipos eq ON j.id_equipo = eq.id_equipo
+        ORDER BY j.nombre ASC
+    """
+    data = db.execute_query(sql).json
+    return {"data": data}
+
+
+@app.get("/info/estadisticas_jugador")
+def get_player_stats(filters: dict, db: SQLiteORM = Depends(get_db)):
+    sql = f"""
+        SELECT 
+            ej.id_partido,
+            ej.id_jornada,
+            ej.minutesPlayed,
+            ej.rating,
+
+            ej.goals,
+            ej.expectedGoals,
+            ej.expectedAssists,
+            ej.totalShots,
+            ej.shotOffTarget,
+
+            ej.totalPass,
+            ej.accuratePass,
+            ej.totalLongBalls,
+            ej.accurateLongBalls,
+
+            ej.totalCross,
+            ej.accurateOppositionHalfPasses,
+
+            ej.totalTackle,
+            ej.wonTackle,
+            ej.interceptionWon,
+            ej.ballRecovery,
+
+            ej.totalContest,
+            ej.duelWon,
+            ej.duelLost,
+            ej.aerialWon,
+            ej.aerialLost,
+
+            ej.wasFouled,
+            ej.fouls,
+            ej.errorLeadToAShot,
+            ej.errorLeadToAGoal
+
+        FROM estadisticas_jugadores ej
+        ORDER BY ej.id_jornada ASC
+    """
+
+    data = db.execute_query(sql).json
+    return {"data": data}

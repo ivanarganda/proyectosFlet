@@ -11,6 +11,7 @@ import asyncio
 
 from MainMenu.Views.Info.partidos import RenderPartidos
 from MainMenu.Views.Info.jugadores import RenderJugadores
+from MainMenu.Views.Info.estadiscitas_jugadores import RenderEstadisticasJugadores
 from MainMenu.Views.Info.estadios import RenderEstadios
 from MainMenu.Views.Info.equipos import RenderEquipos
 from MainMenu.Views.Info.selecciones import RenderSelecciones
@@ -20,6 +21,7 @@ from MainMenu.Views.Info.clasificaciones import RenderClasificaciones
 INFO_VIEWS = {
     "/info/partidos": RenderPartidos,
     "/info/jugadores": RenderJugadores,
+    "/info/estadisticas_jugador": RenderEstadisticasJugadores,
     "/info/estadios": RenderEstadios,
     "/info/equipos": RenderEquipos,
     "/info/selecciones": RenderSelecciones,
@@ -89,9 +91,8 @@ def route_change(e: ft.RouteChangeEvent):
         
         # === INFO ===
         elif "/info" in route:
-            routes_info = [ "/info/partidos", "/info/jugadores", "/info/estadios", "/info/equipos" , "/info/selecciones", "/info/clasificaciones" ]
-
-            if route not in routes_info:
+            
+            if route not in INFO_VIEWS:
                 page.views.append(ft.View("/404", [ft.Text("Página no encontrada")]))
                 return
 

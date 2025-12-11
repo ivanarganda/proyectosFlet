@@ -119,27 +119,30 @@ def RenderEstadios(page: ft.Page):
 
     load_estadios()
 
-    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+    footer = ft.Container(
+        content=footer_navbar(page=page, current_path=current_path, dispatches={}),
+        expand=False
+    )
 
     main_content = content
 
     # === STACK GLOBAL ===
-    stack = ft.Stack(
+    layout = ft.Column(
         [
             ft.Container(
-                content= ft.Column([
-                    main_content
-                ],
-                scroll=ft.ScrollMode.AUTO,
+                content=ft.Column(
+                    [
+                        main_content
+                    ],
+                    scroll=ft.ScrollMode.AUTO
                 ),
                 expand=True,
-                padding=ft.padding.only(bottom=60),   # espacio para el footer
+                padding=ft.padding.only(bottom=10)
             ),
-
             footer
         ],
         expand=True,
+        spacing=0
     )
 
-
-    return addElementsPage(page, [stack])
+    return addElementsPage(page, [layout])

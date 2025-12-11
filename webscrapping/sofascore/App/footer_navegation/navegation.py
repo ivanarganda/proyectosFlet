@@ -1,38 +1,57 @@
 import flet as ft
 
-def footer_navbar(page: ft.Page, current_path = {} , dispatches = {} ):
+def footer_navbar(
+    page: ft.Page, 
+    current_path={}, 
+    dispatches={}, 
+    absolute: bool = False
+):
 
-    func_add_category, args_add_category = dispatches.get("add_category", (lambda *a, **k: None, []))
+    folder = current_path.get("folder", "")
 
-    full_path = current_path["path"]
-    folder = current_path["folder"]
-    file = current_path["file"]
+    func_add_category, args_add_category = dispatches.get(
+        "add_category", 
+        (lambda *a, **k: None, [])
+    )
 
-    print( folder )
-
-    page.bgcolor = ft.colors.WHITE
+    # Si es absoluto, agregamos las props permitidas para Stack
+    positioning = {}
+    if absolute:
+        positioning = dict(left=0, right=0, bottom=0)
 
     footer = ft.Container(
         content=ft.Row(
             [
-                ft.IconButton(ft.icons.HOME, on_click=lambda _: page.go("/menu"), icon_color="#4e73df"),
+                ft.IconButton(
+                    ft.icons.HOME,
+                    on_click=lambda _: page.go("/menu"),
+                    icon_color="#4e73df"
+                ),
                 ft.IconButton(ft.icons.SEARCH, icon_color="#4e73df"),
-                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'ControlPanel') ),
-                ft.FloatingActionButton(on_click=lambda _: page.go("/menu"), icon=ft.icons.ARROW_BACK, bgcolor="#4e73df", visible= (folder == 'Info') ),
+                ft.FloatingActionButton(
+                    on_click=lambda _: page.go("/menu"),
+                    icon=ft.icons.ARROW_BACK, 
+                    bgcolor="#4e73df",
+                    visible=(folder in ("ControlPanel", "Info"))
+                ),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
-                ft.IconButton(ft.icons.PERSON, icon_color="#4e73df", visible= folder != 'Profile'),
+                ft.IconButton(
+                    ft.icons.PERSON, 
+                    icon_color="#4e73df", 
+                    visible=(folder != 'Profile')
+                ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_AROUND
         ),
-        bgcolor="#ffffff",
-        bottom=0,
-        left=0,
-        right=0,
+        bgcolor=ft.colors.WHITE,
         border_radius=ft.border_radius.only(top_left=20, top_right=20),
         shadow=ft.BoxShadow(blur_radius=15, color=ft.colors.GREY_400),
         padding=ft.padding.symmetric(vertical=8),
         height=70,
-        expand=True
+        
+        # Si absolute=False → NO rompe Column layout
+        # Si absolute=True → Se usan left/right/bottom correctamente dentro de un Stack
+        **positioning
     )
 
     return footer

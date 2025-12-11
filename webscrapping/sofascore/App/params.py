@@ -20,6 +20,7 @@ ICONS = {
     "football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_player.jpeg",
     "football_match": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_match.jpeg",
     "football_ranking": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_ranking.jpeg",
+    "profile_photo_football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/profile_photo_football_player.png",
 }
 WALLPAPERS = {
     "grass_ball":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/grass_ball_wallpaper.jpg"

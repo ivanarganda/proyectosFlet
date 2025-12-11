@@ -1,8 +1,58 @@
 import flet as ft
+from params import ICONS
+
+def build_jugadores_card(item):
+
+    m_color = {
+        "D": "#1E88E5",
+        "G": "#43A047",
+        "F": "#FB8C00",
+        "M": "#E53935"
+    }.get(item["posicion"], "grey")
+
+    icon = item.get( "escudo")
+
+    return ft.Container(
+        padding=12,
+        bgcolor="white",
+        border_radius=12,
+        shadow=ft.BoxShadow(blur_radius=12, color="#00000030"),
+        content=ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Image(src=ICONS["profile_photo_football_player"], width=70, height=70, fit=ft.ImageFit.COVER),
+                        ft.Image(src=icon, width=25, height=25, fit=ft.ImageFit.COVER)
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER
+                ),
+                ft.Text(item["nombre"], size=16, weight="bold"),
+                ft.Text(item["posicion"], size=12, color=m_color),
+                ft.Text(item["equipo"], size=12, color="grey"),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    )
+
+def build_equipo_card(item):
+    return ft.Container(
+        padding=12,
+        border_radius=12,
+        bgcolor="white",
+        shadow=ft.BoxShadow(blur_radius=10, spread_radius=1, color=ft.colors.with_opacity(0.1, "black")),
+        content=ft.Column(
+            [
+                ft.Image(src=item["escudo"], width=60, height=60),
+                ft.Text(f"🏟 {item['estadio']}", size=12, color="grey"),
+                ft.Text(item["nombre"], size=16, weight="bold")
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=6
+        )
+    )
 
 def build_card_estadios( item ):
-
-    print("estadio")
 
     return ft.Container(
         padding=12,
@@ -253,9 +303,14 @@ def RenderTable(title, loading_text, content_table, callback, extra_footer=None)
 
 def build_card(type_,item):
 
+    type_ = type_.lower()
+
     return {  
+        
         "partidos": build_card_partidos,
-        "estadios": build_card_estadios 
+        "estadios": build_card_estadios,
+        "equipos": build_equipo_card, 
+        "jugadores": build_jugadores_card 
     
     }.get(type_, ft.Text("❌ Not fuund card") )(item) 
     
