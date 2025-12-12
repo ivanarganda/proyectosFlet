@@ -8,6 +8,7 @@ from MainMenu.Views.ControlPanel.scraper_ui import RenderScrapper
 from params import REQUEST_URL, HEADERS
 import requests_async as request
 import asyncio
+from urllib.parse import parse_qs
 
 from MainMenu.Views.Info.partidos import RenderPartidos
 from MainMenu.Views.Info.jugadores import RenderJugadores
@@ -92,7 +93,9 @@ def route_change(e: ft.RouteChangeEvent):
         # === INFO ===
         elif "/info" in route:
             
-            if route not in INFO_VIEWS:
+            route_only = route.split("?")[0]
+
+            if route_only not in INFO_VIEWS:
                 page.views.append(ft.View("/404", [ft.Text("Página no encontrada")]))
                 return
 
@@ -102,8 +105,35 @@ def route_change(e: ft.RouteChangeEvent):
                 page.views.append(ft.View(route, controls=[ft.Text("")]))
                 show_session_expired_dialog(page)
             else:
-                print(route)
-                page.views.append(ft.View(route, controls=[INFO_VIEWS.get(route)(page)]))
+                params = {}
+
+                route_only = route
+                query_params = []
+
+                if "?" in route:
+                    parts = route.split("?")
+                    route_only = parts[0]
+                    query_params = parts[1]
+
+                if query_params:
+                    params = {k: v[0] for k, v in parse_qs(query_params).items()}
+
+                print(route_only)
+
+                view = INFO_VIEWS.get(route_only)
+
+                if view is None:
+                    # Evitar error si la ruta no existe
+                    page.views.append(
+                        ft.View(
+                            "/404",
+                            controls=[ft.Text(f"Ruta no encontrada: {route_only}")]
+                        )
+                    )
+                else:
+                    page.views.append(
+                        ft.View(route_only, controls=[view(page, params)])
+                    )
 
             page.update()
 

@@ -8,9 +8,26 @@ import platform
 from components.PopupMenu import PopupMenuButton # TODO for testing
 # from flet_popupmenu import PopupMenuButton # TODO for production
 from params import HEADERS, REQUEST_URL
+import requests
+
+# REQUESTS
+def get_ids( uri , keys ):
+
+    r = requests.get(
+        f"{REQUEST_URL}{uri}",
+        headers=HEADERS
+    )
+
+    return r.json().get("data", []) , *keys
+
+# CONDITIONS
+def has_parameter_id(params):
+
+    return params and params.get("id")
 
 # ESPECIAL FUNCTIONS
 def get_hostname():
+    
     return platform.node()
 
 def convert_seconds(seconds: float) -> dict:
@@ -140,19 +157,76 @@ def clamp(v, lo=0, hi=255): return max(lo, min(hi, int(v)))
 def rgb_to_hex(r, g, b):
     return f"#{clamp(r):02X}{clamp(g):02X}{clamp(b):02X}"
 
-def setInputField( type_ , label = "" , placeholder = "" , bg_color = "#F5F5F5" , border_color = "#E0E0E0" , focused_border_color = "#808080" ):
-    defaultTextField = ft.TextField(keyboard_type=ft.KeyboardType.TEXT)
+def setInputField(
+    type_: str,
+    label: str = "",
+    placeholder: str = "",
+    bg_color: str = "#F5F5F5",
+    border_color: str = "#E0E0E0",
+    focused_border_color: str = "#808080",
+    color: str = "black",
+    options: list = None,
+    width: int = None,
+    read_only: bool = False
+):
+
+    # Si no se pasan opciones para dropdown
+    if options is None:
+        options = []
+
+    defaultTextField = ft.TextField(
+        label=label,
+        hint_text=placeholder,
+        bgcolor=bg_color,
+        border_radius=5,
+        border_color=border_color,
+        focused_border_color=focused_border_color,
+    )
+
     return {
-        "search": (
-            ft.TextField(keyboard_type=ft.KeyboardType.TEXT, border_radius=5, border_color=border_color, focused_border_color=focused_border_color, border_width=1, prefix_icon=ft.Icons.SEARCH , hint_text=placeholder)
+        "search": ft.TextField(
+            keyboard_type=ft.KeyboardType.TEXT,
+            border_radius=5,
+            border_color=border_color,
+            focused_border_color=focused_border_color,
+            border_width=1,
+            prefix_icon=ft.Icons.SEARCH,
+            hint_text=placeholder,
         ),
-        "text": (
-            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, border_radius=5, border_color=border_color )
+
+        "text": ft.TextField(
+            label=label,
+            keyboard_type=ft.KeyboardType.TEXT,
+            bgcolor=bg_color,
+            border_radius=5,
+            border_color=border_color,
+            focused_border_color=focused_border_color,
+            hint_text=placeholder
         ),
-        "password": (
-            ft.TextField(label=label, keyboard_type=ft.KeyboardType.TEXT, bgcolor=bg_color, password=True, can_reveal_password=True, border_radius=5, border_color=border_color )
+
+        "password": ft.TextField(
+            label=label,
+            keyboard_type=ft.KeyboardType.TEXT,
+            bgcolor=bg_color,
+            password=True,
+            can_reveal_password=True,
+            border_radius=5,
+            border_color=border_color,
+            focused_border_color=focused_border_color,
+            hint_text=placeholder
+        ),
+
+        "dropdown": ft.Dropdown(
+            label=label,
+            bgcolor=bg_color,
+            color=color,
+            border_radius=5,
+            border_color=border_color,
+            width=width,
+            options=[ft.dropdown.Option(o) for o in options],
+            disabled=read_only
         )
-    }.get(type_, defaultTextField )
+    }.get(type_, defaultTextField)
 
 def handle_logout(page: ft.Page):
     page.session.clear()

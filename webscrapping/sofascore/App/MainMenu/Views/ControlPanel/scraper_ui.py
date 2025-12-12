@@ -160,7 +160,10 @@ def RenderScrapper(page: ft.Page):
     # ------------------------------------------------------------
     # LAYOUT FINAL (LIGHT DASHBOARD)
     # ------------------------------------------------------------
-    footer = footer_navbar(page=page, current_path=current_path, dispatches={})
+    footer = ft.Container(
+        content=footer_navbar(page=page, current_path=current_path, dispatches={}),
+        expand=False
+    )
 
     main_content = ft.Container(
         content= ft.Row([
@@ -214,7 +217,7 @@ def RenderScrapper(page: ft.Page):
         expand=True
     )
 
-    stack = ft.Stack(
+    layout = ft.Column(
         [
             main_content,  # menú principal
             footer,         # footer al fondo
@@ -222,4 +225,4 @@ def RenderScrapper(page: ft.Page):
         expand=True,
     )
 
-    return addElementsPage(page, [stack])
+    return addElementsPage(page, [layout])

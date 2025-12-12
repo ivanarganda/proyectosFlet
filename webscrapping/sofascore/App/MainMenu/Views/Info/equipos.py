@@ -3,7 +3,7 @@ import os
 import flet as ft
 import requests
 from helpers.pagination_list import PaginatedList
-from helpers.utils import addElementsPage
+from helpers.utils import addElementsPage, has_parameter_id
 from .common_components_info import build_card
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
@@ -18,7 +18,7 @@ current_path = {
 headers = HEADERS
 label_page = "Pagina"
 
-def RenderEquipos(page: ft.Page):
+def RenderEquipos(page: ft.Page , params = None):
 
     page.window.height=800
     page.window.width=900
@@ -29,7 +29,9 @@ def RenderEquipos(page: ft.Page):
     headers["Authorization"] = f"Bearer {token}"
 
     def fetch_equipos():
+
         r = requests.get(f"{REQUEST_URL}/info/equipos", headers=HEADERS)
+
         return r.json().get("data", [])
 
     content, load_data = PaginatedList(

@@ -1,5 +1,6 @@
 import os
 import logging
+import re
 from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks, Response
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
@@ -14,6 +15,7 @@ import time
 import datetime
 import random
 import requests
+from typing import Optional
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -50,6 +52,51 @@ def date_field( date_field ):
             substr({date_field}, 12)
         )"""
 
+# QUERY
+def BuildQuery(db: SQLiteORM, sql: str, filters: dict = {}):
+
+    if filters:
+
+        where_clauses = []
+        params = []
+
+        # Procesar filtros
+        for key, value in filters.items():
+
+            if value in (None, "", "None"):
+                continue
+
+            try:
+                value = int(value)
+            except:
+                pass
+
+            where_clauses.append(f"{key} = ?")
+            params.append(value)
+
+        # Si no hay filtros, ejecutamos tal cual
+        if not where_clauses:
+            return db.execute_query(sql).json
+
+        # Unir filtros con AND
+        and_conditions = " AND " + " AND ".join(where_clauses)
+
+        # Insertar justo después del WHERE 1=1
+        sql = re.sub(
+            r"(WHERE\s*1\s*=\s*1)",
+            r"\1" + and_conditions,
+            sql,
+            flags=re.IGNORECASE
+        )
+
+        params = tuple(params)
+
+        print("SQL FINAL:", sql)
+        print("PARAMS:", params)
+
+        return db.execute_query(sql, params).json
+    
+    return db.execute_query(sql).json
 
 # --------------------------------------------------------------------
 # STARTUP EVENT  (equivalente a handle_server)
@@ -402,22 +449,25 @@ def api_get_estadios( db: SQLiteORM = Depends(get_db) ):
 # EQUIPOS
 # info equipos
 @app.get("/info/equipos")
-def api_get_equipos( db: SQLiteORM = Depends(get_db) ):
+def api_get_equipos(id: Optional[str] = None, db: SQLiteORM = Depends(get_db)):
 
-    sql = f"""
+    sql = """
         SELECT 
-            id_equipo,
-            (select nombre from estadios where id_equipo = e.id_equipo) as estadio,
+            e.id_equipo,
+            (SELECT nombre FROM estadios WHERE id_equipo = e.id_equipo) AS estadio,
             e.nombre,
             e.escudo
         FROM equipos e
+        WHERE 1=1
     """
 
-    data = db.execute_query(sql).json
+    data = BuildQuery(db, sql)
+
     return {"data": data}
 
 @app.get("/info/jugadores")
-def get_jugadores( db: SQLiteORM = Depends(get_db) ):
+def get_jugadores( id: Optional[str] = None, db: SQLiteORM = Depends(get_db) ):
+
     sql = """
         SELECT
             j.id_jugador,
@@ -429,14 +479,16 @@ def get_jugadores( db: SQLiteORM = Depends(get_db) ):
             eq.escudo
         FROM jugadores j
         LEFT JOIN equipos eq ON j.id_equipo = eq.id_equipo
+        WHERE 1 = 1
         ORDER BY j.nombre ASC
     """
-    data = db.execute_query(sql).json
+    data = BuildQuery(db, sql, filters={"eq.id_equipo":id})
     return {"data": data}
 
 
 @app.get("/info/estadisticas_jugador")
 def get_player_stats(filters: dict, db: SQLiteORM = Depends(get_db)):
+
     sql = f"""
         SELECT 
             ej.id_partido,
@@ -479,4 +531,163 @@ def get_player_stats(filters: dict, db: SQLiteORM = Depends(get_db)):
     """
 
     data = db.execute_query(sql).json
+    return {"data": data}
+
+@app.get("/info/clasificaciones/equipos")
+def get_teams_rank(id: Optional[str] = None , db: SQLiteORM = Depends(get_db)):
+
+    sql = f"""
+        WITH resultados AS (
+            -- Local
+            SELECT
+                p.id_local AS id_equipo,
+                CASE
+                    WHEN p.goles_local > p.goles_visitante THEN 3
+                    WHEN p.goles_local = p.goles_visitante THEN 1
+                    ELSE 0
+                END AS puntos,
+                p.goles_local AS gf,
+                p.goles_visitante AS gc,
+                CASE WHEN p.goles_local > p.goles_visitante THEN 1 ELSE 0 END AS victorias,
+                CASE WHEN p.goles_local = p.goles_visitante THEN 1 ELSE 0 END AS empates,
+                CASE WHEN p.goles_local < p.goles_visitante THEN 1 ELSE 0 END AS derrotas
+            FROM partidos p
+
+            UNION ALL
+
+            -- Visitante
+            SELECT
+                p.id_visitante AS id_equipo,
+                CASE
+                    WHEN p.goles_visitante > p.goles_local THEN 3
+                    WHEN p.goles_visitante = p.goles_local THEN 1
+                    ELSE 0
+                END AS puntos,
+                p.goles_visitante AS gf,
+                p.goles_local AS gc,
+                CASE WHEN p.goles_visitante > p.goles_local THEN 1 ELSE 0 END AS victorias,
+                CASE WHEN p.goles_visitante = p.goles_local THEN 1 ELSE 0 END AS empates,
+                CASE WHEN p.goles_visitante < p.goles_local THEN 1 ELSE 0 END AS derrotas
+            FROM partidos p
+        ),
+
+        clasificacion AS (
+            SELECT
+                e.id_equipo,
+                e.nombre AS equipo,
+                SUM(r.puntos) AS puntos,
+                SUM(r.victorias) AS victorias,
+                SUM(r.empates) AS empates,
+                SUM(r.derrotas) AS derrotas,
+                SUM(r.gf) AS goles_favor,
+                SUM(r.gc) AS goles_contra,
+                SUM(r.gf) - SUM(r.gc) AS diferencia_goles,
+                RANK() OVER (
+                    ORDER BY
+                        SUM(r.puntos) DESC,
+                        (SUM(r.gf) - SUM(r.gc)) DESC,
+                        SUM(r.gf) DESC,
+                        SUM(r.gc) ASC
+                ) AS posicion
+            FROM resultados r
+            JOIN equipos e ON e.id_equipo = r.id_equipo
+            GROUP BY e.id_equipo, e.nombre
+        )
+
+        SELECT *
+        FROM clasificacion
+        ORDER BY puntos DESC, diferencia_goles DESC, goles_favor DESC, goles_contra ASC
+    """
+
+    data = BuildQuery(db, sql)
+    return {"data": data}
+
+@app.get("/info/clasificaciones/jugadores")
+def get_players_by_goal_rank(by: str = "goals" , db: SQLiteORM = Depends(get_db)):
+
+    sqls = {
+        "goals": """
+            SELECT
+                *,
+                RANK() OVER (
+                    ORDER BY goles DESC, minutos ASC, asistencias DESC, partidos ASC
+                ) AS posicion
+            FROM (
+                SELECT
+                    j.id_jugador,
+                    j.nombre AS jugador,
+                    e.nombre AS equipo,
+                    SUM(js.goals) AS goles,
+                    SUM(js.goalAssist) AS asistencias,
+                    SUM(js.minutesPlayed) AS minutos,
+                    COUNT(js.id_partido) AS partidos
+                FROM jugadores_stats js
+                JOIN jugadores j ON j.id_jugador = js.id_jugador
+                JOIN equipos e ON e.id_equipo = js.id_equipo
+                GROUP BY j.id_jugador, j.nombre, e.nombre
+            )
+            ORDER BY goles DESC, minutos ASC, asistencias DESC, partidos ASC
+        """,
+
+        "minutes": """
+            SELECT
+                *,
+                RANK() OVER (ORDER BY minutos DESC) AS posicion
+            FROM (
+                SELECT
+                    j.id_jugador,
+                    j.nombre AS jugador,
+                    e.nombre AS equipo,
+                    SUM(js.minutesPlayed) AS minutos
+                FROM jugadores_stats js
+                JOIN jugadores j ON j.id_jugador = js.id_jugador
+                JOIN equipos e ON e.id_equipo = js.id_equipo
+                GROUP BY j.id_jugador, j.nombre, e.nombre
+            )
+            ORDER BY minutos DESC
+        """,
+
+        "matches": """
+            SELECT
+                *,
+                RANK() OVER (ORDER BY partidos DESC) AS posicion
+            FROM (
+                SELECT
+                    j.id_jugador,
+                    j.nombre AS jugador,
+                    e.nombre AS equipo,
+                    COUNT(js.id_partido) AS partidos
+                FROM jugadores_stats js
+                JOIN jugadores j ON j.id_jugador = js.id_jugador
+                JOIN equipos e ON e.id_equipo = js.id_equipo
+                GROUP BY j.id_jugador, j.nombre, e.nombre
+            )
+            ORDER BY partidos DESC
+        """,
+
+        "position": """
+            SELECT
+                *,
+                RANK() OVER (ORDER BY asistencias DESC) AS posicion
+            FROM (
+                SELECT
+                    j.id_jugador,
+                    j.nombre AS jugador,
+                    e.nombre AS equipo,
+                    SUM(js.goalAssist) AS asistencias
+                FROM jugadores_stats js
+                JOIN jugadores j ON j.id_jugador = js.id_jugador
+                JOIN equipos e ON e.id_equipo = js.id_equipo
+                GROUP BY j.id_jugador, j.nombre, e.nombre
+            )
+            ORDER BY asistencias DESC
+        """
+    }
+
+    # Asegurar que existe la consulta
+    sql = sqls.get(by, sqls["goals"])
+
+    # EJECUCIÓN CORRECTA
+    data = BuildQuery(db, sql)
+
     return {"data": data}
