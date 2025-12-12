@@ -691,3 +691,6 @@ def get_players_by_goal_rank(by: str = "goals" , db: SQLiteORM = Depends(get_db)
     data = BuildQuery(db, sql)
 
     return {"data": data}
+
+
+# Machine learning

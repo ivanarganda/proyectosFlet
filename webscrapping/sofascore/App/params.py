@@ -11,17 +11,17 @@ SOFA_TEXT = "#1C1C1C"
 REQUEST_URL = "http://127.0.0.1:5000"
 HEADERS = { 'Content-Type': 'application/json'}
 ICONS = {
-    "dashboard": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/dashboard.png",
+    "control_panel_football": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/control_panel_football.png",
     "log_out": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log_out.png",
     "mind_stat": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/mind_stat.png",
     "football_world": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_world.png",
-    "football_shield": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_shield.jpg",
-    "venue": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/venue.jpeg",
-    "football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_player.jpeg",
-    "football_match": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_match.jpeg",
-    "football_ranking": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_ranking.jpeg",
+    "football_shield": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_shield.png",
+    "venue": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/venue.png",
+    "football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_player.png",
+    "football_match": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_match.png",
+    "football_ranking": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/football_ranking.png",
     "profile_photo_football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/profile_photo_football_player.png",
 }
 WALLPAPERS = {
-    "grass_ball":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/grass_ball_wallpaper.jpg"
+    "grass_ball":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/grass_ball.png"
 }

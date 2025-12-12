@@ -31,8 +31,8 @@ def PaginatedTablePRO(
     # === UI COLORS ===
     HEADER_BG = "#4E73DF"
     HEADER_TEXT = "white"
-    TEXT_PRIMARY = "#2C3E50"
-    TEXT_SECONDARY = "#6C757D"
+    TEXT_PRIMARY = "grey"
+    TEXT_SECONDARY = "white"
     ROW_ODD = "#F9FAFB"
     ROW_EVEN = "#FFFFFF"
     BORDER = "#E1E5EA"
@@ -50,7 +50,7 @@ def PaginatedTablePRO(
 
     def progress_bar(value, max_value):
         if not isinstance(value, (int, float)) or max_value <= 0:
-            return ft.Text(str(value), size=13)
+            return ft.Text(str(value), color=TEXT_PRIMARY, size=13)
 
         percent = max(0, min(value / max_value, 1))
 
@@ -66,7 +66,7 @@ def PaginatedTablePRO(
                 border_radius=5,
             ),
         )
-        return ft.Row([bar, ft.Text(str(value), size=12)], spacing=5)
+        return ft.Row([bar, ft.Text(int(value), color=TEXT_PRIMARY, size=12)], spacing=5)
 
     # --------------------------------------------------------
     # ORDENAR COLUMNAS
@@ -175,7 +175,7 @@ def PaginatedTablePRO(
                 if col.lower() in ["pos", "posicion", "rank"]:
                     medal = MEDALS.get(value, "")
                     cells.append(
-                        ft.DataCell(ft.Text(f"{medal} {value}", size=14))
+                        ft.DataCell(ft.Text(f"{medal} {value}", color=TEXT_PRIMARY, size=14))
                     )
                     continue
 
@@ -187,7 +187,7 @@ def PaginatedTablePRO(
                 # --- Valores numéricos ---
                 if isinstance(value, (int, float)):
                     cells.append(
-                        ft.DataCell(ft.Text(str(value), size=13, weight="bold"))
+                        ft.DataCell(ft.Text(int(value), color=TEXT_PRIMARY, size=13, weight="bold"))
                     )
                     continue
 

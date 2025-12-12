@@ -302,7 +302,7 @@ def list_menu_items(page: ft.Page):
                 ft.ResponsiveRow(
                     controls=[
                         ft.Container(
-                            content=menu_button(page, ICONS.get("dashboard", ""), "Panel de control", "/scrapping", size=35),
+                            content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/scrapping", size=35),
                             col={"xs": 6, "sm": 4, "md": 3}
                         ) if role == "admin" else None,
 

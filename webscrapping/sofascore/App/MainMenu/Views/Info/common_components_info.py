@@ -126,7 +126,7 @@ def build_card_partidos( item ):
                                     width=25,
                                     height=25,
                                 ),
-                                ft.Text(item["local"], color="grey")
+                                ft.Text(item["visitante"], color="grey")
                             ],
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         )

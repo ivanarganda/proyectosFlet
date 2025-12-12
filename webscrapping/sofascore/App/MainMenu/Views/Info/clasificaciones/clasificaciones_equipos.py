@@ -15,29 +15,21 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
-TAB_KEYS = ["goals", "minutes", "matches", "assists"]
-TAB_TITLES = {
-    "goals": "Pichichi",
-    "minutes": "Minutos Jugados",
-    "matches": "Partidos Jugados",
-    "assists": "Máximos Asistentes",
-}
 
-
-def RenderClasificaciones(page: ft.Page, params=None):
+def RenderClasificacionesEquipos(page: ft.Page, params=None):
 
     page.window.width = 1000
     page.window.height = 900
 
-    def fetch_data(by: str):
+    def fetch_data():
         r = requests.get(
-            f"{REQUEST_URL}/info/clasificaciones/jugadores?by={by}",
+            f"{REQUEST_URL}/info/clasificaciones/equipos",
             headers=HEADERS
         )
         return r.json().get("data", [])
 
-    def build_table(by: str):
-        datos = fetch_data(by)
+    def build_table():
+        datos = fetch_data()
 
         if not datos:
             return ft.Text("No hay datos disponibles", size=16)
@@ -48,36 +40,21 @@ def RenderClasificaciones(page: ft.Page, params=None):
 
         table, load = PaginatedTablePRO(
             page=page,
-            title=TAB_TITLES[by],
+            title="",
             columns=columns,
-            fetch_callback=lambda: fetch_data(by),
+            fetch_callback=lambda: fetch_data(),
             page_size=15
         )
 
         load()
         return table
 
-    footer = ft.Container(
-        content=footer_navbar(page=page, current_path=current_path, dispatches={}),
-        expand=False
-    )
-
-    tabs = ft.Tabs(
-        selected_index=0,
-        expand=True,
-        tabs=[
-            ft.Tab(text="Goles", content=build_table("goals")),
-            ft.Tab(text="Minutos", content=build_table("minutes")),
-            ft.Tab(text="Partidos", content=build_table("matches")),
-            ft.Tab(text="Asistencias", content=build_table("assists")),
-        ]
-    )
+    table = build_table()
 
     layout = ft.Column(
         [
-            ft.Column([tabs], expand=True),
-            ft.Divider(height=2),
-            footer
+            ft.Column([table], expand=True),
+            ft.Container(content=ft.Text(""),height=10)
         ],
         expand=True,
         spacing=0

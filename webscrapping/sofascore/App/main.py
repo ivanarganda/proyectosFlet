@@ -12,17 +12,15 @@ from urllib.parse import parse_qs
 
 from MainMenu.Views.Info.partidos import RenderPartidos
 from MainMenu.Views.Info.jugadores import RenderJugadores
-from MainMenu.Views.Info.estadiscitas_jugadores import RenderEstadisticasJugadores
 from MainMenu.Views.Info.estadios import RenderEstadios
 from MainMenu.Views.Info.equipos import RenderEquipos
 from MainMenu.Views.Info.selecciones import RenderSelecciones
-from MainMenu.Views.Info.clasificaciones import RenderClasificaciones
+from MainMenu.Views.Info.clasificaciones.clasificaciones import RenderClasificaciones
 
 # Mapa de ruta → componente
 INFO_VIEWS = {
     "/info/partidos": RenderPartidos,
     "/info/jugadores": RenderJugadores,
-    "/info/estadisticas_jugador": RenderEstadisticasJugadores,
     "/info/estadios": RenderEstadios,
     "/info/equipos": RenderEquipos,
     "/info/selecciones": RenderSelecciones,

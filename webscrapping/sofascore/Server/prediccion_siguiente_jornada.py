@@ -253,6 +253,6 @@ df_next["prob_empate"] = proba[:,0]
 
 if __name__ == "__main__":
 
-    res = predecir_jornadas_futuras(model, df_partidos, df_equipos, n_jornadas=2)
+    res = predecir_jornadas_futuras(model, df_partidos, df_equipos, n_jornadas=10)
 
     print( res )
