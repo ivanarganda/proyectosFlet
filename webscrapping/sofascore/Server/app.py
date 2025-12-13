@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
 from init_data import init_tables
 from init_files import run_init_files
+from prediccion_siguiente_jornada import predict
 from params import DB,INITTED_FOLDER
 from scrapping_state import SCRAPING_STATUS
 from scrap import run_scrapping
 import glob
-from pathlib import Path
+from pathlib import Path 
 import time
 import datetime
 import random
@@ -694,3 +695,13 @@ def get_players_by_goal_rank(by: str = "goals" , db: SQLiteORM = Depends(get_db)
 
 
 # Machine learning
+@app.post("/ml/forecasting/score")
+def ml_predict_score(): 
+    
+    try:
+
+        return predict(2) 
+
+    except Exception as e:
+
+        return parse_json_response( str(e) , 400 )

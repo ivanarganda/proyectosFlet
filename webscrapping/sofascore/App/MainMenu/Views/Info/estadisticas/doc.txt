@@ -1,0 +1,10 @@
+jugadores_info= 
+promedio goles por jugador 
+promedio tarjetas por jugador (rojas y amarillas) 
+promedio de faltas por jugador 
+promedio de córner por equipo 
+promedio de remates a puerta 
+promedio de remates
+
+partidos_info= 
+total de victorias y derrotas de cada equipo
