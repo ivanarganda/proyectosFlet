@@ -16,7 +16,7 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
-def RenderScrapper(page: ft.Page):
+def RenderScrapper(page: ft.Page, params={}):
 
     page.window.width=1000
     page.window.height=800

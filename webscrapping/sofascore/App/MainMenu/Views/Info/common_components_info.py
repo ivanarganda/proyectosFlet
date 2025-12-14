@@ -1,6 +1,143 @@
 import flet as ft
 from params import ICONS
 
+# ML
+def build_card_prediccion_partidos(item):
+
+    # COLORES SEGÚN PREDICCIÓN
+    pred = item["prediccion"]
+    color_pred = (
+        "#4CAF50" if "Local" in pred else 
+        "#E53935" if "Visitante" in pred else 
+        "#1976D2"
+    )
+
+    # BARRAS DE PROBABILIDAD
+    prob_local = float(item["prob_local"])
+    prob_visit = float(item["prob_visit"])
+    prob_empate = float(item["prob_empate"])
+
+    return ft.Container(
+        padding=12,
+        margin=6,
+        border_radius=12,
+        bgcolor="white",
+        shadow=ft.BoxShadow(
+            blur_radius=12,
+            spread_radius=1,
+            color=ft.colors.with_opacity(0.15, "black"),
+        ),
+        content=ft.Column(
+            [
+                # =========================
+                #     EQUIPOS Y ESCUDOS
+                # =========================
+                ft.Row(
+                    [
+                        # Local
+                        ft.Column(
+                            [
+                                ft.Container(
+                                    image_src=f"/static/escudos/{item['id_local']}.png",
+                                    width=40, height=40,
+                                ),
+                                ft.Text(item["local"], size=13, color="grey"),
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        ),
+
+                        ft.Text("VS", size=16, weight="bold"),
+
+                        # Visitante
+                        ft.Column(
+                            [
+                                ft.Container(
+                                    image_src=f"/static/escudos/{item['id_visitante']}.png",
+                                    width=40, height=40,
+                                ),
+                                ft.Text(item["visitante"], size=13, color="grey"),
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+
+                ft.Divider(height=10),
+
+                # =========================
+                #     PREDICCIÓN
+                # =========================
+                ft.Text(
+                    f"Predicción: {item['prediccion']}",
+                    size=16,
+                    weight="bold",
+                    color=color_pred,
+                    text_align=ft.TextAlign.CENTER,
+                ),
+
+                ft.Divider(height=5),
+
+                # =========================
+                #     PROBABILIDADES
+                # =========================
+                ft.Column(
+                    [
+                        ft.Text("Probabilidades", size=13, weight="bold", color="grey"),
+
+                        ft.Row([
+                            ft.Text("Local", width=60),
+                            ft.ProgressBar(value=prob_local, width=160),
+                            ft.Text(f"{prob_local*100:.0f}%", width=40),
+                        ]),
+
+                        ft.Row([
+                            ft.Text("Empate", width=60),
+                            ft.ProgressBar(value=prob_empate, width=160, color="blue"),
+                            ft.Text(f"{prob_empate*100:.0f}%", width=40),
+                        ]),
+
+                        ft.Row([
+                            ft.Text("Visitante", width=60),
+                            ft.ProgressBar(value=prob_visit, width=160, color="red"),
+                            ft.Text(f"{prob_visit*100:.0f}%", width=40),
+                        ]),
+                    ],
+                    spacing=4
+                ),
+
+                ft.Divider(height=10),
+
+                # =========================
+                #     ESTADÍSTICAS PREVIAS
+                # =========================
+                ft.Row(
+                    [
+                        ft.Column(
+                            [
+                                ft.Text("FORM Local", size=12, color="grey"),
+                                ft.Text(str(item["form_local"]), size=14, weight="bold"),
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                        ),
+                        ft.Column(
+                            [
+                                ft.Text("FORM Visit.", size=12, color="grey"),
+                                ft.Text(str(item["form_visit"]), size=14, weight="bold"),
+                            ],
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY
+                ),
+            ],
+            spacing=10,
+        ),
+    )
+
+
+
+# INFO
 def build_jugadores_card(item):
 
     m_color = {
@@ -310,7 +447,8 @@ def build_card(type_,item):
         "partidos": build_card_partidos,
         "estadios": build_card_estadios,
         "equipos": build_equipo_card, 
-        "jugadores": build_jugadores_card 
+        "jugadores": build_jugadores_card, 
+        "ml_partidos_prediccion": build_card_prediccion_partidos 
     
     }.get(type_, ft.Text("❌ Not fuund card") )(item) 
     

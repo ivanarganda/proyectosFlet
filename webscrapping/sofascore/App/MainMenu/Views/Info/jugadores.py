@@ -18,7 +18,7 @@ current_path = {
 headers = HEADERS
 label_page = "Pagina"
 
-def RenderJugadores(page: ft.Page , params = None):
+def RenderJugadores(page: ft.Page , params = {}):
 
     page.window.height=800
     page.window.width=900

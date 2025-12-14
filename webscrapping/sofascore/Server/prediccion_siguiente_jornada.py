@@ -1,140 +1,208 @@
 from helpers.sofa_utils import *
 from params import *
+
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-
-def predict( n_jornadas ):
-
-    def predecir_jornadas_futuras(model, df_partidos, df_equipos) -> dict:
-        """
-        Genera predicciones para las próximas N jornadas, simulando todo el calendario.
-        """
-
-        resultados_futuros = {}
-        df_simulado = df_partidos.copy()
-
-        for j in range(n_jornadas):
-            print(f"\n🔵 Generando jornada simulada {j+1}/{n_jornadas}...")
-
-            # 1. generar emparejamientos
-            equipos = df_equipos[["id_equipo", "nombre"]].sample(frac=1).reset_index(drop=True)
-
-            matches = []
-            for i in range(0, len(equipos), 2):
-                if i + 1 < len(equipos):
-                    local = equipos.iloc[i]
-                    visit = equipos.iloc[i+1]
-                    matches.append({
-                        "id_local": local["id_equipo"],
-                        "id_visitante": visit["id_equipo"],
-                        "local": local["nombre"],
-                        "visitante": visit["nombre"]
-                    })
-
-            df_next = pd.DataFrame(matches)
-
-            # 2. generar features como si fueran datos reales
-            df_last = df_simulado.sort_values("inicio").groupby("id_local").tail(1)
-
-            def get_last(team_id, col):
-                row = df_last[df_last["id_local"] == team_id]
-                if len(row) == 0:
-                    return 0
-                return row[col].values[0]
-
-            # features que necesita el modelo
-            features = [
-                "gf_local_prev","gc_local_prev",
-                "gf_visit_prev","gc_visit_prev",
-                "form_local","form_visit",
-                "rating_local","rating_visit"
-            ]
-
-            # rellenar datos simulados
-            df_next["gf_local_prev"] = df_next["id_local"].apply(lambda x: get_last(x, "goles_local"))
-            df_next["gc_local_prev"] = df_next["id_local"].apply(lambda x: get_last(x, "goles_visitante"))
-
-            df_next["gf_visit_prev"] = df_next["id_visitante"].apply(lambda x: get_last(x, "goles_visitante"))
-            df_next["gc_visit_prev"] = df_next["id_visitante"].apply(lambda x: get_last(x, "goles_local"))
-
-            df_next["form_local"] = df_next["id_local"].apply(lambda x: get_last(x, "form_local"))
-            df_next["form_visit"] = df_next["id_visitante"].apply(lambda x: get_last(x, "form_visit"))
-
-            df_next["rating_local"] = df_next["id_local"].apply(lambda x: get_last(x, "rating_local"))
-            df_next["rating_visit"] = df_next["id_visitante"].apply(lambda x: get_last(x, "rating_visit"))
-
-            # 3. predicción
-            pred = model.predict(df_next[features])
-            proba = model.predict_proba(df_next[features])
-
-            mapping = {1:"Gana Local",2:"Gana Visitante",0:"Empate"}
-
-            df_next["prediccion"] = pred
-            df_next["prediccion"] = df_next["prediccion"].map(mapping)
-
-            df_next["prob_local"] = proba[:,1]
-            df_next["prob_visit"] = proba[:,2]
-            df_next["prob_empate"] = proba[:,0]
-
-            df_next = df_next.fillna(0).replace([np.inf, -np.inf], 0)
-
-            num_jornadas = int(df_partidos.drop_duplicates(subset=["id_jornada"]).shape[0])
-            resultados_futuros[f"Jornada_{num_jornadas + (j+1)}"] = df_next.to_dict(orient="records")
-
-            # 4. AÑADIR RESULTADOS SIMULADOS A LA TEMPORADA (para que afecten la siguiente jornada)
-            df_tmp = df_next.copy()
-            df_tmp["goles_local"] = (df_tmp["prob_local"] * 3).round().astype(int)
-            df_tmp["goles_visitante"] = (df_tmp["prob_visit"] * 3).round().astype(int)
-            df_tmp["inicio"] = pd.Timestamp.now()
-
-            df_simulado = pd.concat([df_simulado, df_tmp], ignore_index=True)
-
-        return resultados_futuros
+import math
+from typing import Union
+import re
+import unicodedata
+from typing import Union 
 
 
-    # ================================
-    # 1) CARGA DE ARCHIVOS
-    # ================================
+# ==========================================================
+# UTILIDADES
+# ==========================================================
+
+def clean_dict(obj):
+    if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+        return 0
+    if isinstance(obj, dict):
+        return {k: clean_dict(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [clean_dict(v) for v in obj]
+    return obj
+
+
+# ==========================================================
+# SLUGS Y MATCHING ROBUSTO
+# ==========================================================
+def normalize_slug(slug: Union[str, None]) -> str:
+    """
+    Normalización estricta para matching interno
+    """
+    if not slug:
+        return ""
+
+    slug = slug.lower()
+
+    # quitar tildes
+    slug = unicodedata.normalize("NFD", slug)
+    slug = slug.encode("ascii", "ignore").decode("utf-8")
+
+    # mantener letras, numeros y guiones
+    slug = re.sub(r"[^a-z0-9\-]", "", slug)
+
+    return slug.strip()
+
+
+def extract_match_slug(url: str) -> str:
+    try:
+        return url.split("/match/")[1].split("/")[0].lower()
+    except Exception:
+        return ""
+
+
+def prepare_equipos_df(df_equipos: pd.DataFrame) -> pd.DataFrame:
+    df = df_equipos.copy()
+    df["slug_norm"] = (
+        df["slug"]
+        .astype(str)
+        .str.lower()
+        .str.strip()
+    )
+    return df
+
+
+def build_alias_to_id_map(df_equipos: pd.DataFrame) -> dict:
+    """
+    alias_slug -> id_equipo
+    """
+    alias_map = {}
+
+    for _, row in df_equipos.iterrows():
+        slug = normalize_slug(row["slug_norm"])
+        id_ = int(row["id_equipo"])
+
+        alias_map[slug] = id_
+
+        # Alias habituales de SofaScore
+        if slug == "alaves":
+            alias_map["deportivo-alaves"] = id_
+        if slug == "athletic":
+            alias_map["athletic-club"] = id_
+        if slug == "atletico":
+            alias_map["atletico-madrid"] = id_
+        if slug == "girona":
+            alias_map["girona-fc"] = id_
+        if slug == "levante":
+            alias_map["levante-ud"] = id_
+        if slug == "betis":
+            alias_map["real-betis"] = id_
+
+    return alias_map
+
+
+def extract_local_visit_slugs(match_slug: str):
+    """
+    Genera combinaciones ordenadas local/visitante
+    respetando el orden del slug
+    """
+    parts = match_slug.split("-")
+    for i in range(1, len(parts)):
+        yield "-".join(parts[:i]), "-".join(parts[i:])
+
+
+def find_team_ids_from_match_slug(match_slug: str, alias_map: dict):
+    """
+    Devuelve (id_local, id_visitante) o (None, None)
+    """
+    
+    for local_slug, visit_slug in extract_local_visit_slugs(match_slug):
+        if local_slug in alias_map and visit_slug in alias_map:
+            return alias_map[local_slug], alias_map[visit_slug] , local_slug , visit_slug
+
+    print(f"⚠️ Equipos no detectados en slug: {match_slug} {alias_map}")
+    return None, None, None, None
+
+
+# ==========================================================
+# FEATURES
+# ==========================================================
+
+def build_features_from_history(id_local, id_visit, df_partidos):
+
+    df_last = df_partidos.sort_values("inicio").groupby("id_local").tail(1)
+
+    def get_last(team_id, col):
+        row = df_last[df_last["id_local"] == team_id]
+        if row.empty:
+            return 0
+        val = row[col].values[0]
+        return 0 if pd.isna(val) else val
+
+    return {
+        "gf_local_prev": get_last(id_local, "gf_local_prev"),
+        "gc_local_prev": get_last(id_local, "gc_local_prev"),
+        "gf_visit_prev": get_last(id_visit, "gf_visit_prev"),
+        "gc_visit_prev": get_last(id_visit, "gc_visit_prev"),
+        "form_local": get_last(id_local, "form_local"),
+        "form_visit": get_last(id_visit, "form_visit"),
+        "rating_local": get_last(id_local, "rating_local"),
+        "rating_visit": get_last(id_visit, "rating_visit"),
+    }
+
+
+# ==========================================================
+# MODELO PRINCIPAL
+# ==========================================================
+
+def predict():
+
+    # ======================================
+    # 1) CARGA DE DATOS
+    # ======================================
     df_partidos = read_file(f"{INITTED_FOLDER}partidos_info_db.xlsx")
     df_equipos = read_file(f"{INITTED_FOLDER}equipos_info_db.xlsx")
     df_stats = read_file(f"{INITTED_FOLDER}jugadores_stats_info_db.xlsx")
 
-    # Parseo correcto de fechas
     df_partidos["inicio"] = pd.to_datetime(
         df_partidos["inicio"],
         format="%d/%m/%Y %H:%M:%S",
         errors="coerce"
     )
 
-    # ================================
-    # 2) FEATURE ENGINEERING
-    # ================================
+    df_equipos = prepare_equipos_df(df_equipos)
+    alias_map = build_alias_to_id_map(df_equipos)
 
-    # Goles totales previos local
+    # ======================================
+    # 2) FEATURE ENGINEERING
+    # ======================================
     df_partidos["gf_local_prev"] = df_partidos.groupby("id_local")["goles_local"].shift(1)
     df_partidos["gc_local_prev"] = df_partidos.groupby("id_local")["goles_visitante"].shift(1)
 
-    # Goles totales previos visitante
     df_partidos["gf_visit_prev"] = df_partidos.groupby("id_visitante")["goles_visitante"].shift(1)
     df_partidos["gc_visit_prev"] = df_partidos.groupby("id_visitante")["goles_local"].shift(1)
 
-    # Racha últimos 5 partidos
     def compute_form(df, team_col, gf_col, gc_col):
         df_team = df[[team_col, gf_col, gc_col]].copy()
-        df_team["points"] = np.where(df_team[gf_col] > df_team[gc_col], 3,
-                            np.where(df_team[gf_col] == df_team[gc_col], 1, 0))
-        df_team["form5"] = df_team.groupby(team_col)["points"].rolling(5).sum().reset_index(level=0, drop=True)
-        return df_team["form5"]
+        df_team["points"] = np.where(
+            df_team[gf_col] > df_team[gc_col], 3,
+            np.where(df_team[gf_col] == df_team[gc_col], 1, 0)
+        )
+        return (
+            df_team.groupby(team_col)["points"]
+            .rolling(5)
+            .sum()
+            .reset_index(level=0, drop=True)
+        )
 
-    df_partidos["form_local"] = compute_form(df_partidos, "id_local", "goles_local", "goles_visitante")
-    df_partidos["form_visit"] = compute_form(df_partidos, "id_visitante", "goles_visitante", "goles_local")
+    df_partidos["form_local"] = compute_form(
+        df_partidos, "id_local", "goles_local", "goles_visitante"
+    )
+    df_partidos["form_visit"] = compute_form(
+        df_partidos, "id_visitante", "goles_visitante", "goles_local"
+    )
 
-    # Rating medio por equipo
-    df_stats_group = df_stats.groupby(["id_partido", "id_equipo"])["rating"].mean().reset_index()
-    df_stats_group.columns = ["id_partido", "id_equipo", "rating_mean"]
+    df_stats_group = (
+        df_stats.groupby(["id_partido", "id_equipo"])["rating"]
+        .mean()
+        .reset_index()
+        .rename(columns={"rating": "rating_mean"})
+    )
 
     df_partidos = df_partidos.merge(
         df_stats_group,
@@ -150,110 +218,102 @@ def predict( n_jornadas ):
         how="left"
     ).rename(columns={"rating_mean": "rating_visit"}).drop(columns=["id_equipo"])
 
-    # Variable objetivo
-    df_partidos["resultado"] = np.where(df_partidos["goles_local"] > df_partidos["goles_visitante"], 1,
-                                np.where(df_partidos["goles_local"] < df_partidos["goles_visitante"], 2, 0))
+    df_partidos["resultado"] = np.where(
+        df_partidos["goles_local"] > df_partidos["goles_visitante"], 1,
+        np.where(df_partidos["goles_local"] < df_partidos["goles_visitante"], 2, 0)
+    )
 
-    # ================================
-    # 3) ENTRENAMIENTO DEL MODELO
-    # ================================
+    df_model = df_partidos.dropna(
+        subset=["gf_local_prev", "gf_visit_prev"]
+    ).copy()
 
-    # Requerimos solo que haya goles previos
-    df_model = df_partidos.dropna(subset=[
-        "gf_local_prev","gf_visit_prev"
-    ]).copy()
-
-    # Rellenamos el resto para evitar dataset vacío
-    df_model["gc_local_prev"] = df_model["gc_local_prev"].fillna(0)
-    df_model["gc_visit_prev"] = df_model["gc_visit_prev"].fillna(0)
-    df_model["form_local"] = df_model["form_local"].fillna(0)
-    df_model["form_visit"] = df_model["form_visit"].fillna(0)
-
-    # Ratings: si falta, ponemos la media (estrategia estándar)
-    df_model["rating_local"] = df_model["rating_local"].fillna(df_model["rating_local"].mean())
-    df_model["rating_visit"] = df_model["rating_visit"].fillna(df_model["rating_visit"].mean())
+    df_model.fillna(0, inplace=True)
 
     features = [
-        "gf_local_prev","gc_local_prev","gf_visit_prev","gc_visit_prev",
-        "form_local","form_visit","rating_local","rating_visit"
+        "gf_local_prev", "gc_local_prev",
+        "gf_visit_prev", "gc_visit_prev",
+        "form_local", "form_visit",
+        "rating_local", "rating_visit"
     ]
 
-    X = df_model[features] # dependence variables
-    y = df_model["resultado"] # independence variable
+    X = df_model[features]
+    y = df_model["resultado"]
 
-    # Si aun así hay menos de 5 partidos, evitamos train_test_split
-    if len(df_model) < 5:
-        print("⚠️ Muy pocos partidos para entrenar. Entrenando con todo el dataset...")
-        model = RandomForestClassifier(n_estimators=300)
-        model.fit(X, y)
-    else:
+    model = RandomForestClassifier(n_estimators=300, random_state=42)
+
+    if len(df_model) > 5:
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.20, shuffle=True
         )
-
-        model = RandomForestClassifier(n_estimators=300)
         model.fit(X_train, y_train)
+        print("🔮 Accuracy:", accuracy_score(y_test, model.predict(X_test)))
+    else:
+        model.fit(X, y)
 
-        pred = model.predict(X_test)
-        print("🔮 Accuracy del modelo:", accuracy_score(y_test, pred))
+    # ======================================
+    # 3) SIMULACIÓN DE JORNADAS FUTURAS
+    # ======================================
+    df_urls = pd.read_csv(f"{SCRAPPING_FOLDER}partidos_laliga.csv")
 
-    # ================================
-    # 4) GENERAR SIGUIENTE JORNADA AUTOMÁTICAMENTE
-    # ================================
-    print("⚽ Generando jornada simulada...")
+    ultima_jornada_jugada = df_partidos["id_jornada"].max()
+    df_futuras = df_urls[df_urls["Jornada"] > ultima_jornada_jugada]
 
-    equipos = df_equipos[["id_equipo", "nombre"]].sample(frac=1, random_state=42).reset_index(drop=True)
+    resultados = {}
 
-    # Emparejamientos automáticos tipo liga
-    matches = []
-    for i in range(0, len(equipos), 2):
-        if i + 1 < len(equipos):
-            local = equipos.iloc[i]
-            visit = equipos.iloc[i+1]
-            matches.append({
-                "id_local": local["id_equipo"],
-                "id_visitante": visit["id_equipo"],
-                "local": local["nombre"],
-                "visitante": visit["nombre"]
+    for jornada in sorted(df_futuras["Jornada"].unique()):
+        df_jornada = df_futuras[df_futuras["Jornada"] == jornada]
+        pred_rows = []
+
+        for _, row in df_jornada.iterrows():
+            match_slug = extract_match_slug(row["URL"])
+
+            id_local, id_visit , local, visit = find_team_ids_from_match_slug(
+                match_slug,
+                alias_map
+            )
+
+            if id_local is None:
+                continue
+
+            features_row = build_features_from_history(
+                id_local, id_visit, df_partidos
+            )
+
+            print( id_local )
+
+            pred_rows.append({
+                "id_local": id_local,
+                "id_visitante": id_visit,
+                "local": normalize_slug(local).capitalize().replace("-", " "),
+                "visitante": normalize_slug(visit).capitalize().replace("-", " "),
+                **features_row
             })
 
-    df_next = pd.DataFrame(matches)
+        if not pred_rows:
+            continue
 
-    # Unimos features previas desde df_partidos
-    df_last = df_partidos.sort_values("inicio").groupby("id_local").tail(1)
+        df_pred = pd.DataFrame(pred_rows)
 
-    def get_last_values(team_id, col):
-        row = df_last[df_last["id_local"] == team_id]
-        if len(row) == 0:
-            return 0
-        return row[col].values[0]
+        pred = model.predict(df_pred[features])
+        proba = model.predict_proba(df_pred[features])
 
-    for col in ["gf_local_prev","gc_local_prev","form_local","rating_local"]:
-        df_next[col] = df_next["id_local"].apply(lambda x: get_last_values(x, col))
+        mapping = {1: "Gana Local", 2: "Gana Visitante", 0: "Empate"}
 
-    for col in ["gf_visit_prev","gc_visit_prev","form_visit","rating_visit"]:
-        df_next[col] = df_next["id_visitante"].apply(lambda x: get_last_values(x, col.replace("visit","local")))
+        df_pred["prediccion"] = [mapping[p] for p in pred]
+        df_pred["prob_local"] = proba[:, 1]
+        df_pred["prob_visit"] = proba[:, 2]
+        df_pred["prob_empate"] = proba[:, 0]
 
-    # ================================
-    # 5) PREDICCIÓN FINAL
-    # ================================
-    X_pred = df_next[features]
-    pred = model.predict(X_pred)
-    proba = model.predict_proba(X_pred)
+        resultados[f"Jornada_{int(jornada)}"] = df_pred.to_dict(orient="records")
 
-    mapping = {1: "Gana Local", 2: "Gana Visitante", 0: "Empate"}
+    return {
+        "simulaciones_futuras": clean_dict(resultados)
+    }
 
-    df_next["predicción"] = pred
-    df_next["predicción"] = df_next["predicción"].map(mapping)
 
-    df_next["prob_local"] = proba[:,1]
-    df_next["prob_visit"] = proba[:,2]
-    df_next["prob_empate"] = proba[:,0]
-
-    return predecir_jornadas_futuras( model, df_partidos, df_equipos )
-
+# ==========================================================
+# EJECUCIÓN LOCAL
+# ==========================================================
 if __name__ == "__main__":
-
-    res = predict(1)
-
-    print( res )
+    res = predict()
+    print(res)

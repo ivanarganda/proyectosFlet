@@ -7,7 +7,7 @@ from ivbox.SQLiteORM import *
 from init_data import init_tables
 from init_files import run_init_files
 from prediccion_siguiente_jornada import predict
-from params import DB,INITTED_FOLDER
+from params import DB,INITTED_FOLDER,SCRAPPING_FOLDER
 from scrapping_state import SCRAPING_STATUS
 from scrap import run_scrapping
 import glob
@@ -17,6 +17,7 @@ import datetime
 import random
 import requests
 from typing import Optional
+from helpers.sofa_utils import read_file
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -426,7 +427,65 @@ def api_get_partidos( db: SQLiteORM = Depends(get_db) ):
     data = db.execute_query(sql).json
     return {"data": data}
 
+@app.get("/excel/jornadas_liga")
+def api_get_jornadas_liga(db: SQLiteORM = Depends(get_db)):
 
+    # =========================
+    # CSV
+    # =========================
+    df = read_file(f"{SCRAPPING_FOLDER}partidos_laliga.csv")
+
+    jornadas_csv = (
+        df["Jornada"]
+        .dropna()
+        .astype(int)
+        .unique()
+        .tolist()
+    )
+
+    jornadas_csv = sorted(jornadas_csv)
+
+    # =========================
+    # BD
+    # =========================
+    sql = """
+        SELECT j.id_jornada
+        FROM jornadas j
+        WHERE j.id_temporada = ?
+    """
+
+    rows = db.execute_query(sql, (1,)).json
+    jornadas_bd = {row["id_jornada"] for row in rows}
+
+    # =========================
+    # FUTURAS = CSV - BD
+    # =========================
+    jornadas_futuras = [
+        j for j in jornadas_csv if j not in jornadas_bd
+    ]
+
+    return {
+        "jornadas_futuras": jornadas_futuras,
+        "ultima_jornada_jugada": max(jornadas_bd) if jornadas_bd else None,
+    }
+
+@app.get("/info/jornadas")
+def api_get_jornadas(db: SQLiteORM = Depends(get_db)):
+
+    sql = """
+        SELECT j.id_jornada
+        FROM jornadas j
+        WHERE j.id_temporada = ?
+    """
+
+    rows = db.execute_query(sql, (1,)).json
+
+    # Extraer ints limpios
+    jornadas_bd = [row["id_jornada"] for row in rows]
+
+    return {
+        "data": jornadas_bd
+    }
 
 # ESTADIOS
 # info estadios
@@ -700,7 +759,7 @@ def ml_predict_score():
     
     try:
 
-        return predict(2) 
+        return { "data": predict()["simulaciones_futuras"] } 
 
     except Exception as e:
 

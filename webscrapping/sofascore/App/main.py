@@ -4,18 +4,28 @@ from middlewares.auth import show_session_expired_dialog
 from middlewares.dev import show_development_dialog
 from LoginRegisterForm.LoginRegisterForm import renderTemplate
 from MainMenu.MainMenu import renderMainMenu
-from MainMenu.Views.ControlPanel.scraper_ui import RenderScrapper
 from params import REQUEST_URL, HEADERS
 import requests_async as request
 import asyncio
 from urllib.parse import parse_qs
 
+# MANAGEMENT
+from MainMenu.Views.ControlPanel.scraper_ui import RenderScrapper
+
+# INFO
 from MainMenu.Views.Info.partidos import RenderPartidos
 from MainMenu.Views.Info.jugadores import RenderJugadores
 from MainMenu.Views.Info.estadios import RenderEstadios
 from MainMenu.Views.Info.equipos import RenderEquipos
 from MainMenu.Views.Info.selecciones import RenderSelecciones
 from MainMenu.Views.Info.clasificaciones.clasificaciones import RenderClasificaciones
+
+# ML
+from MainMenu.Views.ML.prediccion_resultados import RenderMLPrediccionResultados
+
+MANAGEMENT_VIEWS = {
+    "/management/scrapping": RenderScrapper,
+}
 
 # Mapa de ruta → componente
 INFO_VIEWS = {
@@ -27,10 +37,66 @@ INFO_VIEWS = {
     "/info/clasificaciones": RenderClasificaciones
 }
 
-# ==========================================================
-# CARGA DE PUNTUACIONES CON MANEJO DE ERRORES
-# ==========================================================
+STATS_VIEWS = {
+    "stats/"
+}
+
+ML_VIEWS = {
+    "/ml/predicciones/resultados":RenderMLPrediccionResultados
+}
+
+is_logged_in = False
+
+def render_view(page, dispatches_views, route):
+
+    global is_logged_in
+
+    if "?" in route:
+        route_only, raw_params = route.split("?", 1)
+        params = {k: v[0] for k, v in parse_qs(raw_params).items()}
+    else:
+        route_only = route
+        params = {}
+
+    view_func = dispatches_views.get(route_only)
+    if view_func is None:
+        return ft.View(
+            "/404",
+            controls=[ft.Text(f"❌ Ruta no encontrada: {route_only}", size=20)]
+        )
+
+    if not is_logged_in:
+        show_session_expired_dialog(page)
+        return ft.View(
+            route_only,
+            controls=[ft.Text("Sesión expirada...")]
+        )
+
+    try:
+        view_content = view_func(page, params)
+    except Exception as e:
+        print("❌ Error renderizando vista:", e)
+        return ft.View(
+            "/500",
+            controls=[ft.Text(f"❌ Error interno: {str(e)}")]
+        )
+
+    return ft.View(
+        route_only,
+        controls=[view_content],
+        scroll=ft.ScrollMode.AUTO
+    )
+
+def create_view(page, dispatches, route):
+
+    page.views.clear()
+    page.views.append(render_view(page, dispatches, route))
+    page.update()
+
 def route_change(e: ft.RouteChangeEvent):
+
+    global is_logged_in
+
     page = e.page
     page.views.clear()
 
@@ -41,37 +107,15 @@ def route_change(e: ft.RouteChangeEvent):
 
     print(f"🔁 Cargando ruta: {route}")
 
-    async def load_and_render_game(game_id: int, renderer):
-        """Carga puntuaciones y renderiza el juego."""
-        try:
-            scores = await load_scores(game_id, token, page)
-            if scores.get("status") == 401:
-                return
-            view = ft.View(route, [renderer(page, scores, load_scores)])
-            page.views.append(view)
-            page.update()
-        except Exception as ex:
-            print(f"❌ Error en load_and_render_game: {ex}")
-            notify_error(page, f"Error cargando juego: {ex}")
-
-    def run_async_task(coro):
-        """Ejecuta una corrutina de forma segura, sin warning."""
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                asyncio.ensure_future(coro)
-            else:
-                loop.run_until_complete(coro)
-        except RuntimeError:
-            asyncio.run(coro)
-
     try:
         # === LOGIN ===
         if route == "/":
+
             page.views.append(ft.View("/", [renderTemplate(page)]))
 
         # === MENU PRINCIPAL ===
         elif route == "/menu":
+
             if not is_logged_in:
                 page.views.append(ft.View("/menu", [ft.Text("")]))
                 show_session_expired_dialog(page)
@@ -79,61 +123,19 @@ def route_change(e: ft.RouteChangeEvent):
                 page.views.append(ft.View("/menu", [renderMainMenu(page)]))
 
         # === TASKS ===
-        elif route == "/scrapping":
-            page.views.clear()
-            if not is_logged_in:
-                page.views.append(ft.View("/scrapping", controls=[ft.Text("")]))
-                show_session_expired_dialog(page)
-            else:
-                page.views.append(ft.View("/scrapping", controls=[RenderScrapper(page)]))
-            page.update()
+        elif "management" in route:
+
+            create_view( page, MANAGEMENT_VIEWS , route )
         
         # === INFO ===
-        elif "/info" in route:
-            
-            route_only = route.split("?")[0]
+        elif "info" in route:
+                 
+            create_view( page, INFO_VIEWS , route )
 
-            if route_only not in INFO_VIEWS:
-                page.views.append(ft.View("/404", [ft.Text("Página no encontrada")]))
-                return
-
-            page.views.clear()
-
-            if not is_logged_in:
-                page.views.append(ft.View(route, controls=[ft.Text("")]))
-                show_session_expired_dialog(page)
-            else:
-                params = {}
-
-                route_only = route
-                query_params = []
-
-                if "?" in route:
-                    parts = route.split("?")
-                    route_only = parts[0]
-                    query_params = parts[1]
-
-                if query_params:
-                    params = {k: v[0] for k, v in parse_qs(query_params).items()}
-
-                print(route_only)
-
-                view = INFO_VIEWS.get(route_only)
-
-                if view is None:
-                    # Evitar error si la ruta no existe
-                    page.views.append(
-                        ft.View(
-                            "/404",
-                            controls=[ft.Text(f"Ruta no encontrada: {route_only}")]
-                        )
-                    )
-                else:
-                    page.views.append(
-                        ft.View(route_only, controls=[view(page, params)])
-                    )
-
-            page.update()
+        # === INFO ===
+        elif "ml" in route:
+                 
+            create_view( page, ML_VIEWS , route )
 
         # === 404 ===
         else:
@@ -142,6 +144,7 @@ def route_change(e: ft.RouteChangeEvent):
         page.update()
 
     except Exception as e:
+
         print(f"❌ Error al cambiar de ruta ({route}): {e}")
         snack = ft.SnackBar(ft.Text(f"Error: {e}"))
         page.overlay.append(snack)
@@ -152,6 +155,7 @@ def route_change(e: ft.RouteChangeEvent):
 # FUNCIÓN PRINCIPAL
 # ==========================================================
 def main(page: ft.Page):
+
     page.title = "Sofascore management"
     page.on_route_change = route_change
 

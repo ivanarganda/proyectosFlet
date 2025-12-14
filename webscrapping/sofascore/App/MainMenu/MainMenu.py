@@ -61,8 +61,9 @@ def menu_button(page: ft.Page, icon_url: str, label: str, route: str, on_callbac
                 ),
                 ft.Text(label, size=text_size, color=SOFA_TEXT, weight=ft.FontWeight.W_600),
             ],
+            alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=8,
+            spacing=2,
         )
     except Exception as e:
         log_error("menu_button", e)
@@ -239,45 +240,35 @@ def list_menu_items(page: ft.Page):
 
 
         # === TITULAR ============================================================
+        # === TITULAR ============================================================
         title = ft.Container(
             padding=ft.padding.only(left=25, top=10, right=20),
             content=ft.Column(
                 [
-                    # Animación de entrada del título
-                    ft.AnimatedSwitcher(
-                        ft.Row(
-                            [
-                                ft.Image(
-                                    src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/ball_blue.png",
-                                    width=40,
-                                    height=40
-                                ),
-                                ft.Text(
-                                    "Football Analytics",
-                                    size=32,
-                                    weight=ft.FontWeight.BOLD,
-                                    color=SOFA_BLUE,
-                                ),
-                            ],
-                            spacing=12,
-                            alignment=ft.MainAxisAlignment.START,
-                        ),
-                        transition=ft.AnimatedSwitcherTransition.FADE,
-                        duration=300,
+                    ft.Row(
+                        [
+                            ft.Image(
+                                src="https://raw.githubusercontent.com/ivanarganda/images_assets/main/ball_blue.png",
+                                width=40,
+                                height=40
+                            ),
+                            ft.Text(
+                                "Football Analytics",
+                                size=32,
+                                weight=ft.FontWeight.BOLD,
+                                color=SOFA_BLUE,
+                            ),
+                        ],
+                        spacing=12,
+                        alignment=ft.MainAxisAlignment.START,
                     ),
 
-                    # Subtítulo animado
-                    ft.AnimatedSwitcher(
-                        content=ft.Text(
-                            "Insights powered by SofaScore",
-                            size=18,
-                            color="#6C6C6C",
-                        ),
-                        opacity=1,
-                        duration=450,
+                    ft.Text(
+                        "Insights powered by SofaScore",
+                        size=18,
+                        color="#6C6C6C",
                     ),
 
-                    # Barra animada inferior estilo estadística SofaScore
                     ft.Container(
                         width=180,
                         height=6,
@@ -287,107 +278,113 @@ def list_menu_items(page: ft.Page):
                             begin=ft.Alignment(-1, 0),
                             end=ft.Alignment(1, 0),
                         ),
-                        animate_size=ft.Animation(350, "easeOut"),
                         margin=ft.margin.only(top=8),
                     ),
                 ],
                 spacing=6,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
+                alignment=ft.MainAxisAlignment.START
             ),
         )
 
-        # === BOTONES DE MENÚ ====================================================
-        menu_grid = ft.Column(
-            [
-                ft.ResponsiveRow(
+        tab_gestion = ft.Tab(
+            text="Gestión",
+            content=ft.Container(
+                padding=20,
+                content=ft.ResponsiveRow(
                     controls=[
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/scrapping", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ) if role == "admin" else None,
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/estadisticas_jugador", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ) if role == "admin" else None,
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("football_match", ""), "Partidos", "/info/partidos", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("football_shield", ""), "Equipos", "/info/equipos", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("football_ranking", ""), "Clasificaciones", "/info/clasificaciones", size=35),
-                            col={"xs": 6, "sm": 4, "md": 3}
-                        ),
-                    ],
-                    run_spacing=15,
-                    spacing=15,
+                        *( [
+                            ft.Container(
+                                content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/scrapping", size=40),
+                                col={"xs": 6, "sm": 4, "md": 3},
+                            )
+                        ] if role == "admin" else [] )
+                    ]
+                
                 )
+            )
+        ) if role == "admin" else ft.Tab()
 
-            ],
-            spacing=25,
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
-
-        arrow_down = ft.Container(
-            content=ft.Icon(name=ft.Icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=32, color="black"),
-            alignment=ft.alignment.bottom_center,
-            padding=ft.padding.only(bottom=20),
-        )
-
-        white_card = ft.Container(
+        # TABS
+        tabs_card = ft.Container(
+            padding=15,
+            border_radius=20,
             bgcolor="white",
-            expand=True,  # ⬅⬅⬅ Ocupa TODO el contenedor
-            border_radius=40,
+            expand=True,
             shadow=ft.BoxShadow(
-                blur_radius=30,
-                color=ft.colors.with_opacity(0.25, "black")
+                blur_radius=25,
+                spread_radius=3,
+                color=ft.colors.with_opacity(0.15, "black")
             ),
-            content=ft.Stack(
-                [
-                    # === CONTENIDO PRINCIPAL DEL MENÚ ===
-                    ft.Container(
-                        expand=True,
-                        padding=ft.padding.all(0),
-                        content=ft.Column(
-                            [
-                                header,
-                                ft.Container(height=10),
-                                title,
-                                ft.Container(height=30),
-                                menu_grid,
-                            ],
-                            expand=True
+            content=ft.Tabs(
+                selected_index=0 if role == "admin" else 1,
+                indicator_color=SOFA_BLUE,
+                divider_color="transparent",
+                expand=True,
+                tabs=[
+                    tab_gestion,
+                    ft.Tab(
+                        text="Información",
+                        content=ft.Container(
+                            padding=20,
+                            content=ft.ResponsiveRow(
+                                controls=[
+                                    ft.Container(content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/estadisticas_jugador", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("football_match", ""), "Partidos", "/info/partidos", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("football_shield", ""), "Equipos", "/info/equipos", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("football_ranking", ""), "Clasificaciones", "/info/clasificaciones", size=40), col={"xs":6,"sm":4,"md":3}),
+                                ],
+                                run_spacing=20,
+                                spacing=20,
+                            )
                         )
                     ),
-
-                    sidebar
-                   
+                    ft.Tab(
+                        text="Predicción",
+                        content=ft.Container(
+                            padding=20,
+                            content=ft.ResponsiveRow(
+                                controls=[
+                                    ft.Container(
+                                        content=menu_button(page, ICONS.get("ml_score_match", ""), "Simulador partidos", "/ml/predicciones/resultados", size=40),
+                                        col={"xs": 6, "sm": 4, "md": 3},
+                                    )
+                                ],
+                                
+                            )
+                        )
+                    ),
                 ]
             )
         )
 
+        # === CONTENEDOR PRINCIPAL SIN ESPACIO EXTRA ==========================
+        white_card = ft.Container(
+            bgcolor="white",
+            expand=True,
+            border_radius=40,
+            shadow=ft.BoxShadow(blur_radius=30, color=ft.colors.with_opacity(0.25, "black")),
+            content=ft.Stack(
+                [
+                   ft.Column(
+                        [
+                            header,
+                            ft.Container(height=5),
+                            title,
+                            ft.Container(height=20),
+                            tabs_card,
+                            ft.Container(height=80),  # espacio para el footer
+                        ],
+                        spacing=20,
+                        expand=True,  # ← CLAVE
+                    ),
+                    sidebar
+                ]
+            )
+        )
 
         return [
             ft.Container(
