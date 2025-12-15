@@ -11,8 +11,32 @@ import hashlib
 import random
 import time
 from params import LOCATIONIQ_API_KEY
+import ast
+import json
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
+
+def extract_market_value(x):
+    if pd.isna(x):
+        return None
+
+    # Caso 1: dict real
+    if isinstance(x, dict):
+        return x.get("value")
+
+    # Caso 2: string
+    if isinstance(x, str):
+        try:
+            # intenta JSON válido
+            return json.loads(x).get("value")
+        except json.JSONDecodeError:
+            try:
+                # intenta dict estilo Python
+                return ast.literal_eval(x).get("value")
+            except (ValueError, SyntaxError):
+                return None
+
+    return None
 
 def _export_handlers(df, path):
     return {

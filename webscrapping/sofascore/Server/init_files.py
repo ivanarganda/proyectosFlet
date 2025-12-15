@@ -5,6 +5,7 @@ from params import *
 from datetime import datetime
 from helpers.player_stats_fields import PLAYER_STATS_FIELDS
 import warnings
+import json
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
 
@@ -201,17 +202,20 @@ def run_init_files( progress_cb = None ):
         axis=1
     )
 
-    df_jug = df_jugadores_stats[["id_jugador", "name", "age", "gender", "country_alpha3", "teamId","dateOfBirthTimestamp"]].drop_duplicates()
+    df_jug = df_jugadores_stats[["id_jugador", "name", "age", "proposedMarketValueRaw", "gender", "country_alpha3", "teamId","dateOfBirthTimestamp"]].drop_duplicates()
 
     df_jug["id_jugador_"] = df_jug["id_jugador"].astype(str) + df_jug["teamId"].astype(str) + df_jug["dateOfBirthTimestamp"].astype(str)
+    df_jug["proposedMarketValueRaw"] = df_jug["proposedMarketValueRaw"].apply(extract_market_value)
+    df_jug["precio"] = df_jug["proposedMarketValueRaw"].astype(float)
 
     jugadores = init_excel_db(
         f"{INITTED_FOLDER}jugadores_info_db.xlsx",
-        ["id_jugador", "nombre", "edad", "sexo", "country_name", "id_equipo","fecha_nacimiento"],
+        ["id_jugador", "nombre", "edad", "precio", "sexo", "country_name", "id_equipo","fecha_nacimiento"],
         [
             df_jug["id_jugador_"].tolist(),
             df_jug["name"].tolist(),
             df_jug["age"].tolist(),
+            df_jug["precio"].tolist(),
             df_jug["gender"].tolist(),
             df_jug["country_alpha3"].tolist(),
             df_jug["teamId"].tolist(),
@@ -316,7 +320,9 @@ def run_init_files( progress_cb = None ):
 
     df_info["id_posicion"] = df_info["position"].map(posiciones)
 
-    df_info = df_info[["id_jugador","nombre","edad","sexo","country_name","id_posicion","id_equipo"]]
+    df_info = df_info[["id_jugador","nombre","edad", "precio", "sexo","country_name","id_posicion","id_equipo"]]
+
+    df_info["precio"] = df_info["precio"].fillna(0)
 
     export(f"{INITTED_FOLDER}jugadores_info_db.xlsx", df_info)
 

@@ -19,6 +19,7 @@ from MainMenu.Views.Info.estadios import RenderEstadios
 from MainMenu.Views.Info.equipos import RenderEquipos
 from MainMenu.Views.Info.selecciones import RenderSelecciones
 from MainMenu.Views.Info.clasificaciones.clasificaciones import RenderClasificaciones
+from MainMenu.Views.Info.estadisticas.estadisticas import RenderDashboard
 
 # ML
 from MainMenu.Views.ML.prediccion_resultados import RenderMLPrediccionResultados
@@ -34,7 +35,8 @@ INFO_VIEWS = {
     "/info/estadios": RenderEstadios,
     "/info/equipos": RenderEquipos,
     "/info/selecciones": RenderSelecciones,
-    "/info/clasificaciones": RenderClasificaciones
+    "/info/clasificaciones": RenderClasificaciones,
+    "/info/dashboard": RenderDashboard
 }
 
 STATS_VIEWS = {

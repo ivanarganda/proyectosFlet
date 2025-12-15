@@ -85,6 +85,7 @@ def init_tables():
                     "id_jugador": text(pk=True),
                     "nombre": text(default="Unknown"),
                     "edad": integer(not_null=True),
+                    "precio": real(not_null=True),
                     "sexo": enum(enum_values=["M","F"], not_null=True),
                     "country_name": text(),
                     "id_posicion": integer(not_null=True),

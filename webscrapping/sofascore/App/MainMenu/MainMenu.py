@@ -295,7 +295,7 @@ def list_menu_items(page: ft.Page):
                     controls=[
                         *( [
                             ft.Container(
-                                content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/scrapping", size=40),
+                                content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/management/scrapping", size=40),
                                 col={"xs": 6, "sm": 4, "md": 3},
                             )
                         ] if role == "admin" else [] )
@@ -329,7 +329,7 @@ def list_menu_items(page: ft.Page):
                             padding=20,
                             content=ft.ResponsiveRow(
                                 controls=[
-                                    ft.Container(content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/estadisticas_jugador", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    ft.Container(content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/dashboard", size=40), col={"xs":6,"sm":4,"md":3}),
                                     ft.Container(content=menu_button(page, ICONS.get("football_match", ""), "Partidos", "/info/partidos", size=40), col={"xs":6,"sm":4,"md":3}),
                                     ft.Container(content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=40), col={"xs":6,"sm":4,"md":3}),
                                     ft.Container(content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=40), col={"xs":6,"sm":4,"md":3}),

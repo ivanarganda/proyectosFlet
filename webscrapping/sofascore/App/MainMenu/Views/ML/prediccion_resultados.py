@@ -65,6 +65,12 @@ def RenderMLPrediccionResultados(page: ft.Page, params={}):
     if jornadas:
         selected_jornada["value"] = jornadas[0]
 
+    title_text = ft.Text(
+        f"Resultados simulados - Jornada {selected_jornada['value']}",
+        size=20,
+        weight=ft.FontWeight.BOLD,
+    )
+
     # =========================
     # RESULT CONTAINER (DINÁMICO)
     # =========================
@@ -111,9 +117,11 @@ def RenderMLPrediccionResultados(page: ft.Page, params={}):
     # =========================
     # PAGINATED LIST
     # =========================
+    
+
     content, load_data = PaginatedList(
         page=page,
-        title=f"Resultados simulados – Jornada {selected_jornada['value']}",
+        title=None,
         type_="ml_partidos_prediccion",
         fetch_callback=fetch_partidos,
         item_builder=build_card,
@@ -154,8 +162,17 @@ def RenderMLPrediccionResultados(page: ft.Page, params={}):
 
         load_data()
 
+        title_text = ft.Text(
+            f"Resultados simulados - Jornada {selected_jornada['value']}",
+            size=20,
+            weight=ft.FontWeight.BOLD,
+        )
+
         result_container.controls.clear()
-        result_container.controls.append(content)
+        result_container.controls.extend([
+            title_text,
+            content
+        ])
         page.update()
 
     # =========================
@@ -240,7 +257,7 @@ def RenderMLPrediccionResultados(page: ft.Page, params={}):
             # CONTENIDO (EMPUJA AL FOOTER)
             # =========================
             ft.Container(
-                expand=True,   # 👈 ESTE es el ÚNICO expand
+                expand=True,
                 padding=ft.padding.only(left=16, right=16, top=16),
                 content=ft.Column(
                     expand=True,
@@ -250,8 +267,6 @@ def RenderMLPrediccionResultados(page: ft.Page, params={}):
                         header,
                         control_panel,
                         result_container,
-
-                        # 🔥 ESPACIADOR REAL
                         ft.Container(expand=True),
                     ],
                 ),
