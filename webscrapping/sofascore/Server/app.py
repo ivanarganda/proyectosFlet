@@ -10,6 +10,7 @@ from prediccion_siguiente_jornada import predict
 from params import DB,INITTED_FOLDER,SCRAPPING_FOLDER
 from scrapping_state import SCRAPING_STATUS
 from scrap import run_scrapping
+import pandas as pd
 import glob
 from pathlib import Path 
 import time
@@ -868,3 +869,66 @@ def get_kpis(db: SQLiteORM = Depends(get_db)):
 
     except Exception as e:
         return parse_json_response(str(e), 400)
+
+@app.get("/dashboard/goles-jugador/{id_equipo}")
+def goles_por_jugador(id_equipo: int, db: SQLiteORM = Depends(get_db)):
+
+    rows = db.execute_query(
+        """
+        SELECT
+            js.id_jugador,
+            (SELECT nombre FROM jugadores WHERE id_jugador = js.id_jugador) AS jugador,
+            ROUND(AVG(js.goals), 2) AS avg_goals
+        FROM jugadores_stats js
+        WHERE js.id_equipo = ?
+        GROUP BY js.id_jugador
+        """,
+        (id_equipo,)
+    ).json
+
+    # rows = [(id_jugador, jugador, avg_goals), ...]
+
+    return rows
+
+@app.get("/dashboard/stats-jugador/{id_equipo}")
+def stats_por_jugador(id_equipo: int, db: SQLiteORM = Depends(get_db)):
+
+    rows = db.execute_query(
+        f"""
+        WITH _faltas AS ( select
+            sub.id_equipo,
+            sub.faltas,
+            sub.id_jugador,
+            sub.totalShoots,
+            FLOOR(sub.faltas % 2) AS rojas,
+            faltas - FLOOR(sub.faltas % 2) AS amarillas
+        from (select id_equipo as id_equipo, id_jugador as id_jugador, COUNT(fouls) as faltas, SUM(totalShots) as totalShoots
+                    from jugadores_stats
+                    GROUP BY id_jugador
+        ) as sub )
+        SELECT
+            (
+                select nombre from jugadores where id_jugador = f.id_jugador
+            ) as jugador
+            ,
+            f.faltas,
+            f.amarillas,
+            f.rojas,
+            ROUND(
+                SUM(
+                        CASE
+                            WHEN f.rojas > 0 THEN 1 ELSE 0
+                        END
+                ), 0
+            ) AS expulsiones,
+            f.totalShoots
+        FROM _faltas f
+        WHERE f.id_equipo = ?
+        GROUP BY f.id_jugador;
+        
+        """,
+        (id_equipo,)
+    ).json
+
+    return rows
+
