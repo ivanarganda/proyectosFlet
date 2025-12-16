@@ -764,3 +764,107 @@ def ml_predict_score():
     except Exception as e:
 
         return parse_json_response( str(e) , 400 )
+
+
+
+# Dashboard
+
+# ============================
+# KPIS
+# ============================
+@app.get("/dashboard/kpis")
+def get_kpis(db: SQLiteORM = Depends(get_db)):
+
+    try:
+        total_equipos = db.execute_query(
+            "SELECT COUNT(*) AS total FROM equipos"
+        ).json[0]["total"]
+
+        promedio_goles = db.execute_query(
+            """
+            SELECT ROUND(
+                AVG(goles_local) + AVG(goles_visitante),
+                2
+            ) AS promedio
+            FROM partidos
+            """
+        ).json[0]["promedio"]
+
+        total_gastos = db.execute_query(
+            """
+            SELECT
+                SUM(j.precio) AS valor_total
+            FROM jugadores j
+            """
+        ).json[0]["valor_total"]
+
+        kd_raw = db.execute_query(""" 
+            WITH stats_por_jornada AS (
+                SELECT
+                    p.id_jornada,
+                    SUM(
+                        CASE
+                            WHEN p.goles_local > p.goles_visitante THEN 1
+                            WHEN p.goles_visitante > p.goles_local THEN 1
+                            ELSE 0
+                        END
+                    ) AS victorias,
+                    SUM(
+                        CASE
+                            WHEN p.goles_local = p.goles_visitante THEN 0.5
+                            ELSE 0
+                        END
+                    ) AS empates
+                FROM partidos p
+                GROUP BY p.id_jornada
+            ),
+            jornadas_ref AS (
+                SELECT
+                    MAX(id_jornada) AS jornada_actual,
+                    (
+                        SELECT id_jornada
+                        FROM jornadas
+                        WHERE id_jornada < (SELECT MAX(id_jornada) FROM jornadas)
+                        ORDER BY id_jornada DESC
+                        LIMIT 1
+                    ) AS jornada_anterior
+                FROM jornadas
+            ),
+            j_actual AS (
+                SELECT
+                    (victorias + empates) / 10 AS kd_jornada_actual,
+                    j.jornada_actual as id_jornada_actual
+                FROM stats_por_jornada s
+                JOIN jornadas_ref j
+                    ON s.id_jornada = j.jornada_actual
+            ),
+            j_anterior AS (
+                SELECT
+                    (victorias + empates) / 10 AS kd_jornada_anterior,
+                    j.jornada_anterior as id_jornada_anterior
+                FROM stats_por_jornada s
+                JOIN jornadas_ref j
+                    ON s.id_jornada = j.jornada_anterior
+            )
+            SELECT
+                id_jornada_actual,
+                id_jornada_anterior,
+                j_actual.kd_jornada_actual,
+                j_anterior.kd_jornada_anterior,
+                ROUND((j_actual.kd_jornada_actual / NULLIF(j_anterior.kd_jornada_anterior, 0) - 1) * 100, 2)
+                AS porcentaje
+            FROM j_actual
+            CROSS JOIN j_anterior
+        """).json
+
+        kd_variacion = kd_raw
+
+        return {
+            "total_equipos": total_equipos,
+            "promedio_goles": promedio_goles,
+            "kd_variacion": kd_variacion,
+            "total_gastos": total_gastos,
+        }
+
+    except Exception as e:
+        return parse_json_response(str(e), 400)

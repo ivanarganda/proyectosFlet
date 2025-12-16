@@ -49,14 +49,46 @@ def RenderDashboard(page: ft.Page, params={}):
     # ==================================================
     # KPIs
     # ==================================================
+    r = requests.get(f"{REQUEST_URL}/dashboard/kpis").json()
+
+    kd_jornada_actual = r["kd_variacion"][0]["kd_jornada_actual"]
+    kd_jornada_anterior = r["kd_variacion"][0]["kd_jornada_anterior"]
+    id_jornada_anterior = r["kd_variacion"][0]["id_jornada_anterior"]
+    id_jornada_actual = r["kd_variacion"][0]["id_jornada_actual"]
+
     kpis = ft.Row(
         spacing=16,
         controls=[
-            kpi_card("Total de equipos", "21", ft.Icons.GROUPS, "#2563EB"),
-            kpi_card("Promedio de goles", "2.74", ft.Icons.SPORTS_SOCCER, "#16A34A"),
-            kpi_card("KD vs jornada anterior", "+3", ft.Icons.TRENDING_UP, "#F59E0B"),
-            kpi_card("Gasto total", "€1.2B", ft.Icons.EURO, "#DC2626"),
-        ],
+            kpi_card("Total equipos", r["total_equipos"], ft.Icons.GROUPS, "#2563EB"),
+            kpi_card("Promedio goles", r["promedio_goles"], ft.Icons.SPORTS_SOCCER, "#16A34A"),
+            ft.Container(
+                expand=True,
+                padding=16,
+                border_radius=16,
+                bgcolor="white",
+                shadow=ft.BoxShadow(
+                    blur_radius=16,
+                    color=ft.colors.with_opacity(0.15, "black"),
+                ),
+                content=ft.Row(
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    controls=[
+                        ft.Column(
+                            spacing=4,
+                            controls=[
+                                ft.Text("Tasa KD partidos", size=13, color="#6B7280"),
+                                ft.Row([
+                                    ft.Text(f"Jrd {id_jornada_anterior} {kd_jornada_anterior}", size=22, weight=ft.FontWeight.BOLD),
+                                    ft.Text(f"Jrd {id_jornada_actual} {kd_jornada_actual}", size=22, weight=ft.FontWeight.BOLD)
+                                ])
+                            ],
+                        ),
+                        ft.Icon( (ft.Icons.TRENDING_UP if kd_jornada_actual > kd_jornada_anterior else ft.Icons.TRENDING_DOWN) , size=36, color="#9333EA"),
+                    ],
+                ),
+            ),
+            kpi_card("Total gastos", f"€{r['total_gastos']}", ft.Icons.EURO, "#DC2626"),
+        ]
     )
 
     # ==================================================
