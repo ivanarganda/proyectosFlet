@@ -16,6 +16,11 @@ import json
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
 
+
+def color_from_name(name: str) -> str:
+    h = hashlib.md5(name.encode("utf-8")).hexdigest()
+    return f"#{h[:6]}"
+
 def extract_market_value(x):
     if pd.isna(x):
         return None

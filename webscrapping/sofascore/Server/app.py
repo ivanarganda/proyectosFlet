@@ -18,7 +18,8 @@ import datetime
 import random
 import requests
 from typing import Optional
-from helpers.sofa_utils import read_file
+from helpers.sofa_utils import read_file, color_from_name
+from collections import defaultdict
 # --------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------
@@ -773,98 +774,341 @@ def ml_predict_score():
 # ============================
 # KPIS
 # ============================
+from fastapi import Depends
+from collections import defaultdict
+from math import ceil
+
+@app.get("/dashboard/kpis-equipo/{id_equipo}")
+def kpis_equipo(id_equipo: int, db: SQLiteORM = Depends(get_db)):
+
+    # =========================
+    # KPI BÁSICOS
+    # =========================
+    stats = db.execute_query("""
+        SELECT
+            COUNT(*) AS partidos,
+
+            SUM(
+                CASE
+                    WHEN id_local = ? THEN goles_local
+                    ELSE goles_visitante
+                END
+            ) AS goles_favor,
+
+            SUM(
+                CASE
+                    WHEN id_local = ? THEN goles_visitante
+                    ELSE goles_local
+                END
+            ) AS goles_contra,
+
+            SUM(
+                CASE
+                    WHEN (id_local = ? AND goles_local > goles_visitante)
+                      OR (id_visitante = ? AND goles_visitante > goles_local)
+                        THEN 3
+                    WHEN goles_local = goles_visitante THEN 1
+                    ELSE 0
+                END
+            ) AS puntos
+
+        FROM partidos
+        WHERE id_local = ? OR id_visitante = ?
+    """, (
+        id_equipo,
+        id_equipo,
+        id_equipo,
+        id_equipo,
+        id_equipo,
+        id_equipo,
+    )).json
+
+    if not stats:
+        return {
+            "ppg": 0,
+            "diferencia_goles": 0,
+            "goles_favor_partido": 0,
+            "kd_variacion": []
+        }
+
+    partidos = stats[0]["partidos"] or 1
+    goles_favor = stats[0]["goles_favor"] or 0
+    goles_contra = stats[0]["goles_contra"] or 0
+    puntos = stats[0]["puntos"] or 0
+
+    ppg = round(puntos / partidos, 2)
+    diferencia_goles = goles_favor - goles_contra
+    goles_favor_partido = round(goles_favor / partidos, 2)
+
+    # =========================
+    # KD POR JORNADAS
+    # =========================
+    jornadas = db.execute_query("""
+        SELECT
+            id_jornada,
+
+            SUM(
+                CASE
+                    WHEN id_local = ? THEN goles_local
+                    ELSE goles_visitante
+                END
+            ) AS gf,
+
+            SUM(
+                CASE
+                    WHEN id_local = ? THEN goles_visitante
+                    ELSE goles_local
+                END
+            ) AS gc
+
+        FROM partidos
+        WHERE id_local = ? OR id_visitante = ?
+        GROUP BY id_jornada
+        ORDER BY id_jornada DESC
+        LIMIT 2
+    """, (
+        id_equipo,
+        id_equipo,
+        id_equipo,
+        id_equipo,
+    )).json
+
+    kd_variacion = []
+
+    if jornadas:
+        actual = jornadas[0]
+        anterior = jornadas[1] if len(jornadas) > 1 else None
+
+        kd_actual = round((actual["gf"] + 1) / (actual["gc"] + 1), 2)
+
+        if anterior:
+            kd_anterior = round((anterior["gf"] + 1) / (anterior["gc"] + 1), 2)
+        else:
+            kd_anterior = kd_actual
+
+        porcentaje = (
+            round(((kd_actual - kd_anterior) / kd_anterior) * 100, 2)
+            if kd_anterior != 0 else 0
+        )
+
+        kd_variacion.append({
+            "id_jornada_actual": actual["id_jornada"],
+            "id_jornada_anterior": anterior["id_jornada"] if anterior else actual["id_jornada"],
+            "kd_jornada_actual": kd_actual,
+            "kd_jornada_anterior": kd_anterior,
+            "porcentaje": porcentaje
+        })
+
+    # =========================
+    # RESPUESTA FINAL
+    # =========================
+    return {
+        "ppg": ppg,
+        "diferencia_goles": diferencia_goles,
+        "goles_favor_partido": goles_favor_partido,
+        "kd_variacion": kd_variacion
+    }
+
+
 @app.get("/dashboard/kpis")
-def get_kpis(db: SQLiteORM = Depends(get_db)):
+def dashboard_kpis(db: SQLiteORM = Depends(get_db)):
 
     try:
-        total_equipos = db.execute_query(
-            "SELECT COUNT(*) AS total FROM equipos"
-        ).json[0]["total"]
 
-        promedio_goles = db.execute_query(
-            """
-            SELECT ROUND(
-                AVG(goles_local) + AVG(goles_visitante),
-                2
-            ) AS promedio
+        # ============================
+        # 1️⃣ KPIs GENERALES
+        # ============================
+
+        total_equipos = db.execute_query("""
+            SELECT COUNT(*) AS total
+            FROM equipos
+        """).json[0]["total"]
+
+        promedio_goles = db.execute_query("""
+            SELECT ROUND(AVG(goles_local + goles_visitante), 2) AS promedio
             FROM partidos
-            """
-        ).json[0]["promedio"]
+        """).json[0]["promedio"]
 
-        total_gastos = db.execute_query(
-            """
+        total_gastos = db.execute_query("""
             SELECT
-                SUM(j.precio) AS valor_total
+                ROUND(SUM(j.precio) / 1000000.0, 2) AS total_millones
             FROM jugadores j
-            """
-        ).json[0]["valor_total"]
+        """).json[0]["total_millones"]
 
-        kd_raw = db.execute_query(""" 
-            WITH stats_por_jornada AS (
+        # ============================
+        # 2️⃣ GOLES A FAVOR / EN CONTRA
+        # ============================
+
+        goles_stats = db.execute_query("""
+            SELECT
+                ROUND(AVG(goles_local), 2) AS goles_local,
+                ROUND(AVG(goles_visitante), 2) AS goles_visitante
+            FROM partidos
+        """).json[0]
+
+        goles_favor_partido = goles_stats["goles_local"]
+        goles_contra_partido = goles_stats["goles_visitante"]
+        diferencia_goles = round(goles_favor_partido - goles_contra_partido, 2)
+
+        # ============================
+        # 3️⃣ PPG – PUNTOS POR PARTIDO
+        # ============================
+
+        ppg = db.execute_query("""
+            SELECT ROUND(AVG(puntos), 2) AS ppg
+            FROM (
                 SELECT
-                    p.id_jornada,
+                    CASE
+                        WHEN goles_local > goles_visitante THEN 3
+                        WHEN goles_local = goles_visitante THEN 1
+                        ELSE 0
+                    END AS puntos
+                FROM partidos
+            )
+        """).json[0]["ppg"]
+
+        # ============================
+        # 4️⃣ DEPENDENCIA OFENSIVA
+        # ============================
+
+        dependencia = db.execute_query("""
+            WITH goles_jugador AS (
+                SELECT
+                    id_jugador,
+                    SUM(goals) AS total_goles
+                FROM jugadores_stats
+                GROUP BY id_jugador
+            )
+            SELECT
+                MAX(total_goles) * 1.0 / SUM(total_goles) AS dependencia
+            FROM goles_jugador
+        """).json[0]["dependencia"]
+
+        dependencia_pct = round((dependencia or 0) * 100, 2)
+
+        # ============================
+        # 5️⃣ ÚLTIMAS 5 JORNADAS
+        # ============================
+
+        ultimos_5 = db.execute_query("""
+            SELECT SUM(puntos) AS puntos_5
+            FROM (
+                SELECT
+                    CASE
+                        WHEN goles_local > goles_visitante THEN 3
+                        WHEN goles_local = goles_visitante THEN 1
+                        ELSE 0
+                    END AS puntos
+                FROM partidos
+                ORDER BY id_jornada DESC
+                LIMIT 5
+            )
+        """).json[0]["puntos_5"]
+
+        # ============================
+        # 6️⃣ POSICIÓN ACTUAL (LIGA)
+        # ============================
+
+        posicion_actual = db.execute_query("""
+            WITH puntos_acumulados AS (
+                SELECT
+                    e.nombre AS equipo,
                     SUM(
                         CASE
-                            WHEN p.goles_local > p.goles_visitante THEN 1
-                            WHEN p.goles_visitante > p.goles_local THEN 1
+                            WHEN p.id_local = e.id_equipo AND p.goles_local > p.goles_visitante THEN 3
+                            WHEN p.id_visitante = e.id_equipo AND p.goles_visitante > p.goles_local THEN 3
+                            WHEN p.goles_local = p.goles_visitante THEN 1
+                            ELSE 0
+                        END
+                    ) AS puntos
+                FROM equipos e
+                JOIN partidos p
+                ON e.id_equipo IN (p.id_local, p.id_visitante)
+                GROUP BY e.id_equipo
+            )
+            SELECT
+                RANK() OVER (ORDER BY puntos DESC) AS posicion
+            FROM puntos_acumulados
+            LIMIT 1
+        """).json[0]["posicion"]
+
+        # ============================
+        # 7️⃣ KD (YA LO TENÍAS)
+        # ============================
+
+        kd_variacion = db.execute_query("""
+            WITH stats_por_jornada AS (
+                SELECT
+                    id_jornada,
+
+                    COUNT(*) AS partidos,
+
+                    SUM(
+                        CASE
+                            WHEN goles_local <> goles_visitante THEN 1
                             ELSE 0
                         END
                     ) AS victorias,
+
                     SUM(
                         CASE
-                            WHEN p.goles_local = p.goles_visitante THEN 0.5
+                            WHEN goles_local = goles_visitante THEN 1
                             ELSE 0
                         END
                     ) AS empates
-                FROM partidos p
-                GROUP BY p.id_jornada
+
+                FROM partidos
+                GROUP BY id_jornada
             ),
-            jornadas_ref AS (
+
+            kd_por_jornada AS (
                 SELECT
-                    MAX(id_jornada) AS jornada_actual,
-                    (
-                        SELECT id_jornada
-                        FROM jornadas
-                        WHERE id_jornada < (SELECT MAX(id_jornada) FROM jornadas)
-                        ORDER BY id_jornada DESC
-                        LIMIT 1
-                    ) AS jornada_anterior
-                FROM jornadas
+                    id_jornada,
+                    ROUND(
+                        (victorias + empates * 0.5) / NULLIF(partidos, 0),
+                        4
+                    ) AS kd
+                FROM stats_por_jornada
             ),
-            j_actual AS (
+
+            kd_variacion AS (
                 SELECT
-                    (victorias + empates) / 10 AS kd_jornada_actual,
-                    j.jornada_actual as id_jornada_actual
-                FROM stats_por_jornada s
-                JOIN jornadas_ref j
-                    ON s.id_jornada = j.jornada_actual
-            ),
-            j_anterior AS (
-                SELECT
-                    (victorias + empates) / 10 AS kd_jornada_anterior,
-                    j.jornada_anterior as id_jornada_anterior
-                FROM stats_por_jornada s
-                JOIN jornadas_ref j
-                    ON s.id_jornada = j.jornada_anterior
+                    id_jornada                                    AS id_jornada_actual,
+                    kd                                            AS kd_jornada_actual,
+                    LAG(id_jornada) OVER (ORDER BY id_jornada)   AS id_jornada_anterior,
+                    LAG(kd) OVER (ORDER BY id_jornada)           AS kd_jornada_anterior,
+                    ROUND(
+                        (kd - LAG(kd) OVER (ORDER BY id_jornada)) * 100.0 /
+                        NULLIF(LAG(kd) OVER (ORDER BY id_jornada), 0),
+                        2
+                    ) AS porcentaje
+                FROM kd_por_jornada
             )
-            SELECT
-                id_jornada_actual,
-                id_jornada_anterior,
-                j_actual.kd_jornada_actual,
-                j_anterior.kd_jornada_anterior,
-                ROUND((j_actual.kd_jornada_actual / NULLIF(j_anterior.kd_jornada_anterior, 0) - 1) * 100, 2)
-                AS porcentaje
-            FROM j_actual
-            CROSS JOIN j_anterior
+
+            SELECT *
+            FROM kd_variacion
+            ORDER BY id_jornada_actual DESC
+            LIMIT 1
+
+
         """).json
 
-        kd_variacion = kd_raw
+        # ============================
+        # 📦 RESPUESTA FINAL
+        # ============================
 
         return {
-            "total_equipos": total_equipos,
-            "promedio_goles": promedio_goles,
-            "kd_variacion": kd_variacion,
-            "total_gastos": total_gastos,
+            "total_equipos": total_equipos,              # (opcional, puedes ocultarlo)
+            "total_gastos": total_gastos,              # (opcional, puedes ocultarlo)
+            "promedio_goles": promedio_goles,            # (opcional)
+            "ppg": ppg,
+            "goles_favor_partido": goles_favor_partido,
+            "goles_contra_partido": goles_contra_partido,
+            "diferencia_goles": diferencia_goles,
+            "dependencia_ofensiva_pct": dependencia_pct,
+            "puntos_ultimas_5": ultimos_5,
+            "posicion_actual": posicion_actual,
+            "kd_variacion": kd_variacion
         }
 
     except Exception as e:
@@ -932,3 +1176,128 @@ def stats_por_jugador(id_equipo: int, db: SQLiteORM = Depends(get_db)):
 
     return rows
 
+@app.get("/dashboard/bumpy-clasificacion/{id_equipo}")
+def bumpy_clasificacion(id_equipo: int, db: SQLiteORM = Depends(get_db)):
+
+    rows = db.execute_query("""
+        WITH resultados AS (
+            SELECT
+                p.id_jornada,
+                e.id_equipo,
+                e.nombre AS equipo,
+                CASE
+                    WHEN p.id_local = e.id_equipo THEN p.goles_local
+                    ELSE p.goles_visitante
+                END AS goles_favor,
+                CASE
+                    WHEN p.id_local = e.id_equipo THEN p.goles_visitante
+                    ELSE p.goles_local
+                END AS goles_contra
+            FROM partidos p
+            JOIN equipos e
+              ON e.id_equipo IN (p.id_local, p.id_visitante)
+        ),
+        puntos AS (
+            SELECT
+                id_jornada,
+                id_equipo,
+                equipo,
+                CASE
+                    WHEN goles_favor > goles_contra THEN 3
+                    WHEN goles_favor = goles_contra THEN 1
+                    ELSE 0
+                END AS puntos
+            FROM resultados
+        ),
+        acumulado AS (
+            SELECT
+                id_jornada,
+                id_equipo,
+                equipo,
+                SUM(puntos) OVER (
+                    PARTITION BY id_equipo
+                    ORDER BY id_jornada
+                ) AS puntos_acumulados
+            FROM puntos
+        )
+        SELECT
+            id_jornada,
+            id_equipo,
+            equipo,
+            RANK() OVER (
+                PARTITION BY id_jornada
+                ORDER BY puntos_acumulados DESC
+            ) AS posicion
+        FROM acumulado
+        ORDER BY equipo, id_jornada
+    """).json
+
+    # 🔹 Equipo seleccionado
+    selected_team = next(
+        (r["equipo"] for r in rows if r["id_equipo"] == id_equipo),
+        None
+    )
+
+    team_positions = defaultdict(list)
+    team_colors = {}
+
+    for r in rows:
+        equipo = r["equipo"]
+
+        team_positions[equipo].append(r["posicion"])
+
+        # 🔹 Color generado UNA sola vez por equipo
+        if equipo not in team_colors:
+            team_colors[equipo] = color_from_name(equipo)
+
+    return {
+        "selected_team": selected_team,
+        "data": dict(team_positions),
+        "colors": team_colors
+    }
+
+@app.get("/dashboard/ranking-paradas-porteros/{id_equipo}")
+def top_saves_goalkeepers( id_equipo:int, db:SQLiteORM = Depends(get_db) ):
+
+    return db.execute_query(
+        """
+        SELECT
+            j.id_jugador,
+            j.nombre AS jugador,
+            e.nombre AS equipo,
+            SUM(js.saves) AS total_paradas,
+            COUNT(js.id_partido) AS partidos,
+            ROUND(
+                CAST(SUM(js.saves) AS FLOAT) / NULLIF(COUNT(js.id_partido), 0),
+                2
+            ) AS paradas_por_partido
+        FROM jugadores_stats js
+        JOIN jugadores j ON j.id_jugador = js.id_jugador
+        JOIN equipos e ON e.id_equipo = j.id_equipo
+        WHERE ( select nombre from posiciones where id_posicion = j.id_posicion ) = 'G'
+        GROUP BY j.id_jugador, j.nombre, e.nombre
+        ORDER BY total_paradas DESC
+        LIMIT 20
+
+        """
+    ).json
+
+@app.get("/dashboard/ranking-value-market-players/{id_equipo}")
+def top_sold_players( id_equipo:int, db:SQLiteORM = Depends(get_db) ):
+
+    return db.execute_query(
+        """
+        SELECT
+            j.id_jugador,
+            j.nombre AS jugador,
+            ( select nombre from posiciones where id_posicion = j.id_posicion ) as posicion,
+            e.nombre AS equipo,
+            ( '€' || ROUND(j.precio / 1000000.0, 2) || ' M' ) AS precio
+        FROM jugadores j
+        JOIN equipos e ON e.id_equipo = j.id_equipo
+        WHERE j.precio IS NOT NULL
+        ORDER BY j.precio DESC
+        LIMIT 25
+
+        """
+    ).json
