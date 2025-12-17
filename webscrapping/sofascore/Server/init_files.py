@@ -310,6 +310,8 @@ def run_init_files( progress_cb = None ):
 
     df_positions = df_positions[["id_posicion","posicion"]]
 
+    df_positions["nombre_completo"] = df_positions["posicion"].map(map_positions)
+
     export( f"{INITTED_FOLDER}posiciones_info_db.xlsx" , df_positions )
 
     ids_posiciones = list( np.array( df_positions["id_posicion"] ) )

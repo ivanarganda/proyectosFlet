@@ -16,6 +16,15 @@ import json
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
 
+def map_positions( position ):
+
+    return {
+        "D": "Defensa",
+        "F": "Delantero",
+        "G": "Portero",
+        "M": "Medio centro"
+    }.get( position , "Unknown" )
+
 
 def color_from_name(name: str) -> str:
     h = hashlib.md5(name.encode("utf-8")).hexdigest()

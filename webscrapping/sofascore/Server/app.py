@@ -317,6 +317,47 @@ def list_db_files():
 # ===================
 # USERS
 # ===================
+@app.post("/users/register")
+async def register( request: Request, db:SQLiteORM = Depends(get_db) ):
+
+    try:
+
+        json_data = await request.json()
+ 
+        # logging.debug(json_data) 
+
+        username = json_data.get("username", None )
+        email = json_data.get("email", None )
+        password = json_data.get("password", None )
+
+        if username == None or email == None or password == None:
+            return parse_json_response( "Incorrect credentials" , 400 )
+
+        result = db.execute_query(
+            """ 
+                SELECT * from usuarios where nombre = ? or email = ?
+            """,
+            ( username, email )
+        ).json
+
+        if result:
+            return parse_json_response( f"User {username} or email {email} is already taken" , 401 )
+
+        db.execute_query(
+            """ 
+                INSERT INTO usuarios ( nombre, email , password, rol, token ) VALUES ( ? , ? , ? , ? , ? )
+            """,
+            ( username , email, password , 'user' , None )
+        )
+
+        return parse_json_response("User registered successfully", 200)
+
+    except Exception as e:
+
+        logging.debug(e)
+        
+        return parse_json_response( str(e) , 400 ) 
+
 @app.post("/users/login")
 async def login( request: Request, db: SQLiteORM = Depends(get_db) ):
 
@@ -534,7 +575,7 @@ def get_jugadores( id: Optional[str] = None, db: SQLiteORM = Depends(get_db) ):
         SELECT
             j.id_jugador,
             j.nombre,
-            ( select nombre from posiciones where j.id_posicion = id_posicion ) as posicion,
+            ( select nombre_completo from posiciones where j.id_posicion = id_posicion ) as posicion,
             j.edad,
             eq.nombre AS equipo,
             eq.id_equipo,
@@ -1122,56 +1163,42 @@ def goles_por_jugador(id_equipo: int, db: SQLiteORM = Depends(get_db)):
         SELECT
             js.id_jugador,
             (SELECT nombre FROM jugadores WHERE id_jugador = js.id_jugador) AS jugador,
-            ROUND(AVG(js.goals), 2) AS avg_goals
+            ROUND(SUM(js.goals), 2) AS total_goals
         FROM jugadores_stats js
         WHERE js.id_equipo = ?
         GROUP BY js.id_jugador
+        ORDER BY 3 DESC
         """,
         (id_equipo,)
     ).json
 
-    # rows = [(id_jugador, jugador, avg_goals), ...]
-
     return rows
 
-@app.get("/dashboard/stats-jugador/{id_equipo}")
-def stats_por_jugador(id_equipo: int, db: SQLiteORM = Depends(get_db)):
+@app.get("/dashboard/stats-jugador")
+def stats_por_jugador( stat:str, id_equipo:int , db: SQLiteORM = Depends(get_db)):
+
+    stat_expr = f"ROUND(SUM(s.{stat}), 2)"
+
+    if stat == "rating":
+        stat_expr = f"ROUND(SUM(s.{stat}), 0)"
 
     rows = db.execute_query(
         f"""
-        WITH _faltas AS ( select
-            sub.id_equipo,
-            sub.faltas,
-            sub.id_jugador,
-            sub.totalShoots,
-            FLOOR(sub.faltas % 2) AS rojas,
-            faltas - FLOOR(sub.faltas % 2) AS amarillas
-        from (select id_equipo as id_equipo, id_jugador as id_jugador, COUNT(fouls) as faltas, SUM(totalShots) as totalShoots
-                    from jugadores_stats
-                    GROUP BY id_jugador
-        ) as sub )
-        SELECT
-            (
-                select nombre from jugadores where id_jugador = f.id_jugador
-            ) as jugador
-            ,
-            f.faltas,
-            f.amarillas,
-            f.rojas,
-            ROUND(
-                SUM(
-                        CASE
-                            WHEN f.rojas > 0 THEN 1 ELSE 0
-                        END
-                ), 0
-            ) AS expulsiones,
-            f.totalShoots
-        FROM _faltas f
-        WHERE f.id_equipo = ?
-        GROUP BY f.id_jugador;
-        
+        SELECT 
+            j.nombre as nombre_jugador, 
+            ( select nombre_completo from posiciones where id_posicion = j.id_posicion ) as posicion, 
+            {stat_expr} AS valor,
+            CAST(SUM(s.minutesPlayed) AS INTEGER) AS minutos,
+            ROUND(AVG(s.rating), 2) AS rating_promedio
+        FROM jugadores_stats s
+        JOIN jugadores j ON s.id_jugador = j.id_jugador
+        JOIN equipos e ON s.id_equipo = e.id_equipo
+        WHERE e.id_equipo = ? AND s.rating > 0
+        GROUP BY j.id_jugador, j.nombre, e.nombre
+        ORDER BY valor DESC
+        LIMIT ?
         """,
-        (id_equipo,)
+        (id_equipo,10,)
     ).json
 
     return rows
@@ -1290,7 +1317,7 @@ def top_sold_players( id_equipo:int, db:SQLiteORM = Depends(get_db) ):
         SELECT
             j.id_jugador,
             j.nombre AS jugador,
-            ( select nombre from posiciones where id_posicion = j.id_posicion ) as posicion,
+            ( select nombre_completo from posiciones where id_posicion = j.id_posicion ) as posicion,
             e.nombre AS equipo,
             ( '€' || ROUND(j.precio / 1000000.0, 2) || ' M' ) AS precio
         FROM jugadores j

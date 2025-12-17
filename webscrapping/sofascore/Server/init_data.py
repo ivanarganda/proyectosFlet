@@ -76,7 +76,8 @@ def init_tables():
             "posiciones": [
                 {
                     "id_posicion": integer(pk=True),
-                    "nombre": text(not_null=True)
+                    "nombre": text(not_null=True),
+                    "nombre_completo": text(not_null=True)
                 }
             ],
 

@@ -1,8 +1,18 @@
 # pages/equipos.py
+import os
 import flet as ft
 import requests
 import pandas as pd
 from params import REQUEST_URL
+from .stats import *
+from footer_navegation.navegation import footer_navbar
+from helpers.utils import addElementsPage
+
+current_path = {
+    "path": os.path.abspath(__file__),
+    "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
+    "file": __file__.split("\\")[-1],
+}
 
 # ======================================================
 # THEME (DARK + LIGHT)
@@ -31,6 +41,67 @@ table_player_container = ft.Container(expand=True)
 table_market_container = ft.Container(expand=True)
 bumpy_container = ft.Container(expand=True)
 top_saves_goalkeepers_container = ft.Container(expand=True)
+
+market_scroll_ref = ft.Ref[ft.Column]()
+players_scroll_ref = ft.Ref[ft.Column]()
+goalkeeper_scroll_ref = ft.Ref[ft.Column]()
+ref_scroll_layout = ft.Ref[ft.Column]()
+stick_to_bottom = True
+selected_stat = "totalPass"
+
+escudo_titulo = ft.Image(src="", width=100, height=100, fit=ft.ImageFit.COVER)
+
+def on_page_scroll(e: ft.ScrollEvent):
+    
+    print("SCROLL:", e.pixels, e.max_scroll_extent)
+
+def on_change_stat(e,page):
+
+    global selected_stat
+
+    selected_stat = str(e.control.value)
+
+    table_player_container.content = skeleton(320)
+
+    page.update()
+
+    table_player_container.content = build_players_table(page,selected_equipo_id,selected_stat)
+    
+    page.update()
+
+
+def generate_button_scroll_down( data, callback_ref ):
+
+    return ft.FloatingActionButton(
+            icon=ft.Icons.ARROW_DOWNWARD,
+            on_click=lambda e: scroll_down( e, callback_ref ),
+            visible= len(data) > 6
+        )
+
+def inside_click(e):
+
+    e.stop_propagation()
+
+def scroll_down(e, ref_container):
+
+    global stick_to_bottom
+
+    col = ref_container.current
+
+    print( col )
+
+    stick_to_bottom = False
+
+    col.auto_scroll = not col.auto_scroll
+
+    if col.auto_scroll:
+        col.scroll_to(
+            offset=10**9,
+            duration=300,
+            curve=ft.AnimationCurve.EASE_OUT
+        )
+
+    col.update()
 
 # ======================================================
 # KPI CARDS
@@ -312,11 +383,16 @@ def skeleton(height=200):
 def team_selector(page, on_change):
     data = requests.get(f"{REQUEST_URL}/info/equipos").json()["data"]
 
+    escudo = [ e.get("escudo") for e in data if int(e.get("id_equipo")) == int(selected_equipo_id) ][0]
+
+    escudo_titulo.src = escudo
+
     return card(
         ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             controls=[
                 title("Equipo seleccionado"),
+                escudo_titulo,
                 ft.Dropdown(
                     width=260,
                     value=str(selected_equipo_id),
@@ -355,9 +431,20 @@ def on_team_change(e, page):
 
     chart_container.content = build_goals_chart(selected_equipo_id)
     bumpy_container.content = build_bumpy_chart(selected_equipo_id)
-    table_player_container.content = build_players_table(selected_equipo_id)
+    table_player_container.content = build_players_table(page,selected_equipo_id, selected_stat)
     table_market_container.content = build_market_table(selected_equipo_id)
     top_saves_goalkeepers_container.content = build_goalkeepers_table(selected_equipo_id)
+
+    data = requests.get(f"{REQUEST_URL}/info/equipos").json()["data"]
+    escudo = next(
+        eq["escudo"]
+        for eq in data
+        if int(eq["id_equipo"]) == selected_equipo_id
+    )
+
+    escudo_titulo.src = escudo
+
+    escudo_titulo.update()
     page.update()
 
 
@@ -371,8 +458,8 @@ def build_goals_chart(id_equipo):
     ).json()
 
     df = pd.DataFrame(data)
-    df["avg_goals"] = pd.to_numeric(df["avg_goals"], errors="coerce")
-    df = df[df["avg_goals"] > 0].head(20)
+    df["total_goals"] = pd.to_numeric(df["total_goals"], errors="coerce")
+    df = df[df["total_goals"] > 0].head(20)
 
     if df.empty:
         return muted("No hay datos disponibles")
@@ -382,8 +469,9 @@ def build_goals_chart(id_equipo):
             x=i,
             bar_rods=[
                 ft.BarChartRod(
+                    tooltip=f"{row["jugador"]} - {row["total_goals"]}",
                     from_y=0,
-                    to_y=row["avg_goals"],
+                    to_y=row["total_goals"],
                     width=18,
                     color=THEME["primary"],
                     border_radius=6,
@@ -394,7 +482,7 @@ def build_goals_chart(id_equipo):
     ]
 
     chart = ft.BarChart(
-        max_y=df["avg_goals"].max() + 0.1,
+        max_y=df["total_goals"].max() + 0.1,
         bar_groups=bars,
         interactive=True,
     )
@@ -405,7 +493,7 @@ def build_goals_chart(id_equipo):
             expand=True,
             spacing=10,
             controls=[
-                title("Insight clave · Goles por jugador"),
+                title("Insight clave · Total goles por jugador"),
                 muted("Quién decide los partidos"),
                 ft.Row(
                     scroll=ft.ScrollMode.AUTO,
@@ -458,7 +546,7 @@ def build_bumpy_chart(id_equipo):
         points = [
             ft.LineChartDataPoint(
                 x=i + 1,
-                y=max_posicion - pos + 1
+                y=pos + 1
             )
             for i, pos in enumerate(posiciones)
         ]
@@ -487,8 +575,8 @@ def build_bumpy_chart(id_equipo):
                     expand=True,
                     min_x=1,
                     max_x=max_jornadas,
-                    min_y=1,
                     max_y=max_posicion,
+                    min_y=1,
                     left_axis=ft.ChartAxis(
                         title=ft.Text("Posición"),
                         labels_size=40,
@@ -539,27 +627,35 @@ def build_goalkeepers_table(id_equipo):
                 ft.Container(
                     expand=True,
                     height=320,
-                    content=ft.Column(
-                        expand=True,
-                        scroll=ft.ScrollMode.AUTO,
-                        controls=[
-                            ft.DataTable(
-                                expand=True,
-                                width=float("inf"),
-                                heading_row_color=THEME["border"],
-                                column_spacing=32,
-                                horizontal_margin=20,
-                                columns=[
-                                    ft.DataColumn(ft.Text("Portero")),
-                                    ft.DataColumn(ft.Text("Equipo")),
-                                    ft.DataColumn(ft.Text("Total paradas")),
-                                    ft.DataColumn(ft.Text("Partidos")),
-                                    ft.DataColumn(ft.Text("PP")),
-                                ],
-                                rows=rows,
-                            )
-                        ],
-                    ),
+                    content=
+                    ft.Stack([
+                        ft.Column(
+                            ref=goalkeeper_scroll_ref,
+                            expand=True,
+                            scroll=ft.ScrollMode.AUTO,
+                            controls=[
+                                ft.DataTable(
+                                    expand=True,
+                                    width=float("inf"),
+                                    heading_row_color=THEME["border"],
+                                    column_spacing=32,
+                                    horizontal_margin=20,
+                                    columns=[
+                                        ft.DataColumn(ft.Text("Portero")),
+                                        ft.DataColumn(ft.Text("Equipo")),
+                                        ft.DataColumn(ft.Text("Total paradas")),
+                                        ft.DataColumn(ft.Text("Partidos")),
+                                        ft.DataColumn(ft.Text("PP")),
+                                    ],
+                                    rows=rows,
+                                )
+                            ],
+                        ),
+                        generate_button_scroll_down( data , goalkeeper_scroll_ref)
+                    ],
+                        alignment=ft.alignment.bottom_center,
+                        expand=True
+                    )
                 ),
             ],
         )
@@ -568,21 +664,20 @@ def build_goalkeepers_table(id_equipo):
 # ======================================================
 # TABLE · JUGADORES
 # ======================================================
-def build_players_table(id_equipo):
+def build_players_table(page,id_equipo, stat):
 
     data = requests.get(
-        f"{REQUEST_URL}/dashboard/stats-jugador/{id_equipo}"
+        f"{REQUEST_URL}/dashboard/stats-jugador?stat={stat}&id_equipo={id_equipo}"
     ).json()
 
     rows = [
         ft.DataRow(
             cells=[
-                ft.DataCell(ft.Text(p["jugador"], color=THEME["text"])),
-                ft.DataCell(ft.Text(str(p.get("faltas", 0)), color=THEME["muted"])),
-                ft.DataCell(ft.Text(str(p.get("amarillas", 0)), color=THEME["muted"])),
-                ft.DataCell(ft.Text(str(p.get("rojas", 0)), color=THEME["muted"])),
-                ft.DataCell(ft.Text(str(p.get("expulsiones", 0)), color=THEME["muted"])),
-                ft.DataCell(ft.Text(str(p.get("totalShoots", 0)), color=THEME["muted"])),
+                ft.DataCell(ft.Text(p["nombre_jugador"], color=THEME["text"])),
+                ft.DataCell(ft.Text(str(p.get("posicion", 0)), color=THEME["muted"])),
+                ft.DataCell(ft.Text(str(p.get("valor", 0)), color=THEME["muted"])),
+                ft.DataCell(ft.Text(str(p.get("minutos", 0)), color=THEME["muted"])),
+                ft.DataCell(ft.Text(str(p.get("rating_promedio", 0)), color=THEME["muted"]))
             ]
         )
         for p in data
@@ -591,38 +686,90 @@ def build_players_table(id_equipo):
     return card(
         ft.Column(
             expand=True,
-            spacing=10,
+            spacing=12,
             controls=[
-                title("Detalle · Estadísticas del jugador"),
-                ft.Container(
+
+                ft.Row(
                     expand=True,
-                    height=320,
-                    content=ft.Column(
-                        expand=True,
-                        scroll=ft.ScrollMode.AUTO,
-                        controls=[
-                            ft.DataTable(
-                                width=float("inf"),
-                                expand=True,
-                                heading_row_color=THEME["border"],
-                                column_spacing=32,
-                                horizontal_margin=24,
-                                columns=[
-                                    ft.DataColumn(ft.Text("Jugador")),
-                                    ft.DataColumn(ft.Text("Faltas")),
-                                    ft.DataColumn(ft.Text("Amarillas")),
-                                    ft.DataColumn(ft.Text("Rojas")),
-                                    ft.DataColumn(ft.Text("Exp.")),
-                                    ft.DataColumn(ft.Text("Rem.")),
-                                ],
-                                rows=rows,
-                            )
-                        ],
-                    ),
+                    spacing=20,
+                    controls=[
+
+                        ft.Column(
+                            expand=True,
+                            spacing=10,
+                            controls=[
+
+                                ft.Row([
+                                    title("Detalle · Estadísticas del jugador"),
+                                    ft.Column(
+                                        width=260,
+                                        alignment=ft.MainAxisAlignment.START,
+                                        controls=[
+                                            ft.Dropdown(
+                                                label="Estadística",
+                                                value=selected_stat,
+                                                options=[
+                                                    ft.dropdown.Option(
+                                                        key=s,
+                                                        text=traducciones.get(s, s)
+                                                    )
+                                                    for s in stats
+                                                ],
+                                                on_change=lambda e: on_change_stat(e,page),
+                                            )
+                                        ],
+                                    ),
+                                ]),
+                                ft.Row([
+                                    ft.Container(
+                                        expand=True,
+                                        height=320,
+                                        content=ft.Stack(
+                                            expand=True,
+                                            alignment=ft.alignment.bottom_center,
+                                            controls=[
+
+                                                # SCROLL REAL
+                                                ft.Column(
+                                                    ref=players_scroll_ref,
+                                                    expand=True,
+                                                    scroll=ft.ScrollMode.AUTO,
+                                                    controls=[
+                                                        ft.DataTable(
+                                                            width=float("inf"),
+                                                            heading_row_color=THEME["border"],
+                                                            column_spacing=32,
+                                                            horizontal_margin=24,
+                                                            columns=[
+                                                                ft.DataColumn(ft.Text("Jugador")),
+                                                                ft.DataColumn(ft.Text("Posicion")),
+                                                                ft.DataColumn(ft.Text(traducciones.get(stat))),
+                                                                ft.DataColumn(ft.Text("Minutos")),
+                                                                ft.DataColumn(ft.Text("Valoración promedio")),
+                                                            ],
+                                                            rows=rows,
+                                                        )
+                                                    ],
+                                                ),
+
+                                                # BOTÓN FLOTANTE ↓ (solo si hay datos)
+                                                generate_button_scroll_down(
+                                                    data, players_scroll_ref
+                                                ) if data else ft.Container(),
+
+                                            ],
+                                        ),
+                                    ),
+                                ])
+                                
+                            ],
+                        ),
+                    ],
                 ),
             ],
         )
     )
+
 
 # ======================================================
 # TABLE · MERCADO
@@ -663,25 +810,34 @@ def build_market_table(id_equipo):
                 ft.Container(
                     expand=True,
                     height=360,
-                    content=ft.Column(
-                        expand=True,
-                        scroll=ft.ScrollMode.AUTO,
-                        controls=[
-                            ft.DataTable(
+                    on_click=inside_click,
+                    content=ft.Stack([
+                            ft.Column(
+                                ref=market_scroll_ref,
                                 expand=True,
-                                width=float("inf"),
-                                heading_row_color=THEME["border"],
-                                column_spacing=28,
-                                horizontal_margin=20,
-                                columns=[
-                                    ft.DataColumn(ft.Text("Jugador")),
-                                    ft.DataColumn(ft.Text("Equipo")),
-                                    ft.DataColumn(ft.Text("Posición")),
-                                    ft.DataColumn(ft.Text("Valor mercado")),
+                                scroll=ft.ScrollMode.AUTO,
+                                auto_scroll=False,
+                                controls=[
+                                    ft.DataTable(
+                                        expand=True,
+                                        width=float("inf"),
+                                        heading_row_color=THEME["border"],
+                                        column_spacing=28,
+                                        horizontal_margin=20,
+                                        columns=[
+                                            ft.DataColumn(ft.Text("Jugador")),
+                                            ft.DataColumn(ft.Text("Equipo")),
+                                            ft.DataColumn(ft.Text("Posición")),
+                                            ft.DataColumn(ft.Text("Valor mercado")),
+                                        ],
+                                        rows=rows,
+                                    )
                                 ],
-                                rows=rows,
-                            )
+                            ),
+                            generate_button_scroll_down( data, market_scroll_ref )
                         ],
+                        alignment=ft.alignment.bottom_center,
+                        expand=True
                     ),
                 ),
             ],
@@ -699,13 +855,18 @@ def RenderDashboard(page: ft.Page, params={}):
 
     chart_container.content = build_goals_chart(selected_equipo_id)
     bumpy_container.content = build_bumpy_chart(selected_equipo_id)
-    table_player_container.content = build_players_table(selected_equipo_id)
+    table_player_container.content = build_players_table(page,selected_equipo_id, selected_stat)
     table_market_container.content = build_market_table(selected_equipo_id)
     top_saves_goalkeepers_container.content = build_goalkeepers_table(selected_equipo_id)
 
     kpi_container.content = build_kpis()
 
-    return ft.Container(
+    footer = ft.Container(
+        content=footer_navbar(page=page, current_path=current_path, dispatches={}),
+        expand=False
+    )
+
+    main_content = ft.Container(
         expand=True,
         padding=20,
         content=ft.Column(
@@ -812,3 +973,23 @@ def RenderDashboard(page: ft.Page, params={}):
             ],
         ),
     )
+
+    layout = ft.Column(
+        [
+            ft.Container(
+                expand=True,
+                padding=ft.padding.only(bottom=10),
+                content=ft.Column(
+                    ref=ref_scroll_layout,          # 🔥 AQUÍ
+                    scroll=ft.ScrollMode.AUTO,      # 🔥 Y AQUÍ
+                    on_scroll=on_page_scroll,       # 🔥 EVENTO AQUÍ
+                    controls=[main_content],
+                ),
+            ),
+            footer
+        ],
+        expand=True,
+        spacing=0
+    )
+
+    return addElementsPage( page, [layout] )
