@@ -1,13 +1,11 @@
 import os
 import flet as ft
-import requests
 
 from .clasificaciones_jugadores import RenderClasificacionesJugadores
 from .clasificaciones_equipos import RenderClasificacionesEquipos
 
 from helpers.utils import addElementsPage
 from footer_navegation.navegation import footer_navbar
-from params import REQUEST_URL, HEADERS
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -20,14 +18,13 @@ def RenderClasificaciones(page: ft.Page, params=None):
     page.window.width = 1000
     page.window.height = 900
 
-    # --- FOOTER DEFINIDO AQUÍ ---
     footer = ft.Container(
-        content=footer_navbar(page=page, current_path=current_path, dispatches={}),
+        content=footer_navbar(page, current_path=current_path, dispatches={}),
+        height=56,          # 🔥 altura explícita
         expand=False
     )
 
-    # --- TABS ---
-    tabs = ft.Tabs(
+    main_tabs = ft.Tabs(
         selected_index=0,
         expand=True,
         tabs=[
@@ -38,18 +35,20 @@ def RenderClasificaciones(page: ft.Page, params=None):
             ft.Tab(
                 text="Equipos",
                 content=RenderClasificacionesEquipos(page)
-            )
+            ),
         ]
     )
 
     layout = ft.Column(
-        [
-            ft.Column([tabs], expand=True),
-            ft.Divider(height=2),
-            footer
-        ],
         expand=True,
-        spacing=0
+        spacing=0,
+        controls=[
+            ft.Container(
+                expand=True,
+                content=main_tabs
+            ),
+            footer
+        ]
     )
 
-    return addElementsPage(page, [layout])
+    return layout

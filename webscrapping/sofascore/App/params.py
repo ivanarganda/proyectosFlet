@@ -23,6 +23,9 @@ ICONS = {
     "profile_photo_football_player": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/profile_photo_football_player.png",
     "avatar": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/avatar.png",
     "ml_score_match": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/ml_score_match.png",
+    "log": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/log.png",
+    "foro": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/foro.png",
+    "download_report": "https://raw.githubusercontent.com/ivanarganda/images_assets/main/download_report.png",
 }
 WALLPAPERS = {
     "grass_ball":"https://raw.githubusercontent.com/ivanarganda/images_assets/main/grass_ball.png"

@@ -16,48 +16,38 @@ current_path = {
 }
 
 
-def RenderClasificacionesEquipos(page: ft.Page, params=None):
+def RenderClasificacionesEquipos(page: ft.Page):
 
-    page.window.width = 1000
-    page.window.height = 900
+    content_container = ft.Container(expand=True)
 
-    def fetch_data():
+    def load():
+        content_container.content = ft.ProgressRing()
+        page.update()
+
         r = requests.get(
             f"{REQUEST_URL}/info/clasificaciones/equipos",
             headers=HEADERS
         )
-        return r.json().get("data", [])
+        data = r.json().get("data", [])
 
-    def build_table():
-        datos = fetch_data()
+        if not data:
+            content_container.content = ft.Text("No hay datos")
+        else:
+            columns = [c for c in data[0].keys() if not c.lower().startswith("id")]
 
-        if not datos:
-            return ft.Text("No hay datos disponibles", size=16)
+            table, load_table = PaginatedTablePRO(
+                page=page,
+                title="",
+                columns=columns,
+                fetch_callback=lambda: data,
+                page_size=15
+            )
 
-        columns = list(datos[0].keys())
+            load_table()
+            content_container.content = table
 
-        columns = [c for c in columns if not c.lower().startswith("id") ]
+        page.update()
 
-        table, load = PaginatedTablePRO(
-            page=page,
-            title="",
-            columns=columns,
-            fetch_callback=lambda: fetch_data(),
-            page_size=15
-        )
+    load()
 
-        load()
-        return table
-
-    table = build_table()
-
-    layout = ft.Column(
-        [
-            ft.Column([table], expand=True),
-            ft.Container(content=ft.Text(""),height=10)
-        ],
-        expand=True,
-        spacing=0
-    )
-
-    return addElementsPage(page, [layout])
+    return content_container

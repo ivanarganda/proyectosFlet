@@ -2,13 +2,12 @@ import os
 import flet as ft
 import requests
 
-from helpers.pagination_table import PaginatedTable
 from helpers.pagination_table_pro import PaginatedTablePRO
-
-from helpers.utils import addElementsPage
-from footer_navegation.navegation import footer_navbar
 from params import REQUEST_URL, HEADERS
 
+# -----------------------------
+# METADATA
+# -----------------------------
 current_path = {
     "path": os.path.abspath(__file__),
     "folder": os.path.dirname(os.path.abspath(__file__)).split("\\")[-1],
@@ -16,65 +15,98 @@ current_path = {
 }
 
 TAB_KEYS = ["goals", "minutes", "matches", "assists"]
-TAB_TITLES = {
-    "goals": "Pichichi",
-    "minutes": "Minutos Jugados",
-    "matches": "Partidos Jugados",
-    "assists": "Máximos Asistentes",
-}
+TAB_LABELS = ["Goleadores", "Minutos", "Partidos", "Asistencias"]
 
 
-def RenderClasificacionesJugadores(page: ft.Page, params=None):
+# -----------------------------
+# VISTA PRINCIPAL
+# -----------------------------
+def RenderClasificacionesJugadores(page: ft.Page):
 
     page.window.width = 1000
     page.window.height = 900
 
-    def fetch_data(by: str):
-        r = requests.get(
-            f"{REQUEST_URL}/info/clasificaciones/jugadores?by={by}",
-            headers=HEADERS
-        )
-        return r.json().get("data", [])
+    # CONTENEDOR CENTRAL (AQUÍ CAMBIA TODO)
+    content_container = ft.Container(expand=True)
 
-    def build_table(by: str):
-        datos = fetch_data(by)
+    # -----------------------------
+    # CARGA DE DATOS SEGÚN TAB
+    # -----------------------------
+    def load_clasificacion(by: str):
 
-        if not datos:
-            return ft.Text("No hay datos disponibles", size=16)
+        # Loader inmediato
+        content_container.content = ft.ProgressRing()
+        page.update()
 
-        columns = list(datos[0].keys())
+        try:
+            r = requests.get(
+                f"{REQUEST_URL}/info/clasificaciones/jugadores",
+                params={"by": by},
+                headers=HEADERS,
+                timeout=10
+            )
+            r.raise_for_status()
+            data = r.json().get("data", [])
+        except Exception as ex:
+            content_container.content = ft.Text(
+                f"Error cargando datos: {ex}",
+                color="red"
+            )
+            page.update()
+            return
 
-        columns = [c for c in columns if not c.lower().startswith("id") ]
+        if not data:
+            content_container.content = ft.Text(
+                "No hay datos disponibles",
+                size=16
+            )
+            page.update()
+            return
 
-        table, load = PaginatedTablePRO(
+        # Columnas dinámicas (sin IDs)
+        columns = [
+            c for c in data[0].keys()
+            if not c.lower().startswith("id")
+        ]
+
+        # Tabla paginada
+        table, load_table = PaginatedTablePRO(
             page=page,
             title="",
             columns=columns,
-            fetch_callback=lambda: fetch_data(by),
+            fetch_callback=lambda: data,
             page_size=15
         )
 
-        load()
-        return table
+        load_table()
+        content_container.content = table
+        page.update()
 
+    # -----------------------------
+    # TABS (SOLO CAMBIAN ESTADO)
+    # -----------------------------
     tabs = ft.Tabs(
         selected_index=0,
-        expand=True,
+        on_change=lambda e: load_clasificacion(
+            TAB_KEYS[e.control.selected_index]
+        ),
         tabs=[
-            ft.Tab(text="Goles", content=build_table("goals")),
-            ft.Tab(text="Minutos", content=build_table("minutes")),
-            ft.Tab(text="Partidos", content=build_table("matches")),
-            ft.Tab(text="Asistencias", content=build_table("assists")),
+            ft.Tab(text=label)
+            for label in TAB_LABELS
         ]
     )
 
-    layout = ft.Column(
-        [
-            ft.Column([tabs], expand=True),
-            ft.Divider(height=2)
-        ],
-        expand=True,
-        spacing=0
-    )
+    # CARGA INICIAL
+    load_clasificacion(TAB_KEYS[0])
 
-    return addElementsPage(page, [layout])
+    # -----------------------------
+    # LAYOUT FINAL
+    # -----------------------------
+    return ft.Column(
+        spacing=0,
+        controls=[
+            tabs,
+            ft.Divider(height=2),
+            content_container
+        ]
+    )

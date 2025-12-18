@@ -3,10 +3,13 @@ import os
 import flet as ft
 import requests
 import pandas as pd
-from params import REQUEST_URL
+from params import *
 from .stats import *
+import json
 from footer_navegation.navegation import footer_navbar
-from helpers.utils import addElementsPage
+from helpers.utils import *
+from middlewares.auth import middleware_auth
+from .init_filters import *
 
 current_path = {
     "path": os.path.abspath(__file__),
@@ -28,12 +31,11 @@ THEME = {
     "skeleton": "#1F2937",
 }
 
+id_user = None
+
 # ======================================================
 # GLOBAL STATE
 # ======================================================
-selected_equipo_id = 24264
-kpi_mode = "global"
-
 kpi_container = ft.Container()
 
 chart_container = ft.Container(expand=True)
@@ -47,7 +49,6 @@ players_scroll_ref = ft.Ref[ft.Column]()
 goalkeeper_scroll_ref = ft.Ref[ft.Column]()
 ref_scroll_layout = ft.Ref[ft.Column]()
 stick_to_bottom = True
-selected_stat = "totalPass"
 
 escudo_titulo = ft.Image(src="", width=100, height=100, fit=ft.ImageFit.COVER)
 
@@ -375,6 +376,149 @@ def skeleton(height=200):
         border_radius=16,
         bgcolor=THEME["skeleton"],
         animate_opacity=300,
+    )
+
+# ======================================================
+# MANAGEMENT REPORT
+# ======================================================
+def handle_report_download(page,data):
+
+    filtros_json = {
+        "team_id":selected_equipo_id,
+        "kpi_mode":kpi_mode,
+        "stat":selected_stat
+    }
+
+    json_data = {
+        "id_usuario": id_user,
+        "titulo": data["titulo"],
+        "descripcion": data["descripcion"],
+        "filtros": json.dumps(filtros_json)
+    }
+
+    r = requests.post( f"{REQUEST_URL}/reports", data=json.dumps(json_data) )
+
+    if ( r.status_code == 200 ):
+        notify_success(page,"✅ Reporte guardado correctamente")
+
+def report_metadata_dialog(page: ft.Page, on_confirm):
+
+    title_field = ft.TextField(
+        label="Título del reporte",
+        autofocus=True,
+        width=400
+    )
+
+    description_field = ft.TextField(
+        label="Descripción",
+        multiline=True,
+        min_lines=3,
+        max_lines=5,
+        width=400
+    )
+
+    error_text = ft.Text("", color="red")
+
+    def close_dialog(e=None):
+        dialog.open = False
+        page.update()
+
+    def confirm(e):
+        title = title_field.value.strip()
+        description = description_field.value.strip()
+
+        if not title:
+            error_text.value = "El título es obligatorio"
+            page.update()
+            return
+
+        close_dialog()
+        on_confirm(
+            page,
+            {
+                "titulo": title,
+                "descripcion": description
+            }
+        )
+
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Guardar / Descargar reporte"),
+        content=ft.Column(
+            tight=True,
+            spacing=12,
+            controls=[
+                title_field,
+                description_field,
+                error_text
+            ]
+        ),
+        actions=[
+            ft.TextButton("Cancelar", on_click=close_dialog),
+            ft.ElevatedButton(
+                "Continuar",
+                icon=ft.Icons.CHECK,
+                on_click=confirm
+            ),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    page.dialog = dialog
+    dialog.open = True
+    page.update()
+
+def management_report(page):
+    
+    btn_download_report = ft.FloatingActionButton(
+        tooltip="Descargar reporte",
+        content=ft.Image(
+            width=100,
+            src=ICONS["download_report"]
+        ),
+        on_click=lambda e: report_metadata_dialog(
+            page,
+            on_confirm=handle_report_download
+        )
+    )
+
+    btn_show_reports = ft.FloatingActionButton(
+        tooltip="Mis reportes",
+        content=ft.Image(
+            width=100,
+            src=ICONS["foro"]
+        ),
+        on_click=lambda e: page.go("/management/reportes")
+    )
+
+    return ft.ResponsiveRow(
+        expand=True,
+        spacing=12,
+        columns=12,
+        controls=[
+            ft.Container(
+                expand=True,
+                col={
+                    "xs": 2,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2,
+                },
+                content=btn_download_report
+            ),
+            ft.Container(
+                expand=True,
+                col={
+                    "xs": 2,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2,
+                },
+                content=btn_show_reports
+            )
+        ]
     )
 
 # ======================================================
@@ -849,6 +993,23 @@ def build_market_table(id_equipo):
 # ======================================================
 def RenderDashboard(page: ft.Page, params={}):
 
+    global id_user, kpi_mode, selected_equipo_id, selected_stat
+
+    session = middleware_auth(page)
+    user = session.get("session", {})
+
+    id_user = int(user.get("id_usuario", 0))
+
+    if len(params) > 0:
+
+        print( "initing filters...." )
+
+        team_id , mode_kpi, stat = check_saved_filters( 1, params.get("id_reporte"))
+        selected_equipo_id = team_id
+        kpi_mode = mode_kpi
+        selected_stat = stat
+
+
     page.window.width = 1200
     page.bgcolor = THEME["bg"]
     page.scroll = ft.ScrollMode.AUTO
@@ -873,6 +1034,8 @@ def RenderDashboard(page: ft.Page, params={}):
             expand=True,
             spacing=20,
             controls=[
+
+                management_report(page),
 
                 # 🔹 Selector de equipo
                 team_selector(page, on_team_change),
@@ -980,9 +1143,9 @@ def RenderDashboard(page: ft.Page, params={}):
                 expand=True,
                 padding=ft.padding.only(bottom=10),
                 content=ft.Column(
-                    ref=ref_scroll_layout,          # 🔥 AQUÍ
-                    scroll=ft.ScrollMode.AUTO,      # 🔥 Y AQUÍ
-                    on_scroll=on_page_scroll,       # 🔥 EVENTO AQUÍ
+                    ref=ref_scroll_layout,         
+                    scroll=ft.ScrollMode.AUTO,    
+                    on_scroll=on_page_scroll,     
                     controls=[main_content],
                 ),
             ),

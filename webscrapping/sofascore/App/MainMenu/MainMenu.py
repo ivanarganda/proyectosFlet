@@ -298,12 +298,16 @@ def list_menu_items(page: ft.Page):
                                 content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/management/scrapping", size=40),
                                 col={"xs": 6, "sm": 4, "md": 3},
                             )
-                        ] if role == "admin" else [] )
+                        ] if role == "admin" else [] ),
+                        ft.Container(
+                            content=menu_button(page, ICONS.get("foro", ""), "Reportes", "/management/reportes", size=40),
+                            col={"xs": 6, "sm": 4, "md": 3},
+                        )
                     ]
                 
                 )
             )
-        ) if role == "admin" else ft.Tab()
+        )
 
         # TABS
         tabs_card = ft.Container(
@@ -334,7 +338,7 @@ def list_menu_items(page: ft.Page):
                                     ft.Container(content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=40), col={"xs":6,"sm":4,"md":3}),
                                     ft.Container(content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=40), col={"xs":6,"sm":4,"md":3}),
                                     ft.Container(content=menu_button(page, ICONS.get("football_shield", ""), "Equipos", "/info/equipos", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    ft.Container(content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=40), col={"xs":6,"sm":4,"md":3}),
+                                    # ft.Container(content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=40), col={"xs":6,"sm":4,"md":3}), TODO: en desarrollo
                                     ft.Container(content=menu_button(page, ICONS.get("football_ranking", ""), "Clasificaciones", "/info/clasificaciones", size=40), col={"xs":6,"sm":4,"md":3}),
                                 ],
                                 run_spacing=20,

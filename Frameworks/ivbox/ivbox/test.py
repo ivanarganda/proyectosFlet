@@ -16,4 +16,3 @@ db = SQLiteORM("productos.db")
 db.connect_DB()
 
 # Get autoincrement primary keys
-db.drop_all_tables()

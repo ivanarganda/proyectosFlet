@@ -10,6 +10,20 @@ from components.PopupMenu import PopupMenuButton # TODO for testing
 from params import HEADERS, REQUEST_URL
 import requests
 
+def loadSnackbar( page: ft.Page, message: str, color: str ):
+    page.snack_bar = ft.SnackBar(ft.Text(message), bgcolor=color)
+    page.snack_bar.open = True
+    page.update()
+
+def notify_success(page, msg="✅ Operación completada"):
+    loadSnackbar(page, msg, "#10b981")  # verde
+
+def notify_warning(page, msg="⚠️ Atención"):
+    loadSnackbar(page, msg, "#facc15")  # amarillo
+
+def notify_error(page, msg="❌ Error inesperado"):
+    loadSnackbar(page, msg, "#ef4444")  # rojo
+
 # REQUESTS
 def get_ids( uri , keys ):
 

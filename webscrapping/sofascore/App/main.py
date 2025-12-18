@@ -11,6 +11,7 @@ from urllib.parse import parse_qs
 
 # MANAGEMENT
 from MainMenu.Views.ControlPanel.scraper_ui import RenderScrapper
+from MainMenu.Views.Gestion.reportes import RenderReportes
 
 # INFO
 from MainMenu.Views.Info.partidos import RenderPartidos
@@ -26,6 +27,7 @@ from MainMenu.Views.ML.prediccion_resultados import RenderMLPrediccionResultados
 
 MANAGEMENT_VIEWS = {
     "/management/scrapping": RenderScrapper,
+    "/management/reportes": RenderReportes,
 }
 
 # Mapa de ruta → componente

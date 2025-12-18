@@ -32,7 +32,7 @@ def footer_navbar(
                     on_click=lambda _: page.go("/menu"),
                     icon=ft.icons.ARROW_BACK, 
                     bgcolor="#4e73df",
-                    visible=(folder in ("ControlPanel", "Info", "clasificaciones", "ML", "estadisticas"))
+                    visible=(folder in ("ControlPanel", "Info", "clasificaciones", "ML", "estadisticas", "Gestion"))
                 ),
                 ft.IconButton(ft.icons.NOTIFICATIONS, icon_color="#4e73df"),
                 ft.IconButton(

@@ -315,6 +315,65 @@ def list_db_files():
     }
 
 # ===================
+# REPORTS
+# ===================
+@app.get("/reports_saved/{id_usuario}/{id_report}")
+def get_reports( id_usuario: int, id_report: int,  db: SQLiteORM = Depends(get_db) ):
+
+    rows = db.execute_query(
+        """
+        SELECT id_reporte, titulo, descripcion, filtros, fecha_creacion
+        FROM reportes
+        WHERE id_usuario = ? and id_reporte = ?
+        ORDER BY fecha_creacion DESC
+        """,
+        (id_usuario,id_report)
+    ).json
+
+    return rows
+
+@app.get("/reports/{id_usuario}")
+def get_reports( id_usuario: int,  db: SQLiteORM = Depends(get_db) ):
+
+    rows = db.execute_query(
+        """
+        SELECT id_reporte, titulo, descripcion, filtros, fecha_creacion
+        FROM reportes
+        WHERE id_usuario = ?
+        ORDER BY fecha_creacion DESC
+        """,
+        (id_usuario,)
+    ).json
+
+    return rows
+
+@app.post("/reports")
+async def save_report( request: Request, db: SQLiteORM = Depends(get_db)):
+
+    try:
+
+        json_data = await request.json()
+
+        id_usuario = json_data.get("id_usuario",0)
+        titulo = json_data.get("titulo", "")
+        descripcion = json_data.get("descripcion", "")
+        titulo = json_data.get("titulo")
+        filtros = json_data.get("filtros")
+
+        db.execute_query(""" INSERT INTO reportes ( id_usuario, titulo , descripcion, filtros, fecha_creacion ) VALUES (?,?,?,?,?) """, ( id_usuario,titulo,descripcion,filtros,None))
+
+        return parse_json_response("Reporte descargado correctamente", 200)
+
+    except Exception as e:
+
+        logging.debug(e)
+        
+        return parse_json_response( str(e) , 400 ) 
+
+
+
+
+# ===================
 # USERS
 # ===================
 @app.post("/users/register")
