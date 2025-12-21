@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks, R
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
 from init_data import init_tables
-from init_files import run_init_files
+from init_files import _run
 from prediccion_siguiente_jornada import predict
 from params import DB,INITTED_FOLDER,SCRAPPING_FOLDER
 from scrapping_state import SCRAPING_STATUS
@@ -193,7 +193,7 @@ def full_scraping_task():
         })
 
         # 1) INIT FILES 0% → 40%
-        run_init_files(init_progress_cb)
+        _run(init_progress_cb)
 
         # 2) SCRAP 40% → 100%
         run_scrapping(scrap_progress_cb)
@@ -280,14 +280,13 @@ def protected_route(auth: bool = Depends(check_authorization)):
 
 @app.get("/scrapping/status")
 def scrapping_status():
-    print(SCRAPING_STATUS)
     return SCRAPING_STATUS
 
 @app.post("/scrapping/start")
 def start_scrapping(background_tasks: BackgroundTasks):
 
-    init_data()
-    time.sleep(1)
+    # init_data()
+    # time.sleep(1)
 
     if SCRAPING_STATUS["running"]:
         return parse_json_response("Scraping already running", 409)

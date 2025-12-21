@@ -14,7 +14,7 @@ def init_tables():
 
     db.connect_DB()
 
-    def drop_all_tables(exceptions: list=["usuarios", "reportes","reportes_jugadores","reportes_partidos"]) -> bool:
+    def drop_all_tables(exceptions: list=["usuarios", "reportes","reportes_jugadores","reportes_partidos", "jornadas"]) -> bool:
 
         try:
 
@@ -153,6 +153,7 @@ def init_tables():
                     "id_jugador": text(not_null=True),
                     "id_equipo": integer(not_null=True),
                     "id_partido": integer(not_null=True),
+                    "partido_orden": integer(not_null=True),
                     "id_jornada": integer(),
 
                     # FLOAT (todas con default 0 excepto caso especial)

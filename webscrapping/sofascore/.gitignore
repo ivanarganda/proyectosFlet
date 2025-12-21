@@ -1,0 +1,68 @@
+# ============================
+# NODE.JS
+# ============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build
+dist/
+build/
+.cache/
+.temp/
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# ============================
+# PYTHON
+# ============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyd.d
+*.pdb
+*.egg-info/
+*.egg
+.eggs/
+build/
+develop-eggs/
+dist/
+pip-wheel-metadata/
+python-packages/
+*.spec
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Logs
+*.log
+logs/
+
+# ============================
+# EDITOR / OS FILES
+# ============================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ============================
+# PROJECT SPECIFIC
+# ============================
+# compiled helpers
+webscrapping/sofascore/__pycache__/
+DatabaseORM/__pycache__/
+
+# temporary debug output
+/tmp/

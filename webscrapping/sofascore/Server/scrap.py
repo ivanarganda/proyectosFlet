@@ -7,6 +7,7 @@ import os
 import sys
 import numpy as np
 from ivbox.SQLiteORM import *
+from typing import Union, Iterable
 
 from params import *
 from helpers.sofa_utils import *
@@ -19,6 +20,86 @@ def run_scrapping(progress_cb=None):
     def update(step, current=None, total=None):
         if progress_cb:
             progress_cb(step, current, total)
+
+    def delete_files( files: list ) -> bool:
+
+        try:
+
+            for file in files:
+
+                os.remove(file)
+
+            return True
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+
+
+    def get_files(
+        folder: str,
+        pattern: Union[str, Iterable[str]],
+        extensions: Union[None, str, Iterable[str]] = None
+    ) -> list[str]:
+
+        patterns = [pattern] if isinstance(pattern, str) else list(pattern)
+
+        if extensions is None:
+            extensions = ["*"]
+        elif isinstance(extensions, str):
+            extensions = [extensions]
+
+        files = set()
+
+        for p in patterns:
+            for ext in extensions:
+                files.update(
+                    glob.glob(f"{folder}*{p}*.{ext}")
+                )
+
+        return sorted(files)
+
+
+    def delete_files_initted( folder: str, pattern: Union[list, str] = "_db", extensions: list = None ) -> bool:
+
+        try:
+
+            # Cuando NO hay filtro por extensión
+            files = get_files( folder, pattern, extensions )
+
+            print(files)
+
+            delete_files( files )
+
+            return True
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+
+    def delete_scrapping_files(folder: str, pattern: Union[list, str] = ["jornadas", "estadisticas"], extensions: list = None):
+
+        try:
+
+            # Cuando NO hay filtro por extensión
+            files = get_files( folder, pattern, extensions )
+
+            print(files)
+
+            delete_files( files )
+
+            return True
+
+        except Exception as e:
+
+            print(e)
+
+            return False
+
 
     def _to_sql_tuples(path, columns):
 
@@ -141,6 +222,10 @@ def run_scrapping(progress_cb=None):
     tables = get_tables( folder, files , delimiter = "_info_db" )
 
     scrap_data( tables )
+
+    delete_scrapping_files( SCRAPPING_FOLDER )
+
+    delete_files_initted( INITTED_FOLDER )
 
 if __name__ == "__main__":
 
