@@ -123,87 +123,72 @@ def edad_from_timestamp(ts):
     edad = hoy.year - fecha_nac.year - ((hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day))
     return edad
 
-def combine_sheets_with_one(current_path: str, alias: str = "", new_file:Union[str,None] = None) -> Union[str, bool]:
+def combine_sheets_with_one(
+    current_path: str,
+    alias: str = "",
+    new_file: Union[str, None] = None
+) -> Union[str, bool]:
 
     from pathlib import Path
 
     try:
-
         xls = pd.ExcelFile(current_path)
-
         obj_path = init_path_object(current_path)
 
         Path("files_initted").mkdir(parents=True, exist_ok=True)
 
         if new_file is None:
-            
-            new_path = f"files_initted/{obj_path.get('filename')}{alias}.{obj_path.get('extension')}"
-
+            new_path = f"files_initted/{obj_path['filename']}{alias}.{obj_path['extension']}"
         else:
+            new_path = f"files_initted/{new_file}.{obj_path['extension']}"
 
-            new_path = f"files_initted/{new_file}.{obj_path.get('extension')}"
+        print(f"Combining ALL sheets from {current_path} into {new_path}")
 
-        p = Path(new_path)
+        all_dfs = []
 
-        if p.is_file():
+        # ------------------------------------
+        # Leer todas las hojas
+        # ------------------------------------
+        for sheet_name in xls.sheet_names:
+            print(f"Processing {sheet_name}")
+            df = pd.read_excel(xls, sheet_name=sheet_name)
 
-            print(f"Este fichero {new_path} ya existe")
-
-            return new_path
-        
-        def load_sheet(sheet_name):
-
-            print(f"Processing {sheet_name} from {current_path}")
-
-            return sheet_name, pd.read_excel(xls, sheet_name=sheet_name)
-
-        sheet_names = xls.sheet_names
-
-        sheet_data = {}
-
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-
-            futures = {executor.submit(load_sheet, sheet): sheet for sheet in sheet_names}
-
-            for future in as_completed(futures):
-
-                sheet_name, df = future.result()
-
-                sheet_data[sheet_name] = df
-
-        df_matchs_info = None
-
-        for i in range(len(sheet_names) - 1):
-
-            s1 = sheet_names[i]
-
-            s2 = sheet_names[i + 1]
-
-            if s1 == s2:
-
+            if df is None or df.empty:
+                print(f"⚠️ Hoja {sheet_name} vacía → ignorada")
                 continue
 
-            df_current = sheet_data[s1]
+            # (opcional) añadir nombre de hoja como contexto
+            df["__sheet"] = sheet_name
 
-            df_next = sheet_data[s2]
+            all_dfs.append(df)
 
-            if df_matchs_info is None:
+        # ------------------------------------
+        # Validación final
+        # ------------------------------------
+        if not all_dfs:
+            print("❌ No hay datos válidos en ninguna hoja")
+            return False
 
-                df_matchs_info = pd.merge(df_current, df_next, how='outer')
+        # ------------------------------------
+        # CONCAT VERTICAL (CLAVE)
+        # ------------------------------------
+        df_final = pd.concat(all_dfs, ignore_index=True)
+        df_final = df_final.loc[:, ~df_final.columns.duplicated()]
 
-            else:
+        # ------------------------------------
+        # Escritura (sobrescribe siempre)
+        # ------------------------------------
+        df_final.to_excel(new_path, index=False)
 
-                df_matchs_info = pd.merge(df_matchs_info, df_next, how='outer')
-
-        df_matchs_info.to_excel(new_path, index=False)
+        print(f"✅ Archivo generado correctamente: {new_path}")
+        print(f"📊 Filas totales: {len(df_final)}")
 
         return new_path
 
     except Exception as e:
-
-        print(e)
-
+        print(f"❌ Error combinando hojas: {e}")
         return False
+
 
 def init_path_object( path ):
 

@@ -38,7 +38,7 @@ def RenderPartidos(page: ft.Page , params = {}):
         type_="partidos",
         fetch_callback=fetch_partidos,
         item_builder=build_card,
-        page_size=12
+        page_size=10
     )
 
     load_data()

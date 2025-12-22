@@ -219,14 +219,14 @@ def init_tables():
                     "bigChanceMissed": real(default=0),
                     "penaltyWon": real(default=0),
                     "captain": real(default=0),
-                    "penaltySave": real(default=0),
+                    "penaltyConceded": real(default=0),
                     "penaltyMiss": real(default=0),
                     "goodHighClaim": real(default=0),
                     "punches": real(default=0),
                     "hitWoodwork": real(default=0),
                     "lastManTackle": real(default=0),
-                    "ownGoals": real(default=0),
-                    "crossNotClaimed": real(default=0),
+                    "goalAssist": real(default=0),
+                    "accurateOppositionHalfPasses": real(default=0),
 
                     # INTEGER
                     "userCount": integer(default=0),

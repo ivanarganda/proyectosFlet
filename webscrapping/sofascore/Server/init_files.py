@@ -54,10 +54,9 @@ def _run( progress_cb = None  ):
         # 3. Leer URLs
         content_urls = read_file(output_file_la_liga)
 
-        # 4. Leer Excel stats (YA EXISTE)
-        xls = pd.ExcelFile(output_file_la_jornadas_stats)
-        jornadas_totales = len(xls.sheet_names)
-
+        # 4. coger jornadas totales
+        jornadas_totales = content_urls["Jornada"].max()
+        
         # 5. Info partidos
         file_info = generate_partidos_jornadas_info(
             content_urls,
@@ -80,6 +79,8 @@ def _run( progress_cb = None  ):
 
         update("Init files completed successfully")
 
+        print(processed_files)
+
         return processed_files
 
     def run_init_files( files ):
@@ -94,6 +95,9 @@ def _run( progress_cb = None  ):
 
         new_path_folder_partidos_info = combine_sheets_with_one(current_path=path_jornadas_info, new_file="partidos_info")
         new_path_folder_jugadores_stats = combine_sheets_with_one(current_path=path_estadisticas_jugadores_por_jornada, new_file="jugadores_stats")
+
+        print( new_path_folder_partidos_info )
+        print( new_path_folder_jugadores_stats )
 
         df_partidos_info = read_file(new_path_folder_partidos_info)
         df_jugadores_stats = read_file(new_path_folder_jugadores_stats)
@@ -345,6 +349,7 @@ def _run( progress_cb = None  ):
         extra_stats = PLAYER_STATS_FIELDS
 
         all_cols = essential_cols + extra_stats
+
         df_final = df_final[all_cols]
 
         df_final = df_final.reset_index(drop=True)

@@ -359,60 +359,54 @@ def generate_partidos_jornadas_info(
 
     start_jornada = current_round
 
-    on_callback("Starting match info extraction...")
+    def safe_cb(msg):
+        if on_callback:
+            on_callback(msg)
 
+    safe_cb("Starting match info extraction...")
+
+    # --------------------------------------------------
+    # Helper: extraer info del partido
+    # --------------------------------------------------
     def extract_match_info_from_json(match_data: dict) -> dict | None:
-        on_callback("Extracting match info from JSON data...")
+
         if not match_data:
-            on_callback("No match data provided.")
             return None
 
-        on_callback("Processing match data...")
-        partido_id = match_data.get('id')
-        local = match_data.get('homeTeam', {}).get('name')
-        visitante = match_data.get('awayTeam', {}).get('name')
+        partido_id = match_data.get("id")
+        local = match_data.get("homeTeam", {}).get("name")
+        visitante = match_data.get("awayTeam", {}).get("name")
 
-        venue = match_data.get('venue', {})
-        estadio = venue.get('name')
-        capacidad = venue.get('capacity')
+        venue = match_data.get("venue", {})
+        estadio = venue.get("name")
+        capacidad = venue.get("capacity")
 
-        coords = venue.get('venueCoordinates', {})
-        latitud = coords.get('latitude')
-        longitud = coords.get('longitude')
+        coords = venue.get("venueCoordinates", {})
+        latitud = coords.get("latitude")
+        longitud = coords.get("longitude")
 
-        home_score = match_data.get('homeScore', {}).get('current')
-        away_score = match_data.get('awayScore', {}).get('current')
+        home_score = match_data.get("homeScore", {}).get("current")
+        away_score = match_data.get("awayScore", {}).get("current")
 
         resultado = (
             f"{home_score}-{away_score}"
             if home_score is not None and away_score is not None
-            else "Pte. Jugar"
+            else "Pte"
         )
 
-        on_callback("Extracting date and time from timestamp...")
-
-        timestamp = match_data.get('startTimestamp')
+        timestamp = match_data.get("startTimestamp")
         fecha_partido = hora_partido = None
 
-        on_callback(f"Raw timestamp: {timestamp}")
-
         if timestamp:
-            on_callback("Converting timestamp to date and time...")
             try:
-                on_callback("Adjusting timestamp if necessary...")
                 if timestamp > 10_000_000_000:
                     timestamp /= 1000
-
                 dt_object = datetime.fromtimestamp(timestamp)
                 fecha_partido = dt_object.strftime("%d/%m/%Y")
                 hora_partido = dt_object.strftime("%H:%M")
-                on_callback(f"Extracted date: {fecha_partido}, time: {hora_partido}")
             except Exception:
-                on_callback("Error converting timestamp.")
                 pass
-            on_callback("Date and time extraction completed.")
 
-        on_callback("Match info extraction completed.")
         return {
             "id": partido_id,
             "Local": local,
@@ -426,95 +420,88 @@ def generate_partidos_jornadas_info(
             "Hora": hora_partido,
         }
 
-    on_callback(f"Preparing for round {start_jornada} to {end_jornada}...")
     # --------------------------------------------------
     # Preparación DataFrame
     # --------------------------------------------------
-    print(f"Iniciando procesamiento de jornadas {start_jornada} a {end_jornada}...")
-
+    df_url = df_url.copy()
     df_url["Jornada"] = pd.to_numeric(df_url["Jornada"], errors="coerce")
-    df_url = df_url.dropna(subset=["Jornada", "URL"]).sort_values(["Jornada", "Partido"])
+    df_url["Partido"] = pd.to_numeric(df_url["Partido"], errors="coerce")
+
+    df_url = (
+        df_url
+        .dropna(subset=["Jornada", "URL"])
+        .sort_values(["Jornada", "Partido"])
+    )
 
     df_url_filtrado = df_url[
         df_url["Jornada"].between(start_jornada, end_jornada)
     ].drop_duplicates(subset=["Jornada", "Partido", "URL"])
 
-    on_callback(f"Filtered URLs by rounds {start_jornada} to {end_jornada}.")
-    print(f"URLs a procesar: {len(df_url_filtrado)}")
+    safe_cb(f"URLs a procesar: {len(df_url_filtrado)}")
 
     # --------------------------------------------------
-    # Worker por fila (THREAD SAFE)
-    # --------------------------------------------------
-    def process_row(row):
-
-        on_callback(f"Processing Jornada {int(row['Jornada'])} | Partido {int(row['Partido']) if pd.notnull(row['Partido']) else None}...")
-
-        sofascore = sfc.Sofascore()
-
-        j = int(row["Jornada"])
-        partido_num = int(row["Partido"]) if pd.notnull(row["Partido"]) else None
-        url = row["URL"]
-
-        on_callback(f"Scraping match data from URL: {url}...")
-
-        try:
-
-            on_callback(f"Retrieving match JSON data for Jornada {j} | Partido {partido_num}...")
-            match_data = sofascore.get_match_dict(url)
-            meta = extract_match_info_from_json(match_data)
-            on_callback(f"Retrieved match data for Jornada {j} | Partido {partido_num}.")
-            if meta and meta['Resultado'] != "Pte. Jugar":
-                on_callback(f"Extracted match info for Jornada {j} | Partido {partido_num}.")
-                meta["Jornada"] = j
-                meta["Partido"] = partido_num
-                print(
-                    f"Jornada {j} - Partido {partido_num} "
-                    f"({meta['Fecha']} {meta['Hora']}): "
-                    f"{meta['Local']} vs {meta['Visitante']} | Rdo: {meta['Resultado']}"
-                )
-                on_callback(f"Processed Jornada {j} | Partido {partido_num}.")
-                return meta
-
-        except Exception as e:
-            on_callback(f"Error processing URL {url} | Jornada {j} Partido {partido_num}: {e}")
-            print(f"❌ Error URL {url} | Jornada {j} Partido {partido_num}: {e}")
-
-        on_callback(f"No data extracted for Jornada {j} | Partido {partido_num}.")
-        return None
-
-    # --------------------------------------------------
-    # ThreadPool
+    # PROCESO SECUENCIAL CON CORTE GLOBAL
     # --------------------------------------------------
     partidos_info = []
+    stop_processing = False
 
-    on_callback("Starting ThreadPool for match info extraction...")
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        on_callback("Submitting match info extraction tasks...")
-        futures = [
-            executor.submit(process_row, row)
-            for _, row in df_url_filtrado.iterrows()
-        ]
+    for jornada in sorted(df_url_filtrado["Jornada"].unique()):
 
-        on_callback("Waiting for match info extraction tasks to complete...")
-        for future in as_completed(futures):
-            result = future.result()
-            if result:
-                on_callback("Appending extracted match info...")
-                partidos_info.append(result)
-        on_callback("All match info extraction tasks completed.")
-    on_callback("ThreadPool processing completed.")
+        if stop_processing:
+            break
+
+        safe_cb(f"Processing Jornada {jornada}...")
+        df_jornada = df_url_filtrado[df_url_filtrado["Jornada"] == jornada]
+
+        for _, row in df_jornada.iterrows():
+
+            sofascore = sfc.Sofascore()
+
+            j = int(row["Jornada"])
+            partido_num = int(row["Partido"]) if pd.notnull(row["Partido"]) else None
+            url = row["URL"]
+
+            try:
+                match_data = sofascore.get_match_dict(url)
+                meta = extract_match_info_from_json(match_data)
+
+                if meta is None:
+                    continue
+
+                # ⛔ CORTE TOTAL SI HAY PARTIDO PENDIENTE
+                if meta["Resultado"] == "Pte":
+                    safe_cb(
+                        f"⛔ Pending match detected → stopping at Jornada {j}, Partido {partido_num}"
+                    )
+                    stop_processing = True
+                    break
+
+                meta["Jornada"] = j
+                meta["Partido"] = partido_num
+                partidos_info.append(meta)
+
+                print(
+                    f"Jornada {j} - Partido {partido_num}: "
+                    f"{meta['Local']} vs {meta['Visitante']} | {meta['Resultado']}"
+                )
+
+            except Exception as e:
+                safe_cb(f"Error Jornada {j} Partido {partido_num}: {e}")
+                print(f"❌ Error Jornada {j} Partido {partido_num}: {e}")
+
     # --------------------------------------------------
-    # Exportación Excel
+    # EXPORTACIÓN EXCEL
     # --------------------------------------------------
-    df_meta = pd.DataFrame(partidos_info)
-
-    if df_meta.empty:
+    if not partidos_info:
         print("\n❌ No se pudieron extraer datos.")
         return False
 
+    df_meta = pd.DataFrame(partidos_info)
+
     output_file = f"{scraping_folder}jornadas_{start_jornada:02d}_{end_jornada:02d}_info.xlsx"
-    output_filename = init_path_object( output_file ).get("filename", "") # no queremos path completo por seguridad
-    on_callback(f"Generating {output_filename} with match info...")
+    output_filename = init_path_object(output_file).get("filename", "")
+
+    safe_cb(f"Generating {output_filename} with match info...")
 
     column_order = [
         "Jornada", "Partido", "id", "Fecha", "Hora",
@@ -523,20 +510,15 @@ def generate_partidos_jornadas_info(
     ]
 
     with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
-        on_callback(f"Writing match info to Excel sheets form {output_filename}...")
         for jornada, df_jornada in df_meta.groupby("Jornada"):
-            on_callback(f"Writing sheet for round {jornada}...")
             df_jornada[column_order].to_excel(
                 writer,
-                sheet_name=f"Jornada {jornada}",
+                sheet_name=f"Jornada {int(jornada)}",
                 index=False
             )
-    on_callback(f"File {output_filename} created successfully.")
 
     print(f"\n✅ Proceso completado. Archivo: {output_filename}")
     return output_file
-
-
 
 def generate_estadisticas_jugadores_por_jornada(
     df_url: pd.DataFrame,
@@ -617,7 +599,7 @@ def generate_estadisticas_jugadores_por_jornada(
             if not isinstance(df_raw, pd.DataFrame) or df_raw.empty:
                 on_callback(f"No player stats data for Jornada {j} | Partido {partido_num}.")
                 print(f"⚠️ Jornada {j} Partido {partido_num}: sin datos")
-                continue
+                break
             
             on_callback(f"Collected raw player stats for Jornada {j} | Partido {partido_num}.")
             raw_results.append((df_raw, j, partido_num, partido_id))
