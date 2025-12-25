@@ -208,7 +208,7 @@ def run_scrapping(progress_cb=None):
                 files.sort()
 
             files = [Path(f).name for f in files]
-
+ 
             return folder, files
 
         except Exception as e:

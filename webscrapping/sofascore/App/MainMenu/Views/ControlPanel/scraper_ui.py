@@ -1,12 +1,13 @@
 import os
 import flet as ft
-from helpers.utils import addElementsPage
+import json
+from helpers.utils import addElementsPage, get_modules
 import threading
 import time
 import requests
 from footer_navegation.navegation import footer_navbar
+from .common_control_panel import handle_selected_module
 from datetime import datetime
-from pathlib import Path
 from params import *
 import glob
 
@@ -16,10 +17,24 @@ current_path = {
     "file": __file__.split("\\")[-1],
 }
 
+colors_checkboxes = {
+    True: "success",
+    False: "error"
+}
+
+panel_settings = None
+ref_panel_settings = ft.Ref[ft.Container]()
+
+MODULES_MENU = get_modules() or {}
+
+MODULES_MENU = json.loads(MODULES_MENU)
+
+selected_modules = {}
+
 def RenderScrapper(page: ft.Page, params={}):
 
-    page.window.width=1000
-    page.window.height=800
+    page.window.width = 1000
+    page.window.height = 800
 
     # ================================================================
     # LISTA DE FICHEROS _db
@@ -33,7 +48,6 @@ def RenderScrapper(page: ft.Page, params={}):
             log(f"Error cargando ficheros: {ex}", "error")
         return []
 
-
     # ------------------------------------------------------------
     # PROGRESS + LOG VIEW
     # ------------------------------------------------------------
@@ -42,40 +56,17 @@ def RenderScrapper(page: ft.Page, params={}):
     status_text = ft.Text("Idle", size=13, color=ft.colors.GREY_700)
 
     def log(msg, level="info"):
-        now = datetime.now().strftime("%H:%M:%S")
-
         color = {
             "info": ft.colors.GREY_800,
             "success": ft.colors.GREEN_700,
             "error": ft.colors.RED_700
         }.get(level, ft.colors.GREY_800)
 
+        now = datetime.now().strftime("%H:%M:%S")
         logs.controls.append(
             ft.Text(f"[{now}] {msg}", size=13, color=color)
         )
         page.update()
-
-    # ------------------------------------------------------------
-    # LISTA DE FICHEROS
-    # ------------------------------------------------------------
-    files_column = ft.Column(scroll="auto", spacing=6)
-
-    def refresh_files():
-        files_column.controls.clear()
-        for f in get_db_files():
-            files_column.controls.append(
-                ft.Container(
-                    content=ft.Text(f"📄 {f}", size=14),
-                    padding=10,
-                    bgcolor=ft.colors.GREY_100,
-                    border_radius=8
-                )
-            )
-        log("Ficheros actualizados")
-        page.update()
-
-
-    refresh_files()
 
     # ------------------------------------------------------------
     # SCRAPING VIA API
@@ -119,7 +110,6 @@ def RenderScrapper(page: ft.Page, params={}):
                     if r.get("finished"):
                         log("Scraping finalizado correctamente ✅", "success")
                         status_text.value = "Finished ✅"
-                        refresh_files()
                         break
 
                     if r.get("error"):
@@ -151,14 +141,61 @@ def RenderScrapper(page: ft.Page, params={}):
         )
     )
 
-    refresh_button = ft.TextButton(
-        "Actualizar lista",
-        icon=ft.Icons.REFRESH,
-        on_click=lambda e: refresh_files(),
-    )
+    # ------------------------------------------------------------
+    # CHECKBOXES
+    # ------------------------------------------------------------
+    checkboxes = ft.Column(controls=[])
+
+    checkboxes.controls.extend([
+        ft.Checkbox(
+            label=module["name"],
+            value=module.get("enabled"),
+            on_change=lambda e: handle_selected_module(
+                page,
+                e,
+                log,
+                colors_checkboxes
+            )
+        )
+        for module in MODULES_MENU.values()
+    ])
 
     # ------------------------------------------------------------
-    # LAYOUT FINAL (LIGHT DASHBOARD)
+    # PANEL DE CONFIGURACIÓN
+    # ------------------------------------------------------------
+    panel_settings = ft.Column(
+        [
+            ft.Column(
+                [
+                    ft.Text("Modo", size=16, weight="bold"),
+                    ft.RadioGroup(
+                        content=ft.Column([
+                            ft.Radio(label="Completo", value="full"),
+                            ft.Radio(label="Rápido", value="fast"),
+                        ]),
+                        value="full",
+                        on_change=lambda e: log(
+                            f"Modo cambiado a: {e.control.value}",
+                            "info"
+                        )
+                    ),
+                ]
+            ),
+            ft.Column(
+                [
+                    ft.Text("Módulos habilitados", size=16, weight="bold"),
+                    checkboxes,
+                ]
+            )
+        ],
+        scroll=ft.ScrollMode.AUTO,
+        height=400
+    )
+
+    page.update()
+
+    # ------------------------------------------------------------
+    # LAYOUT FINAL
     # ------------------------------------------------------------
     footer = ft.Container(
         content=footer_navbar(page=page, current_path=current_path, dispatches={}),
@@ -166,44 +203,28 @@ def RenderScrapper(page: ft.Page, params={}):
     )
 
     main_content = ft.Container(
-        content= ft.Row([
-            # PANEL IZQUIERDO
+        content=ft.Row([
             ft.Column(
                 [
                     ft.Text("Panel de Scraping", size=22, weight="bold"),
                     ft.Divider(),
-
                     run_button,
                     progress_bar,
                     status_text,
-                    refresh_button,
-
                     ft.Divider(),
-
-                    ft.Text("Archivos generados (_db)", size=16, weight="bold"),
-                    ft.Container(
-                        content=files_column,
-                        padding=12,
-                        bgcolor=ft.colors.GREY_50,
-                        border_radius=10,
-                        border=ft.border.all(1, ft.colors.GREY_300),
-                        width=330,
-                        height=350
-                    ),
+                    ft.Container(content=panel_settings)
                 ],
                 spacing=16,
-                expand=False,
+                expand=True,
             ),
 
             ft.VerticalDivider(width=1),
 
-            # PANEL DE LOGS
             ft.Column(
                 [
                     ft.Text("Logs del proceso", size=18, weight="bold"),
                     ft.Container(
                         content=logs,
-                        
                         bgcolor=ft.colors.GREY_50,
                         border_radius=10,
                         border=ft.border.all(1, ft.colors.GREY_300),
@@ -219,8 +240,8 @@ def RenderScrapper(page: ft.Page, params={}):
 
     layout = ft.Column(
         [
-            main_content,  # menú principal
-            footer,         # footer al fondo
+            main_content,
+            footer,
         ],
         expand=True,
     )

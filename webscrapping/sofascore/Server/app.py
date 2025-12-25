@@ -1,6 +1,7 @@
 import os
 import logging
 import re
+import json
 from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks, Response
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
@@ -312,6 +313,32 @@ def list_db_files():
     return {
         "files": [Path(f).name for f in files]
     }
+
+# SETTINGS
+# PANEL SETTINGS
+@app.get("/settings/panel/modules")
+def get_panel_settings_modules(db: SQLiteORM = Depends(get_db)):
+    result = db.execute_query("SELECT settings FROM panel_settings").json
+
+    settings_raw = result[0]["settings"]
+
+    if isinstance(settings_raw, str):
+        return json.loads(settings_raw)
+
+    return settings_raw
+
+@app.put("/settings/panel/module")
+async def update_modules( request:Request, db: SQLiteORM = Depends(get_db)):
+
+    json_data = await request.json()
+
+    modules = json.dumps(json_data, ensure_ascii=False)
+
+    print( modules )
+
+    result = db.execute_query("UPDATE panel_settings SET settings = ? ", (modules,))
+
+    return parse_json_response("✅ Updated module")
 
 # ===================
 # REPORTS

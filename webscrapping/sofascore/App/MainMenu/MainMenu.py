@@ -3,7 +3,7 @@ import flet as ft
 import json
 import asyncio
 from params import *
-from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago, convert_seconds
+from helpers.utils import addElementsPage, getSession, handle_logout, log_error, get_time_ago, convert_seconds, get_modules
 from footer_navegation.navegation import footer_navbar
 from middlewares.auth import middleware_auth
 import requests_async as request
@@ -97,6 +97,16 @@ def update_sidebar_height(page:ft.Page):
 # MENÚ: CONTENIDO PRINCIPAL
 # ===========================================================
 def list_menu_items(page: ft.Page):
+
+    MODULES_MENU = json.loads(get_modules())
+
+    content_tabs = ft.Tabs(
+        tabs=[], 
+        selected_index=0 if role == "admin" else 1,
+        indicator_color=SOFA_BLUE,
+        divider_color="transparent",
+        expand=True
+    )
 
     avatar = ft.CircleAvatar(
             content=ft.Image(
@@ -237,9 +247,6 @@ def list_menu_items(page: ft.Page):
             )
         )
 
-
-
-        # === TITULAR ============================================================
         # === TITULAR ============================================================
         title = ft.Container(
             padding=ft.padding.only(left=25, top=10, right=20),
@@ -287,28 +294,6 @@ def list_menu_items(page: ft.Page):
             ),
         )
 
-        tab_gestion = ft.Tab(
-            text="Gestión",
-            content=ft.Container(
-                padding=20,
-                content=ft.ResponsiveRow(
-                    controls=[
-                        *( [
-                            ft.Container(
-                                content=menu_button(page, ICONS.get("control_panel_football", ""), "Panel de control", "/management/scrapping", size=40),
-                                col={"xs": 6, "sm": 4, "md": 3},
-                            )
-                        ] if role == "admin" else [] ),
-                        ft.Container(
-                            content=menu_button(page, ICONS.get("foro", ""), "Reportes", "/management/reportes", size=40),
-                            col={"xs": 6, "sm": 4, "md": 3},
-                        )
-                    ]
-                
-                )
-            )
-        )
-
         # TABS
         tabs_card = ft.Container(
             padding=15,
@@ -320,50 +305,56 @@ def list_menu_items(page: ft.Page):
                 spread_radius=3,
                 color=ft.colors.with_opacity(0.15, "black")
             ),
-            content=ft.Tabs(
-                selected_index=0 if role == "admin" else 1,
-                indicator_color=SOFA_BLUE,
-                divider_color="transparent",
-                expand=True,
-                tabs=[
-                    tab_gestion,
-                    ft.Tab(
-                        text="Información",
-                        content=ft.Container(
-                            padding=20,
-                            content=ft.ResponsiveRow(
-                                controls=[
-                                    ft.Container(content=menu_button(page, ICONS.get("mind_stat", ""), "Estadísticas", "/info/dashboard", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    ft.Container(content=menu_button(page, ICONS.get("football_match", ""), "Partidos", "/info/partidos", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    ft.Container(content=menu_button(page, ICONS.get("football_player", ""), "Jugadores", "/info/jugadores", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    ft.Container(content=menu_button(page, ICONS.get("venue", ""), "Estadios", "/info/estadios", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    ft.Container(content=menu_button(page, ICONS.get("football_shield", ""), "Equipos", "/info/equipos", size=40), col={"xs":6,"sm":4,"md":3}),
-                                    # ft.Container(content=menu_button(page, ICONS.get("football_world", ""), "Selecciones", "/info/selecciones", size=40), col={"xs":6,"sm":4,"md":3}), TODO: en desarrollo
-                                    ft.Container(content=menu_button(page, ICONS.get("football_ranking", ""), "Clasificaciones", "/info/clasificaciones", size=40), col={"xs":6,"sm":4,"md":3}),
-                                ],
-                                run_spacing=20,
-                                spacing=20,
-                            )
-                        )
-                    ),
-                    ft.Tab(
-                        text="Predicción",
-                        content=ft.Container(
-                            padding=20,
-                            content=ft.ResponsiveRow(
-                                controls=[
-                                    ft.Container(
-                                        content=menu_button(page, ICONS.get("ml_score_match", ""), "Simulador partidos", "/ml/predicciones/resultados", size=40),
-                                        col={"xs": 6, "sm": 4, "md": 3},
-                                    )
-                                ],
-                                
-                            )
-                        )
-                    ),
+            content=ft.Column(
+                controls=[
+                    content_tabs
                 ]
             )
         )
+
+        if MODULES_MENU is not None:
+
+            content_tabs.tabs.clear()
+
+            tabs = []
+
+            tabs = list(dict.fromkeys(
+                MODULES_MENU[module]["tab"]
+                for module in MODULES_MENU
+            ))
+
+            for tab in tabs:
+                tab_modules = [
+                    module for module in MODULES_MENU.values()
+                    if module["tab"] == tab and module["enabled"]
+                ]
+
+                tab_control = ft.Tab(
+                    text=tab,
+                    content=ft.Container(
+                        padding=20,
+                        content=ft.ResponsiveRow(
+                            controls=[
+                                ft.Container(
+                                    content=menu_button(
+                                        page,
+                                        ICONS.get(module_info["icon"].lower().replace(" ", "_"), ""),
+                                        module_name,
+                                        module_info["route"],
+                                        size=40
+                                    ),
+                                    col={"xs": 6, "sm": 4, "md": 3},
+                                )
+                                for module_name, module_info in MODULES_MENU.items()
+                                if module_info in tab_modules and module_info["type"] in (["admin", "mix"] if role == "admin" else ["mix", "user"])
+                            ]
+                        )
+                    )
+                )
+
+                content_tabs.tabs.append(tab_control)
+
+        page.update()
 
         # === CONTENEDOR PRINCIPAL SIN ESPACIO EXTRA ==========================
         white_card = ft.Container(

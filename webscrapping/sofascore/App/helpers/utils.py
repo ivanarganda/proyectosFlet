@@ -9,20 +9,30 @@ from components.PopupMenu import PopupMenuButton # TODO for testing
 # from flet_popupmenu import PopupMenuButton # TODO for production
 from params import HEADERS, REQUEST_URL
 import requests
+from requests.exceptions import ConnectionError, Timeout, RequestException
 
-def loadSnackbar( page: ft.Page, message: str, color: str ):
-    page.snack_bar = ft.SnackBar(ft.Text(message), bgcolor=color)
-    page.snack_bar.open = True
-    page.update()
+def get_modules():
 
-def notify_success(page, msg="✅ Operación completada"):
-    loadSnackbar(page, msg, "#10b981")  # verde
+    try:
+        r = requests.get(f"{REQUEST_URL}/settings/panel/modules",
+            timeout=10
+        )
+        r.raise_for_status()
+        data = r
 
-def notify_warning(page, msg="⚠️ Atención"):
-    loadSnackbar(page, msg, "#facc15")  # amarillo
+        return data.json()
 
-def notify_error(page, msg="❌ Error inesperado"):
-    loadSnackbar(page, msg, "#ef4444")  # rojo
+    except ConnectionError:
+        print("❌ No se puede conectar con el backend (¿servidor caído?)")
+        return None
+
+    except Timeout:
+        print("⏳ Timeout al conectar con el backend")
+        return None
+
+    except RequestException as e:
+        print(f"⚠️ Error HTTP: {e}")
+        return None
 
 # REQUESTS
 def get_ids( uri , keys ):
