@@ -1,3 +1,4 @@
 recursive-include ivbox *.py
 recursive-include ivbox/helpers *.py
 include README.md
+include CHANGELOG.md

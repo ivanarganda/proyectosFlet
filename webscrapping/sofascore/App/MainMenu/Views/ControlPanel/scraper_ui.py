@@ -1,7 +1,14 @@
 import os
 import flet as ft
 import json
-from helpers.utils import addElementsPage, get_modules
+from helpers.utils import ( 
+    addElementsPage, 
+    get_modules, 
+    render_radio, 
+    notify_success,
+    notify_warning,
+    notify_error
+)
 import threading
 import time
 import requests
@@ -24,17 +31,42 @@ colors_checkboxes = {
 
 panel_settings = None
 ref_panel_settings = ft.Ref[ft.Container]()
-
-MODULES_MENU = get_modules() or {}
-
-MODULES_MENU = json.loads(MODULES_MENU)
-
 selected_modules = {}
+mode_radio = None
+clear_previous_data_radio = None
+validate_data_radio = None
+output_save_radio = None
 
 def RenderScrapper(page: ft.Page, params={}):
 
     page.window.width = 1000
     page.window.height = 800
+
+    MODULES_MENU = get_modules() or {}
+
+    running_scrapping = False
+
+    def download_file( page, e:ft.ControlEvent, extension ):
+        
+        extensions = {
+            "sql": "db",
+            "json":"json",
+            "excel": "xlsx",
+            "csv":"csv"
+        }
+
+        ext = extensions.get(extension, None)
+
+        if ext is None:
+            notify_error(page,"Error en la descarga, no existe extension del fichero")
+            return False
+        
+        file = f"info.{ext}"
+        page.launch_url(f"{REQUEST_URL}/download/{file}")
+        download_button.visible = False
+        download_button.update()
+        page.update()
+        notify_success(page,"Descarga exitósa")
 
     # ================================================================
     # LISTA DE FICHEROS _db
@@ -56,6 +88,7 @@ def RenderScrapper(page: ft.Page, params={}):
     status_text = ft.Text("Idle", size=13, color=ft.colors.GREY_700)
 
     def log(msg, level="info"):
+        
         color = {
             "info": ft.colors.GREY_800,
             "success": ft.colors.GREEN_700,
@@ -72,16 +105,28 @@ def RenderScrapper(page: ft.Page, params={}):
     # SCRAPING VIA API
     # ------------------------------------------------------------
     def run_scraper_clicked(e):
+
         run_button.disabled = True
+        run_button.value = "Running...."
         status_text.value = "Running..."
         log("Iniciando scraping vía API...")
         page.update()
 
+        parameters_settings = {
+            "mode": mode_radio.value,
+            "clear_previous_data": clear_previous_data_radio.value,
+            "validate_data": validate_data_radio.value,
+            "output_save": output_save_radio.value
+        }
+
         try:
-            r = requests.post(f"{REQUEST_URL}/scrapping/start")
+
+            r = requests.post(f"{REQUEST_URL}/scrapping/start", json=json.dumps(parameters_settings))
+
         except Exception as ex:
             log(f"Error conectando con API: {ex}", "error")
             run_button.disabled = False
+            run_button.value = "Ejecutar Scraper"
             status_text.value = "Error"
             page.update()
             return
@@ -89,6 +134,7 @@ def RenderScrapper(page: ft.Page, params={}):
         if r.status_code != 200:
             log("Error iniciando scraping", "error")
             run_button.disabled = False
+            run_button.value = "Ejecutar Scraper"
             status_text.value = "Error"
             page.update()
             return
@@ -125,6 +171,8 @@ def RenderScrapper(page: ft.Page, params={}):
                     break
 
             run_button.disabled = False
+            run_button.value = "Ejecutar Scraper"
+            download_button.visible = True
             page.update()
 
         threading.Thread(target=poll_status, daemon=True).start()
@@ -140,6 +188,16 @@ def RenderScrapper(page: ft.Page, params={}):
             padding=ft.padding.symmetric(horizontal=20, vertical=12)
         )
     )
+
+    # RADIOS
+
+    mode_container, mode_radio = render_radio( log, "full", ["Completo","Rápido"], ["full","fast"], "Modo" )
+
+    clear_previous_data_container,clear_previous_data_radio = render_radio( log, "si", ["Si","No"], ["si","no"], "Limpieza previa" )
+
+    validate_data_container,validate_data_radio = render_radio( log, "si", ["Si","No"], ["si","no"], "Validar datos" )
+
+    output_save_container, output_save_radio = render_radio( log, "sql", ["SQL","CSV","Excel","JSON"], ["sql","csv","excel","json"], "Guardar como" )
 
     # ------------------------------------------------------------
     # CHECKBOXES
@@ -167,18 +225,10 @@ def RenderScrapper(page: ft.Page, params={}):
         [
             ft.Column(
                 [
-                    ft.Text("Modo", size=16, weight="bold"),
-                    ft.RadioGroup(
-                        content=ft.Column([
-                            ft.Radio(label="Completo", value="full"),
-                            ft.Radio(label="Rápido", value="fast"),
-                        ]),
-                        value="full",
-                        on_change=lambda e: log(
-                            f"Modo cambiado a: {e.control.value}",
-                            "info"
-                        )
-                    ),
+                    mode_container,
+                    clear_previous_data_container,
+                    validate_data_container,
+                    output_save_container
                 ]
             ),
             ft.Column(
@@ -190,6 +240,19 @@ def RenderScrapper(page: ft.Page, params={}):
         ],
         scroll=ft.ScrollMode.AUTO,
         height=400
+    )
+
+    download_button = ft.ElevatedButton(
+        "Descargar",
+        icon=ft.Icons.DOWNLOAD,
+        on_click=lambda e: download_file(page, e, output_save_radio.value),
+        bgcolor=ft.colors.BLUE_600,
+        color=ft.colors.WHITE,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=8),
+            padding=ft.padding.symmetric(horizontal=20, vertical=12)
+        ),
+        visible=False
     )
 
     page.update()
@@ -208,7 +271,10 @@ def RenderScrapper(page: ft.Page, params={}):
                 [
                     ft.Text("Panel de Scraping", size=22, weight="bold"),
                     ft.Divider(),
-                    run_button,
+                    ft.Row([
+                        run_button,
+                        download_button
+                    ]),
                     progress_bar,
                     status_text,
                     ft.Divider(),

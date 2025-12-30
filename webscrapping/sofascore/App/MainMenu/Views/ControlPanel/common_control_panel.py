@@ -10,10 +10,10 @@ import uuid
 from params import *
 
 files_column = ft.Column(scroll="auto", spacing=6)
+
 # ================================================================
 # LISTA DE FICHEROS _db
 # ================================================================
-
 def get_db_files():
 
     try:
@@ -31,7 +31,8 @@ def get_db_files():
     return []
 
 def change_module_file_content(page: ft.Page, e: ft.ControlEvent):
-    content_module = json.loads(get_modules())
+
+    content_module = get_modules()
 
     if e.control.label in content_module:
         content_module[e.control.label]["enabled"] = e.control.value
@@ -53,6 +54,8 @@ def handle_selected_module(page,e: ft.ControlEvent, log, colors_checkboxes):
     log(f"Módulos seleccionados: {value}", colour)
 
     change_module_file_content(page,e)
+
+    return e.control.value
 
 def parse_checkbox_radio_value(e: ft.ControlEvent, colors_checkboxes):
 

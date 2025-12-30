@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import pandas as pd
 import polars as pl
 import glob
@@ -8,14 +9,208 @@ import sys
 import numpy as np
 from ivbox.SQLiteORM import *
 from typing import Union, Iterable
+import time
 
 from params import *
 from helpers.sofa_utils import *
 
+output_dir = Path("output")
+pattern_innit_files = "_db"
+pattern_scrapping_folder = ["jornadas", "estadisticas"]
+
 db = SQLiteORM(DB)
 db.connect_DB()
 
-def run_scrapping(progress_cb=None):
+def run_scrapping(settings,progress_cb=None):
+
+    def detect_id_columns(df):
+        return [
+            c for c in df.columns
+            if c.lower() == "id" or c.lower().endswith("_id")
+        ]
+
+    from itertools import combinations
+
+    def candidate_keys(columns, max_size=3):
+        keys = []
+        for r in range(1, min(len(columns), max_size) + 1):
+            keys.extend(combinations(columns, r))
+        return keys
+
+    def duplication_ratio(df, subset):
+        total = df.height
+        unique = df.unique(subset=list(subset)).height
+        return 1 - (unique / total)
+
+    def choose_best_key(df, candidates, threshold=(0.01, 0.5)):
+        best = None
+        best_ratio = 0
+
+        for key in candidates:
+            ratio = duplication_ratio(df, key)
+
+            if threshold[0] < ratio < threshold[1]:
+                if ratio > best_ratio:
+                    best_ratio = ratio
+                    best = key
+
+        return best, best_ratio
+
+    def smart_dedup(df):
+
+        id_cols = detect_id_columns(df)
+        if not id_cols:
+            return df, None
+
+        keys = candidate_keys(id_cols + ["Partido", "Jornada"])
+        best_key, ratio = choose_best_key(df, keys)
+
+        if best_key:
+            return df.unique(subset=list(best_key)), best_key
+
+        return df, None
+
+
+    def save_as_sql():
+
+        import sqlite3
+
+        print("Saving as sql")
+
+        files = get_files(INITTED_FOLDER, pattern_innit_files)
+
+        output_dir.mkdir(exist_ok=True)
+
+        conn = sqlite3.connect(output_dir / "info.db")
+
+        try:
+            for file in files:
+                df = read_file(file)
+                df, used_keys = smart_dedup(df)
+                table_name = Path(file).stem
+                df.to_sql(table_name, conn, if_exists="replace", index=False)
+        finally:
+            conn.close()
+
+
+    def save_as_excel():
+
+        print(f"Saving as excel")
+
+        output_file = output_dir / "info.xlsx"
+
+        excel_files = get_files( INITTED_FOLDER, pattern_innit_files )
+        
+        delimiters = []
+        for file in excel_files:
+            file = Path(file).stem
+            delimiter = re.sub(f"^[^_]+","",file)
+            delimiters.append(delimiter)
+
+        if not excel_files:
+            raise RuntimeError("No Excel files found")
+
+        with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
+            for key,file in enumerate(excel_files):
+                df = read_file(file)
+                df, used_keys = smart_dedup(df)
+                stem = Path(file).stem
+                sheet_name = re.sub(r"_[^_]+$", "", stem)  # límite Excel
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+        print(f"✅ Excel combinado generado: {output_file}")
+
+    def save_as_csv():
+        def normalize_schema(dfs: list[pl.DataFrame]) -> list[pl.DataFrame]:
+
+            all_columns = set()
+            for df in dfs:
+                all_columns.update(df.columns)
+
+            all_columns = list(all_columns)
+
+            normalized = []
+            for df in dfs:
+                missing = [c for c in all_columns if c not in df.columns]
+
+                if missing:
+                    df = df.with_columns([
+                        pl.lit(None).alias(c) for c in missing
+                    ])
+
+                # mismo orden de columnas
+                df = df.select(all_columns)
+                normalized.append(df)
+
+            return normalized
+
+        print("Saving as csv")
+
+        path = output_dir / "info.csv"
+        files = get_files(INITTED_FOLDER, pattern_innit_files)
+
+        dfs = []
+
+        for file in files:
+            df_pd = read_file(file)          # Pandas
+            df_pl = pl.from_pandas(df_pd)    # Polars
+            dfs.append(df_pl)
+
+        dfs = normalize_schema(dfs)
+
+        df_combined = pl.concat(dfs, how="vertical_relaxed")
+        df_combined.write_csv(path, separator=";")
+
+    def save_as_json():
+
+        print(f"Saving as json")
+
+        files = get_files(INITTED_FOLDER, pattern_innit_files)
+
+        files_outputted = []
+
+        for file in files:
+            df = read_file(file)
+            
+            name = Path(file).stem
+            df.to_json(
+                output_dir / f"{name}.json",
+                orient="records",
+                force_ascii=False,
+                indent=2
+            )
+            files_outputted.append( output_dir / f"{name}.json" )
+
+        combined = {}
+
+        for file in files_outputted:
+            if not file.exists():
+                continue
+            with open( file , "r", encoding="utf-8") as f:
+                combined[file.stem] = json.load(f)
+        
+        with open( output_dir / "info.json", "w", encoding="utf-8" ) as f:
+            json.dump( combined, f, ensure_ascii=False, indent=2 )
+
+        delete_files( files_outputted )
+
+    def output_save( type ):
+
+        dispatches = {
+
+            "sql": save_as_sql,
+            "excel": save_as_excel,
+            "csv": save_as_csv,
+            "json": save_as_json
+
+        }
+
+        func = dispatches.get(type)
+
+        if not func:
+            raise ValueError(f"Unsupported output type: {type}")
+
+        func()
 
     def update(step, current=None, total=None):
         if progress_cb:
@@ -62,14 +257,12 @@ def run_scrapping(progress_cb=None):
         return sorted(files)
 
 
-    def delete_files_initted( folder: str, pattern: Union[list, str] = "_db", extensions: list = None ) -> bool:
+    def delete_files_initted( folder: str, pattern: Union[list, str] = pattern_innit_files, extensions: list = None ) -> bool:
 
         try:
 
             # Cuando NO hay filtro por extensión
             files = get_files( folder, pattern, extensions )
-
-            print(files)
 
             delete_files( files )
 
@@ -81,14 +274,12 @@ def run_scrapping(progress_cb=None):
 
             return False
 
-    def delete_scrapping_files(folder: str, pattern: Union[list, str] = ["jornadas", "estadisticas"], extensions: list = None):
+    def delete_scrapping_files(folder: str, pattern: Union[list, str] = pattern_scrapping_folder, extensions: list = None):
 
         try:
 
             # Cuando NO hay filtro por extensión
             files = get_files( folder, pattern, extensions )
-
-            print(files)
 
             delete_files( files )
 
@@ -223,10 +414,20 @@ def run_scrapping(progress_cb=None):
 
     scrap_data( tables )
 
-    delete_scrapping_files( SCRAPPING_FOLDER )
+    output_save( settings.get("output_save") )
 
-    delete_files_initted( INITTED_FOLDER )
+    time.sleep(0.3)
+
+    if settings.get("clear_previous_data") == "si":
+
+        delete_scrapping_files( SCRAPPING_FOLDER )
+
+        delete_files_initted( INITTED_FOLDER )
 
 if __name__ == "__main__":
 
-    run_scrapping()
+    # FOR TESTING PURPOUSES
+    run_scrapping({
+        "clear_previous_data": "si",
+        "output_save": "json"
+    })

@@ -3,6 +3,7 @@ import logging
 import re
 import json
 from fastapi import FastAPI, Request, Depends, HTTPException, BackgroundTasks, Response
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from ivbox.SQLiteORM import *
 from init_data import init_tables
@@ -181,7 +182,7 @@ def global_progress_adapter(module, step, current, total, weight, offset):
 
     SCRAPING_STATUS["step"] = f"{module}: {step}"
 
-def full_scraping_task():
+def full_scraping_task(settings):
 
     try:
         SCRAPING_STATUS.update({
@@ -194,10 +195,10 @@ def full_scraping_task():
         })
 
         # 1) INIT FILES 0% → 40%
-        _run(init_progress_cb)
+        _run(settings,init_progress_cb)
 
         # 2) SCRAP 40% → 100%
-        run_scrapping(scrap_progress_cb)
+        run_scrapping(settings,scrap_progress_cb)
 
         SCRAPING_STATUS["running"] = False
         SCRAPING_STATUS["finished"] = True
@@ -284,10 +285,16 @@ def scrapping_status():
     return SCRAPING_STATUS
 
 @app.post("/scrapping/start")
-def start_scrapping(background_tasks: BackgroundTasks):
+async def start_scrapping(request:Request, background_tasks: BackgroundTasks):
 
     # init_data()
     # time.sleep(1)
+
+    import json
+
+    params_settings = await request.json()
+
+    params_settings = json.loads( params_settings )
 
     if SCRAPING_STATUS["running"]:
         return parse_json_response("Scraping already running", 409)
@@ -302,10 +309,11 @@ def start_scrapping(background_tasks: BackgroundTasks):
     })
 
     # Una única tarea → controla todo el pipeline
-    background_tasks.add_task(full_scraping_task)
+    background_tasks.add_task(full_scraping_task, params_settings)
 
     return parse_json_response("Scraping started ✅")
 
+# FILES
 @app.get("/files/db")
 def list_db_files():
     pattern = f"{INITTED_FOLDER}*_db.*"
@@ -313,6 +321,23 @@ def list_db_files():
     return {
         "files": [Path(f).name for f in files]
     }
+
+OUTPUT_DIR = Path("output")
+
+@app.get("/download/{filename}")
+def download_file(filename: str):
+    file_path = OUTPUT_DIR / filename
+
+    print(file_path)
+
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+
+    return FileResponse(
+        path=file_path,
+        filename=file_path.name,
+        media_type="application/octet-stream"
+    )
 
 # SETTINGS
 # PANEL SETTINGS

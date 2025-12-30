@@ -20,7 +20,7 @@ from init_files_scripts import (
 TOTAL_STEPS = 1000
 current_step = 0
 
-def _run( progress_cb = None  ):
+def _run( settings, progress_cb = None  ):
 
     def update(step_name):
         global current_step
@@ -37,7 +37,8 @@ def _run( progress_cb = None  ):
         # =========================================================
         # 0. Comprobar rondas en DB
         # =========================================================
-        check_rounds_in_db()
+        if settings.get("mode") == "fast":
+            check_rounds_in_db()
 
         # 1. URLs
         output_file_la_liga = generate_urls_liga(update)
@@ -95,9 +96,6 @@ def _run( progress_cb = None  ):
 
         new_path_folder_partidos_info = combine_sheets_with_one(current_path=path_jornadas_info, new_file="partidos_info")
         new_path_folder_jugadores_stats = combine_sheets_with_one(current_path=path_estadisticas_jugadores_por_jornada, new_file="jugadores_stats")
-
-        print( new_path_folder_partidos_info )
-        print( new_path_folder_jugadores_stats )
 
         df_partidos_info = read_file(new_path_folder_partidos_info)
         df_jugadores_stats = read_file(new_path_folder_jugadores_stats)

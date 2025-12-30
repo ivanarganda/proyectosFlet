@@ -1,135 +1,145 @@
-# QuantumForge ORM
+# ivbox
 
-*A next-generation ultra-high-performance Python ORM forged for speed, streaming, and massive data operations.*
+[![PyPI version](https://img.shields.io/pypi/v/ivbox.svg)](https://pypi.org/project/ivbox/)
+[![Python](https://img.shields.io/pypi/pyversions/ivbox.svg)](https://pypi.org/project/ivbox/)
+[![License](https://img.shields.io/pypi/l/ivbox.svg)](LICENSE)
 
-## 🚀 Overview
-QuantumForge ORM is a high-performance Python ORM designed from the ground up to handle massive datasets, dynamic SQL, and extreme-speed operations using:
-- Turbo PRAGMAs
-- Intelligent chunking
-- Streaming processors
-- Dynamic WHERE builders
-- Auto-optimizing DELETE, UPDATE and INSERT
-- Full SQL flexibility with Python expressiveness
+ivbox is a Python utility framework focused on improving developer productivity through **better project structure** and **reusable utility functions**, built from real-world usage and repetition.
 
-## ✨ Key Features
-- Ultra-fast INSERT engine (5 million rows in ~5s)
-- Intelligent chunk size detection
-- Dynamic WHERE builder
-- Streaming updates & deletes
-- Type validation for primary keys
-- LIKE, BETWEEN, IN, and all comparison operators
-- Auto-VACUUM for massive deletes
-- PRAGMA turbo mode
-- Modular engines (SQLite, MySQL, Oracle)
-- Mini-DSL for flexible filters
-- 100% Python
+It is designed to grow organically, introducing abstractions **only when patterns prove useful**.
 
-## 🔥 Benchmarks
-| Operation | Rows | Time |
-|----------|------|------|
-| Massive insert | 5,000,000 | ~5.7 seconds |
-| Massive insert | 50,000,000 | ~50 seconds |
-| Dynamic update | millions | < 0.5 seconds |
-| Streaming delete | millions | instant + progress |
+> Current version: **0.2.0**
 
-## 🛠 Installation
-pip install quantumforge
+---
 
-## 🧱 Usage Examples
+## Why ivbox?
 
-### 1. Connect
+When you build real projects, you quickly notice the same pain points repeating:
+
+- You rewrite the same helpers again and again
+- UI code grows fast and becomes hard to maintain
+- Small architectural decisions become expensive later
+- You want *structure* without over-engineering
+
+ivbox exists to reduce that friction with a simple rule:
+
+> **Abstractions are created only when something is repeated.**
+
+---
+
+## Features
+
+- Improved internal project structure (0.2.0 refactor)
+- Reusable **general-purpose utilities**
+- UI helper utilities for **Flet-based applications**
+- Modular design: add what you need, keep it clean
+- Built from real usage, not theoretical patterns
+
+---
+
+## Project Status
+
+ivbox is under **active development**.
+
+- The API may evolve until version `1.0.0`
+- Changes are driven by real usage, not assumptions
+- Stability increases progressively with each release
+
+---
+
+## Installation
+
+```bash
+pip install ivbox
+
+```
+
+## Quick Start
+### General utilities
+
 ```python
-db = SQLiteORM("productos.db")
-db.conect_DB()
+from ivbox.utils import general
 
-# 2. Insert
+# Example usage (adapt to your real functions)
+# general.slugify("Hello World") -> "hello-world"
+# general.now_str() -> "2025-12-29 20:15:00"
+```
+### Flet utilities
 
-# Simple
+```python
+from ivbox.utils import flet as ivf
+import flet as ft
 
-db.insert(
-    table_name="productos",
-    items=[ "producto_x", 10.5, "2023-01-01", 1, 1]
-)
+def main(page: ft.Page):
+    # Example usage (adapt to your real helpers)
+    # page.add(ivf.section_title("Dashboard"))
+    pass
 
-# Massive
+ft.app(target=main)
 
-db.insert_many(
-    table_name="productos",
-    items=[
-        ("producto_x", 10.5, "2023-01-01", 1, 1)
-        for _ in range(5_000_000)
-    ]
-)
+```
 
-# 3. UPDATE
+## Utilities
+### General-purpose utilities
 
-db.update(
-    set_values={"nombre": "nuevo", "precio": 50},
-    data=["id_producto", "IN", (1,2,3)],
-    table_name="productos"
-)
+These helpers are framework-agnostic and intended to reduce repetitive code across projects:
 
-"""  Update all records with nombre and precio column"""
-db.update(
-    set_values={"nombre": "nuevo", "precio": 50},
-    table_name="productos"
-)
+- strings and formatting helpers
 
-# OTHER UPDATE AND DELETE ALTERNATIVES 
-# In case you want delete or update all records without necesity on seeting arguments, take those two functions
-# ⚠️ Use delete_all() carefully. This operation removes every row from the table.
+- date/time helpers
 
-db.delete_all(table_name="productos")
-db.update_all(set_values={"nombre": "nuevo", "precio": 50}, table_name="productos")
+- validation helpers
 
-# 4. DELETE with and without conditions
+- file/path helpers
 
-db.delete(
-    data=["precio", ">", 100],
-    table_name="productos"
-)
+- misc productivity utilities
 
-"""  Delete all records """
-db.delete(
-    table_name="productos"
-)
+### Flet UI utilities
 
-# 5 
+Helpers focused on reducing repetition in Flet apps:
 
-🧠 Architecture
+- reusable layout patterns
 
-SQLiteORM.py – Main engine
+- UI composition helpers
 
-MySQLORM.py – MySQL adapter (in progress)
+- common components wrappers (only when repeated)
 
-OracleORM.py – Oracle adapter (in progress)
+- navigation and page composition helpers (if applicable)
 
-builders/ – WHERE, SET, placeholders builders
+ivbox does not replace Flet — it helps you work with it more efficiently.
 
-stream/ – streaming operations
+### Versioning
 
-optimizers/ – pragma, vacuum, analyze
+ivbox follows semantic versioning with the usual meaning:
 
-🧩 Roadmap
+- 0.x → active development, API may change
 
-Full MySQL engine
+- 1.0.0 → stable and committed API
 
-Full Oracle engine
+### Contributing
 
-QueryBuilder
+Contributions are welcome if they:
 
-Model-based ORM layer
+- solve a real, repeated problem
 
-Automatic migrations
+- keep the project simple and understandable
 
-Batch UPDATE & DELETE
+- respect the philosophy of “repeat first, abstract later”
 
-Foreign key inspector
+Suggested flow:
 
-PyPI release
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1.** Open an issue describing the repeated pain point
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2.** Propose a minimal helper/abstraction
 
-👨‍💻 Author
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**3.** Add a small example + tests if applicable
 
-Iván González Valles
-[GitHub(https://github.com/ivanarganda)]
+## Author
+
+### Ivan Gonzalez Valles
+**GitHub**: https://github.com/ivanarganda
+
+## Inspiration
+
+ivbox is inspired by developer pain points and by frameworks that grew through real usage, like Laravel.
+Build what hurts. Keep what repeats

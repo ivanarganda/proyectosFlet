@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ivbox"
-version = "0.1.1"
-description = "Fast SQLite ORM with schema validation"
+version = "0.2.0"
+description = "Better structure and provides utils functions both general and ui-flet"
 readme = "README.md"
 authors = [
     { name = "Ivan Gonzalez", email = "ivanartista96@example.com" }

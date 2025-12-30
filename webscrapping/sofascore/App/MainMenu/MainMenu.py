@@ -98,7 +98,7 @@ def update_sidebar_height(page:ft.Page):
 # ===========================================================
 def list_menu_items(page: ft.Page):
 
-    MODULES_MENU = json.loads(get_modules())
+    MODULES_MENU = get_modules()
 
     content_tabs = ft.Tabs(
         tabs=[], 

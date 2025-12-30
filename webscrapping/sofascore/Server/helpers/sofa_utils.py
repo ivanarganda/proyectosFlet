@@ -131,8 +131,10 @@ def combine_sheets_with_one(
 
     from pathlib import Path
 
+    xls = pd.ExcelFile(current_path)
+
     try:
-        xls = pd.ExcelFile(current_path)
+        
         obj_path = init_path_object(current_path)
 
         Path("files_initted").mkdir(parents=True, exist_ok=True)
@@ -184,10 +186,14 @@ def combine_sheets_with_one(
         print(f"📊 Filas totales: {len(df_final)}")
 
         return new_path
-
+    
     except Exception as e:
         print(f"❌ Error combinando hojas: {e}")
         return False
+    
+    finally:
+
+        xls.close()
 
 
 def init_path_object( path ):

@@ -17,10 +17,12 @@ def get_modules():
         r = requests.get(f"{REQUEST_URL}/settings/panel/modules",
             timeout=10
         )
+
         r.raise_for_status()
+
         data = r
 
-        return data.json()
+        return json.loads(data.json())
 
     except ConnectionError:
         print("❌ No se puede conectar con el backend (¿servidor caído?)")
@@ -180,6 +182,28 @@ def clamp(v, lo=0, hi=255): return max(lo, min(hi, int(v)))
 
 def rgb_to_hex(r, g, b):
     return f"#{clamp(r):02X}{clamp(g):02X}{clamp(b):02X}"
+
+def render_radio(log, value: str, labels: list, values: list, title: str = ""):
+
+    rg = ft.RadioGroup(
+        value=value,
+        on_change=lambda e: log(f"{title} cambiado a: {e.control.value}", "info"),
+        content=ft.Column(
+            controls=[
+                ft.Radio(label=label, value=val)
+                for label, val in zip(labels, values)
+            ]
+        )
+    )
+
+    col = ft.Column(
+        [
+            ft.Text(title, size=16, weight="bold"),
+            rg
+        ]
+    )
+
+    return col, rg
 
 def setInputField(
     type_: str,
