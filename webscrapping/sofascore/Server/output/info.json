@@ -154,7 +154,7 @@
       "nombre": "Estadio El Sadar",
       "latitud": 42.796662,
       "longitud": -1.637131,
-      "lugar": "Desconocido",
+      "lugar": "Pamplona, Iruñerria / Comarca de Pamplona, Navarre, Spain",
       "capacidad": 23576,
       "id_equipo": 2820
     },
@@ -172,7 +172,7 @@
       "nombre": "Estadi Montilivi",
       "latitud": 41.9611,
       "longitud": 2.8278,
-      "lugar": "Girona, Gironès, Girona, Catalonia, Spain",
+      "lugar": "Desconocido",
       "capacidad": 14624,
       "id_equipo": 24264
     },
@@ -181,7 +181,7 @@
       "nombre": "Estadio de la Ceramica",
       "latitud": 39.944208,
       "longitud": -0.103405,
-      "lugar": "Desconocido",
+      "lugar": "Vila-real, la Plana Baixa, Castelló / Castellón, Valencian Community, 12540, Spain",
       "capacidad": 23500,
       "id_equipo": 2819
     },
@@ -217,7 +217,7 @@
     {
       "id_jornada": 17,
       "id_temporada": 1,
-      "fecha_creacion": 1767093418
+      "fecha_creacion": 1767134035
     }
   ],
   "jugadores_info_db": [
@@ -66902,8 +66902,8 @@
       "nombre": "LaLiga 2025",
       "year_start": "25",
       "year_end": "26",
-      "id_liga": 1767093418,
-      "fecha_creacion": 1767093418
+      "id_liga": 1767134035,
+      "fecha_creacion": 1767134035
     }
   ]
 }

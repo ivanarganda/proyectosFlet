@@ -4,7 +4,6 @@ PLAYER_STATS_FIELDS = [
     "accuratePass",
     "totalLongBalls",
     "accurateLongBalls",
-    "goalAssist",
     "accurateOwnHalfPasses",
     "totalOwnHalfPasses",
     "totalOppositionHalfPasses",
@@ -12,7 +11,6 @@ PLAYER_STATS_FIELDS = [
     "totalContest",
     "ballRecovery",
     "errorLeadToAGoal",
-    "penaltyConceded",
     "fouls",
     "minutesPlayed",
     "touches",
@@ -68,7 +66,6 @@ PLAYER_STATS_FIELDS = [
     "hitWoodwork",
     "lastManTackle",
     "goalAssist",
-    "accurateOppositionHalfPasses",
 
     "userCount",
     "shirtNumber",

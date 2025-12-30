@@ -294,6 +294,7 @@ def run_scrapping(settings,progress_cb=None):
 
     def _to_sql_tuples(path, columns):
 
+
         df = read_file( path )
 
         df = df[columns]
@@ -306,6 +307,9 @@ def run_scrapping(settings,progress_cb=None):
             for row in tuples
         ]
 
+        print( len(rows[0]) )
+        print( len(columns) )
+
         return rows
 
     def scrap_data( tables: dict )-> bool:
@@ -314,6 +318,8 @@ def run_scrapping(settings,progress_cb=None):
         table_index = 0
 
         update("Iniciando scraping", 0, total_tables)
+
+        # TODO fix insert jugadores stats bug
 
         for table in tables:
 
@@ -416,7 +422,7 @@ def run_scrapping(settings,progress_cb=None):
 
     output_save( settings.get("output_save") )
 
-    time.sleep(0.3)
+    # time.sleep(0.3)
 
     if settings.get("clear_previous_data") == "si":
 
@@ -428,6 +434,5 @@ if __name__ == "__main__":
 
     # FOR TESTING PURPOUSES
     run_scrapping({
-        "clear_previous_data": "si",
         "output_save": "json"
     })

@@ -14,7 +14,7 @@ def init_tables():
 
     db.connect_DB()
 
-    def drop_all_tables(exceptions: list=["usuarios", "reportes","reportes_jugadores","reportes_partidos", "jornadas"]) -> bool:
+    def drop_all_tables(exceptions: list=["usuarios", "reportes","reportes_jugadores","reportes_partidos", "jornadas", "panel_settings"]) -> bool:
 
         try:
 
@@ -162,7 +162,6 @@ def init_tables():
                     "accuratePass": real(default=0),
                     "totalLongBalls": real(default=0),
                     "accurateLongBalls": real(default=0),
-                    "goalAssist": real(default=0),
                     "accurateOwnHalfPasses": real(default=0),
                     "totalOwnHalfPasses": real(default=0),
                     "totalOppositionHalfPasses": real(default=0),
@@ -170,7 +169,6 @@ def init_tables():
                     "totalContest": real(default=0),
                     "ballRecovery": real(default=0),
                     "errorLeadToAGoal": real(default=0),
-                    "penaltyConceded": real(default=0),
                     "fouls": real(default=0),
                     "minutesPlayed": real(default=0),
                     "touches": real(default=0),
@@ -226,7 +224,6 @@ def init_tables():
                     "hitWoodwork": real(default=0),
                     "lastManTackle": real(default=0),
                     "goalAssist": real(default=0),
-                    "accurateOppositionHalfPasses": real(default=0),
 
                     # INTEGER
                     "userCount": integer(default=0),
@@ -294,7 +291,7 @@ def init_tables():
                 {
                     "fk_reportes_jugadores_reportes":("id_reporte", "reportes","id_reporte")
                 }
-            ]
+            ],
 
         })
 
