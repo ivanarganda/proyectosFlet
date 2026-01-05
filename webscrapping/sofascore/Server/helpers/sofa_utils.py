@@ -2,7 +2,7 @@ import os
 import sys
 import polars as pl
 import requests
-from typing import Union, List, Tuple, Optional
+from typing import Union, List, Tuple, Optional, Iterable
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
@@ -13,8 +13,150 @@ import time
 from params import LOCATIONIQ_API_KEY
 import ast
 import json
+import glob
+from pathlib import Path
 
 max_workers = min(20, (os.cpu_count() or 4) * 4)
+
+def delete_files( files: list ) -> bool:
+
+    try:
+
+        for file in files:
+
+            os.remove(file)
+
+        return True
+
+    except Exception as e:
+
+        print(e)
+
+        return False
+
+def is_autoincrement(series, tolerance=0.98):
+    s = series.dropna()
+
+    if len(s) < 3:
+        return False
+
+    # intentar convertir a entero
+    try:
+        s = pd.to_numeric(s, errors="raise").astype(int)
+    except Exception:
+        return False
+
+    # deben ser únicos
+    if s.nunique() != len(s):
+        return False
+
+    # comprobar incremento constante
+    s_sorted = s.sort_values()
+    diffs = s_sorted.diff().dropna()
+
+    step = diffs.mode()
+    if step.empty:
+        return False
+
+    return (diffs == step.iloc[0]).mean() >= tolerance
+
+def detect_autoincrement_columns(df):
+    return [
+        col for col, series in df.items()
+        if is_autoincrement(series)
+    ]
+
+
+def detect_id_columns(df):
+    
+    return [
+        c for c in df.columns
+        if c.lower().startswith("id") or c.lower().endswith("_id")
+    ]
+
+from itertools import combinations
+
+def candidate_keys(columns, max_size=3):
+    keys = []
+    for r in range(1, min(len(columns), max_size) + 1):
+        keys.extend(combinations(columns, r))
+    return keys
+
+def duplication_ratio(df, subset):
+    total = len(df)
+    unique = df.drop_duplicates(subset=list(subset))
+    return 1 - (len(unique) / total)
+
+def choose_best_key(df, candidates, threshold=(0.01, 0.5)):
+    best = None
+    best_ratio = 0
+
+    for key in candidates:
+        ratio = duplication_ratio(df, key)
+
+        if threshold[0] < ratio < threshold[1]:
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best = key
+
+    return best, best_ratio
+
+def smart_dedup(df):
+
+    # 1️⃣ AUTOINCREMENT PRIMERO (prioridad máxima)
+    auto_ids = detect_autoincrement_columns(df)
+
+    if auto_ids:
+        key = (auto_ids[0],)
+        return df.drop_duplicates(subset=list(key)), key,1
+
+    # 2️⃣ IDS POR NAMING
+    id_cols = detect_id_columns(df)
+
+    if len(id_cols) == 0:
+        return df, None,1
+
+    # 3️⃣ columnas extra SOLO si existen
+    extra_cols = [c for c in ["Partido", "Jornada"] if c in df.columns]
+
+    all_cols = id_cols + extra_cols
+
+    if len(all_cols) == 0:
+        return df, None,1
+
+    # 4️⃣ combinaciones
+    keys = candidate_keys(all_cols)
+
+    # 5️⃣ mejor clave por duplicación
+    best_key, ratio = choose_best_key(df, keys)
+
+    if best_key:
+        return df.drop_duplicates(subset=list(best_key)), best_key
+
+    return df, keys, len(keys)
+
+def get_files(
+    folder: str,
+    pattern: Union[str, Iterable[str]],
+    extensions: Union[None, str, Iterable[str]] = None
+) -> list[str]:
+
+    patterns = [pattern] if isinstance(pattern, str) else list(pattern)
+
+    if extensions is None:
+        extensions = ["*"]
+    elif isinstance(extensions, str):
+        extensions = [extensions]
+
+    files = set()
+
+    for p in patterns:
+        for ext in extensions:
+            files.update(
+                glob.glob(f"{folder}*{p}*.{ext}")
+            )
+
+    return sorted(files)
 
 def map_positions( position ):
 
@@ -122,6 +264,84 @@ def edad_from_timestamp(ts):
     hoy = datetime.now().date()
     edad = hoy.year - fecha_nac.year - ((hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day))
     return edad
+
+def generate_json(**args):
+
+    try:
+
+        files = args.get("files", [])
+        alias = args.get("alias", "")
+        on_callback = args.get("on_callback", lambda x: None)
+        folder = args.get("folder", "output")
+        cleanup = args.get("cleanup", True)
+        combine = args.get("combine", {})
+
+        folder_path = Path(folder)
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+        files_outputted = []
+
+        for file in files:
+            df = read_file(file)
+            name = Path(file).stem
+
+            report = on_callback(df)
+
+            report_file = folder_path / f"{alias}{name}.json"
+
+            if report is not None and not isinstance(report, dict):
+                raise TypeError("callback must return dict or None")
+            if report is not None:
+                df_report = pd.DataFrame([report])
+            else:
+                df_report = df
+
+            df_report.to_json(
+                report_file,
+                orient="records",
+                force_ascii=False,
+                indent=2
+            )
+
+            files_outputted.append(report_file)
+
+        # 🔹 combinar si se solicita
+        if not combine or "file" not in combine:
+            return {
+                "success": False,
+                "files_processed": len(files_outputted),
+                "combined": False
+            }
+
+        combined = {}
+
+        for file in files_outputted:
+            if file.exists():
+                with open(file, "r", encoding="utf-8") as f:
+                    combined[file.stem] = json.load(f)
+
+        combined_path = folder_path / f"{combine['file']}.json"
+
+        with open(combined_path, "w", encoding="utf-8") as f:
+            json.dump(combined, f, ensure_ascii=False, indent=2)
+
+        if cleanup:
+            for file in files_outputted:
+                file.unlink(missing_ok=True)
+
+        return {
+            "success": True,
+            "files_processed": len(files_outputted),
+            "combined": bool(combine)
+        }
+
+    except Exception as e:
+        print(f"[generate_json] Error: {e}")
+        return {
+            "success": False,
+            "files_processed": 0,
+            "combined": False
+        }
 
 def combine_sheets_with_one(
     current_path: str,

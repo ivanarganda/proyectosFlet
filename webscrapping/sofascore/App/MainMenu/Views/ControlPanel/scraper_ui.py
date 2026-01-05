@@ -191,11 +191,11 @@ def RenderScrapper(page: ft.Page, params={}):
 
     # RADIOS
 
-    mode_container, mode_radio = render_radio( log, "full", ["Completo","Rápido"], ["full","fast"], "Modo" )
+    mode_container, mode_radio = render_radio( log, "fast", ["Completo","Rápido"], ["full","fast"], "Modo" )
 
     clear_previous_data_container,clear_previous_data_radio = render_radio( log, "si", ["Si","No"], ["si","no"], "Limpieza previa" )
 
-    validate_data_container,validate_data_radio = render_radio( log, "si", ["Si","No"], ["si","no"], "Validar datos" )
+    validate_data_container,validate_data_radio = render_radio( log, "no", ["Si","No"], ["si","no"], "Validar datos" )
 
     output_save_container, output_save_radio = render_radio( log, "sql", ["SQL","CSV","Excel","JSON"], ["sql","csv","excel","json"], "Guardar como" )
 

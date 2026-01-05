@@ -23,54 +23,6 @@ db.connect_DB()
 
 def run_scrapping(settings,progress_cb=None):
 
-    def detect_id_columns(df):
-        return [
-            c for c in df.columns
-            if c.lower() == "id" or c.lower().endswith("_id")
-        ]
-
-    from itertools import combinations
-
-    def candidate_keys(columns, max_size=3):
-        keys = []
-        for r in range(1, min(len(columns), max_size) + 1):
-            keys.extend(combinations(columns, r))
-        return keys
-
-    def duplication_ratio(df, subset):
-        total = df.height
-        unique = df.unique(subset=list(subset)).height
-        return 1 - (unique / total)
-
-    def choose_best_key(df, candidates, threshold=(0.01, 0.5)):
-        best = None
-        best_ratio = 0
-
-        for key in candidates:
-            ratio = duplication_ratio(df, key)
-
-            if threshold[0] < ratio < threshold[1]:
-                if ratio > best_ratio:
-                    best_ratio = ratio
-                    best = key
-
-        return best, best_ratio
-
-    def smart_dedup(df):
-
-        id_cols = detect_id_columns(df)
-        if not id_cols:
-            return df, None
-
-        keys = candidate_keys(id_cols + ["Partido", "Jornada"])
-        best_key, ratio = choose_best_key(df, keys)
-
-        if best_key:
-            return df.unique(subset=list(best_key)), best_key
-
-        return df, None
-
-
     def save_as_sql():
 
         import sqlite3
@@ -86,7 +38,7 @@ def run_scrapping(settings,progress_cb=None):
         try:
             for file in files:
                 df = read_file(file)
-                df, used_keys = smart_dedup(df)
+                df, used_keys, _ = smart_dedup(df)
                 table_name = Path(file).stem
                 df.to_sql(table_name, conn, if_exists="replace", index=False)
         finally:
@@ -113,7 +65,7 @@ def run_scrapping(settings,progress_cb=None):
         with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
             for key,file in enumerate(excel_files):
                 df = read_file(file)
-                df, used_keys = smart_dedup(df)
+                df, used_keys,_ = smart_dedup(df)
                 stem = Path(file).stem
                 sheet_name = re.sub(r"_[^_]+$", "", stem)  # límite Excel
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
@@ -167,32 +119,7 @@ def run_scrapping(settings,progress_cb=None):
 
         files = get_files(INITTED_FOLDER, pattern_innit_files)
 
-        files_outputted = []
-
-        for file in files:
-            df = read_file(file)
-            
-            name = Path(file).stem
-            df.to_json(
-                output_dir / f"{name}.json",
-                orient="records",
-                force_ascii=False,
-                indent=2
-            )
-            files_outputted.append( output_dir / f"{name}.json" )
-
-        combined = {}
-
-        for file in files_outputted:
-            if not file.exists():
-                continue
-            with open( file , "r", encoding="utf-8") as f:
-                combined[file.stem] = json.load(f)
-        
-        with open( output_dir / "info.json", "w", encoding="utf-8" ) as f:
-            json.dump( combined, f, ensure_ascii=False, indent=2 )
-
-        delete_files( files_outputted )
+        generate_json( files=files , folder="output", combine={ "file": "info" } )
 
     def output_save( type ):
 
@@ -215,47 +142,6 @@ def run_scrapping(settings,progress_cb=None):
     def update(step, current=None, total=None):
         if progress_cb:
             progress_cb(step, current, total)
-
-    def delete_files( files: list ) -> bool:
-
-        try:
-
-            for file in files:
-
-                os.remove(file)
-
-            return True
-
-        except Exception as e:
-
-            print(e)
-
-            return False
-
-
-    def get_files(
-        folder: str,
-        pattern: Union[str, Iterable[str]],
-        extensions: Union[None, str, Iterable[str]] = None
-    ) -> list[str]:
-
-        patterns = [pattern] if isinstance(pattern, str) else list(pattern)
-
-        if extensions is None:
-            extensions = ["*"]
-        elif isinstance(extensions, str):
-            extensions = [extensions]
-
-        files = set()
-
-        for p in patterns:
-            for ext in extensions:
-                files.update(
-                    glob.glob(f"{folder}*{p}*.{ext}")
-                )
-
-        return sorted(files)
-
 
     def delete_files_initted( folder: str, pattern: Union[list, str] = pattern_innit_files, extensions: list = None ) -> bool:
 

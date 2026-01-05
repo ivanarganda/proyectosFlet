@@ -1,3 +1,4 @@
+import re
 from helpers.sofa_utils import *
 import pandas as pd
 import numpy as np
@@ -11,13 +12,15 @@ warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
 
 from init_files_scripts import (
     check_rounds_in_db,
+    reset_db_rounds,
+    get_total_steps,
     generate_urls_liga,
     generate_partidos_jornadas_stats,
     generate_partidos_jornadas_info,
     generate_estadisticas_jugadores_por_jornada
 )
 
-TOTAL_STEPS = 1000
+total_steps = 0
 current_step = 0
 
 def _run( settings, progress_cb = None  ):
@@ -26,19 +29,27 @@ def _run( settings, progress_cb = None  ):
         global current_step
         current_step += 1
         if progress_cb:
-            progress_cb(step_name, current_step, TOTAL_STEPS)
+            progress_cb(step_name, current_step, total_steps)
 
     scraping_folder = SCRAPPING_FOLDER
 
     def init_files() -> bool | list:
+
+        global total_steps
 
         processed_files = []
 
         # =========================================================
         # 0. Comprobar rondas en DB
         # =========================================================
-        if settings.get("mode") == "fast":
-            check_rounds_in_db()
+        if settings.get("mode") == "full":
+            
+            reset_db_rounds()
+            time.sleep(0.2)
+
+        check_rounds_in_db()
+
+        total_steps = get_total_steps()
 
         # 1. URLs
         output_file_la_liga = generate_urls_liga(update)
@@ -79,8 +90,6 @@ def _run( settings, progress_cb = None  ):
         processed_files.append(file_estadisticas_jugadores)
 
         update("Init files completed successfully")
-
-        print(processed_files)
 
         return processed_files
 
@@ -408,6 +417,105 @@ def _run( settings, progress_cb = None  ):
 
     run_init_files( processed_files )
 
+    if settings.get("validate_data") == "si":
+
+        from collections import Counter
+        from pathlib import Path
+
+        def classify_value(v):
+
+            if v is None or str(v).strip() == "":
+                return "empty"
+
+            s = str(v).strip().lower()
+
+            # Booleanos
+            if s.lower() in {"true", "false", "yes", "no"}:
+                return "bool"
+            
+            if s in {"0", "1"}:
+                return "int"   # 👈 CLAVE
+
+            # Entero
+            if re.fullmatch(r"-?\d+", s):
+                return "int"
+
+            # Float (coma o punto)
+            if re.fullmatch(r"-?\d+[.,]\d+", s):
+                return "float"
+
+            # Fecha
+            for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%Y/%m/%d"):
+                try:
+                    datetime.strptime(s, fmt)
+                    return "date"
+                except ValueError:
+                    pass
+
+            # String válida
+            if any(c.isalpha() for c in s):
+                return "string"
+
+            return "invalid"
+
+        def infer_column_type(series, threshold=0.8):
+
+            types = [classify_value(v) for v in series]
+
+            counter = Counter(t for t in types if t != "empty")
+
+            if not counter:
+                return "empty"
+
+            dominant, pct = counter.most_common(1)[0]
+            pct = pct / sum(counter.values())
+
+            return dominant if pct >= threshold else "mixed"
+
+        def validate_column(series):
+
+            expected = infer_column_type(series)
+            errors = []
+
+            for i, v in series.items():
+                t = classify_value(v)
+
+                if t == "empty":
+                    continue
+
+                if expected != "mixed" and t != expected:
+                    errors.append({
+                        "row": i,
+                        "value": v,
+                        "expected": expected,
+                        "found": t
+                    })
+
+            return expected, errors
+
+        def validate_dataframe(df):
+
+            report = {}
+
+            _, used_keys, length = smart_dedup(df)
+
+            for col in df.columns:
+                expected, errors = validate_column(df[col])
+
+                report[col] = {
+                    "expected_type": expected,
+                    "errors": errors,
+                    "error_count": len(errors)
+                }
+
+            return report
+
+        print("validating data.....")
+
+        files_info_db = get_files( INITTED_FOLDER, "_db" )
+
+        generate_json( files=files_info_db , alias="report_" , folder="output", on_callback=validate_dataframe, combine={ "file": "reports" } )
+
 if __name__ == "__main__":
 
-    _run()
+    _run( {"validate_data":"si"} )

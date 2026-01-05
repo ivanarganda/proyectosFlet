@@ -27,6 +27,9 @@ MAX_WORKERS = 1
 # Numero de workers para ThreadPoolExecutor  procesamiento
 PROCESSING_MAX_WORKERS = max(2, os.cpu_count() - 1)
 
+# Output files
+OUTPUT_PARTIDOS_LIGA = f"{scraping_folder}partidos_laliga.csv"
+
 def retry_scrape(fn, url, retries=5, base_sleep=2):
     for attempt in range(1, retries + 1):
         try:
@@ -37,6 +40,53 @@ def retry_scrape(fn, url, retries=5, base_sleep=2):
             sleep = base_sleep * attempt
             print(f"⏳ Retry {attempt}/{retries} en {sleep}s | {url}")
             time.sleep(sleep)
+
+def get_total_steps() -> int:
+    
+    db = SQLiteORM(DB)
+    db.connect_DB()
+
+    df = read_file(OUTPUT_PARTIDOS_LIGA)
+    df = df[df["Jornada"].between(current_round, int(df["Jornada"].max()))]
+
+    # --- PARTIDOS ---
+    total_matches = df["URL"].count()
+
+    already_matches_scraped = db.execute_query(
+        "SELECT COUNT(*) AS n FROM partidos"
+    ).json[0]["n"]
+
+    pending_matches = max(0, total_matches - already_matches_scraped)
+
+    match_steps = pending_matches * 2  # ej: request + parse
+
+    # --- JUGADORES ---
+    players_per_match = 21
+    total_players = pending_matches * players_per_match
+
+    already_players_stats_scraped = db.execute_query(
+        "SELECT COUNT(*) AS n FROM jugadores_stats"
+    ).json[0]["n"]
+
+    pending_players = max(0, total_players - already_players_stats_scraped)
+
+    # --- TOTAL ---
+    return match_steps + pending_players
+
+def reset_db_rounds()-> bool:
+    
+    try:
+
+        db = SQLiteORM(DB)
+        db.connect_DB()
+        db.delete_all("jornadas")
+
+        return True
+    
+    except Exception:
+
+        print(f"Error: unable to delete all rounds")
+        return False
 
 def check_rounds_in_db()-> None:
 
@@ -54,8 +104,6 @@ def check_rounds_in_db()-> None:
 def generate_urls_liga(on_callback=None) -> str | bool:
 
     global output_filename
-
-    OUTPUT_PARTIDOS_LIGA = f"{scraping_folder}partidos_laliga.csv"
 
     output_filename = init_path_object( OUTPUT_PARTIDOS_LIGA ).get("filename", "") # no queremos path completo por seguridad
 
@@ -734,3 +782,9 @@ def generate_estadisticas_jugadores_por_jornada(
         print(f"❌ Error escribiendo Excel: {e}")
         return False
 
+
+
+if __name__ == "__main__":
+
+    # Only for testing
+    print(get_total_steps())

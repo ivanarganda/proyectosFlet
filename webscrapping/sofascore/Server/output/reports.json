@@ -1,0 +1,708 @@
+{
+  "report_equipos_info_db": [
+    {
+      "id_equipo": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "nombre": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "slug": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "escudo": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_estadios_info_db": [
+    {
+      "id_estadio": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "nombre": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "latitud": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "longitud": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "lugar": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "capacidad": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_equipo": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_jornadas_info_db": [
+    {
+      "id_jornada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_temporada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "fecha_creacion": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_jugadores_info_db": [
+    {
+      "id_jugador": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "nombre": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "edad": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "precio": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "sexo": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "country_name": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_posicion": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_equipo": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_jugadores_stats_info_db": [
+    {
+      "id_estadistica_jugadores": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_jugador": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_equipo": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_partido": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "partido_orden": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_jornada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "jerseyNumber": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalPass": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "accuratePass": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalLongBalls": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "accurateLongBalls": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "accurateOwnHalfPasses": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalOwnHalfPasses": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalOppositionHalfPasses": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "duelLost": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalContest": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "ballRecovery": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "errorLeadToAGoal": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "fouls": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "minutesPlayed": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "touches": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "rating": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "possessionLostCtrl": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "expectedAssists": {
+        "expected_type": "float",
+        "errors": [
+          {
+            "row": 0,
+            "value": 7.099e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 129,
+            "value": 5.917e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 152,
+            "value": 1.07e-06,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 214,
+            "value": 1.276e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 257,
+            "value": 3.323e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 271,
+            "value": 4.621e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 280,
+            "value": 3.983e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 288,
+            "value": 6.949e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 312,
+            "value": 2.61e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 364,
+            "value": 5.298e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 365,
+            "value": 7.99e-06,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 684,
+            "value": 1.424e-05,
+            "expected": "float",
+            "found": "string"
+          },
+          {
+            "row": 686,
+            "value": 2.113e-05,
+            "expected": "float",
+            "found": "string"
+          }
+        ],
+        "error_count": 13
+      },
+      "goalsPrevented": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "passValueNormalized": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "dribbleValueNormalized": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "defensiveValueNormalized": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "accurateOppositionHalfPasses": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalCross": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "aerialWon": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "duelWon": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "dispossessed": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalClearance": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "interceptionWon": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalTackle": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "wonTackle": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "wasFouled": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "errorLeadToAShot": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalOffside": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "aerialLost": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "shotOffTarget": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "unsuccessfulTouch": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "expectedGoals": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "shotValueNormalized": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "challengeLost": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "accurateCross": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "wonContest": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "onTargetScoringAttempt": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "goals": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "clearanceOffLine": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "outfielderBlock": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "expectedGoalsOnTarget": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "bigChanceCreated": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "keyPass": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "blockedScoringAttempt": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "savedShotsFromInsideTheBox": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "penaltyFaced": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "saves": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "keeperSaveValue": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "goalkeeperValueNormalized": {
+        "expected_type": "float",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalKeeperSweeper": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "accurateKeeperSweeper": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "bigChanceMissed": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "penaltyWon": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "captain": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "penaltyConceded": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "penaltyMiss": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "goodHighClaim": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "punches": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "hitWoodwork": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "lastManTackle": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "goalAssist": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "userCount": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "shirtNumber": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "totalShots": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "position": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "substitute": {
+        "expected_type": "bool",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_partidos_info_db": [
+    {
+      "id_partido": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_temporada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_jornada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_local": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_visitante": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_estadio": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "inicio": {
+        "expected_type": "invalid",
+        "errors": [],
+        "error_count": 0
+      },
+      "estado": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "goles_local": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "goles_visitante": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_posiciones_info_db": [
+    {
+      "id_posicion": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "posicion": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "nombre_completo": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ],
+  "report_temporadas_info_db": [
+    {
+      "id_temporada": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "nombre": {
+        "expected_type": "string",
+        "errors": [],
+        "error_count": 0
+      },
+      "year_start": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "year_end": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "id_liga": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      },
+      "fecha_creacion": {
+        "expected_type": "int",
+        "errors": [],
+        "error_count": 0
+      }
+    }
+  ]
+}

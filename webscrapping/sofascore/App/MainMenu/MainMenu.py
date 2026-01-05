@@ -96,7 +96,7 @@ def update_sidebar_height(page:ft.Page):
 # ===========================================================
 # MENÚ: CONTENIDO PRINCIPAL
 # ===========================================================
-def list_menu_items(page: ft.Page):
+def list_menu_items(page: ft.Page): 
 
     MODULES_MENU = get_modules()
 
@@ -393,7 +393,6 @@ def list_menu_items(page: ft.Page):
     except Exception as e:
         log_error("list_menu_items", e)
         return [ft.Text("❌ Error cargando menú principal")]
-
 
 # ===========================================================
 # FUNCIONES AUXILIARES
