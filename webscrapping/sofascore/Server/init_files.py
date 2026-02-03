@@ -27,7 +27,8 @@ def _run( settings, progress_cb = None  ):
 
     def update(step_name):
         global current_step
-        current_step += 1
+        current_step += 1.33
+        print(current_step)
         if progress_cb:
             progress_cb(step_name, current_step, total_steps)
 

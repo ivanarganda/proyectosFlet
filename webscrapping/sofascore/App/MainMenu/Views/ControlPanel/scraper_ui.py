@@ -15,6 +15,7 @@ import requests
 from footer_navegation.navegation import footer_navbar
 from .common_control_panel import handle_selected_module
 from datetime import datetime
+from middlewares.auth import middleware_auth
 from params import *
 import glob
 
@@ -38,6 +39,8 @@ validate_data_radio = None
 output_save_radio = None
 
 def RenderScrapper(page: ft.Page, params={}):
+    
+    middleware_auth(page)
 
     page.window.width = 1000
     page.window.height = 800

@@ -42,36 +42,28 @@ def retry_scrape(fn, url, retries=5, base_sleep=2):
             time.sleep(sleep)
 
 def get_total_steps() -> int:
-    
+
     db = SQLiteORM(DB)
     db.connect_DB()
 
     df = read_file(OUTPUT_PARTIDOS_LIGA)
     df = df[df["Jornada"].between(current_round, int(df["Jornada"].max()))]
 
-    # --- PARTIDOS ---
-    total_matches = df["URL"].count()
+    total_matches = df["URL"].drop_duplicates().count()
 
-    already_matches_scraped = db.execute_query(
-        "SELECT COUNT(*) AS n FROM partidos"
-    ).json[0]["n"]
+    already_matches_scraped = db.execute_query(f"""
+        SELECT COUNT(*) AS n
+        FROM partidos
+        WHERE id_jornada >= {current_round}
+    """).json[0]["n"]
 
     pending_matches = max(0, total_matches - already_matches_scraped)
 
-    match_steps = pending_matches * 2  # ej: request + parse
+    # --- STEPS ---
+    match_steps = pending_matches * 1        # request + parse
+    player_steps = pending_matches * 2       # batch jugadores
 
-    # --- JUGADORES ---
-    players_per_match = 21
-    total_players = pending_matches * players_per_match
-
-    already_players_stats_scraped = db.execute_query(
-        "SELECT COUNT(*) AS n FROM jugadores_stats"
-    ).json[0]["n"]
-
-    pending_players = max(0, total_players - already_players_stats_scraped)
-
-    # --- TOTAL ---
-    return match_steps + pending_players
+    return match_steps + player_steps
 
 def reset_db_rounds()-> bool:
     

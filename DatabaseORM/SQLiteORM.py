@@ -624,7 +624,7 @@ class SQLiteORM:
 
                 raise Exception(f"It could not be obtained table_info PRAGMA from '{table_name}'")
 
-            # TODO check primary keys provided that they are autoincrement
+            # check primary keys provided that they are autoincrement
             primary_keys = self.get_autoincrement_pks( table_name )
 
             cols_to_insert = [c for c in columns if c]
@@ -732,7 +732,7 @@ class SQLiteORM:
                 # Detect primary keys because they might be autoincrement amd it is not necessary to provide a value
                 info = self.execute_query(f"PRAGMA table_info({table_name})")
 
-                # TODO primary keys only for autoincrement
+                # primary keys only for autoincrement
                 primary_keys = self.get_autoincrement_pks( table_name )
 
                 placeholders = ", ".join(["?"] * ( len(data) - len(primary_keys) ))

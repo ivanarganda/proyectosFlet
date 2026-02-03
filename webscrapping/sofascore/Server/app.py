@@ -282,6 +282,7 @@ def protected_route(auth: bool = Depends(check_authorization)):
 
 @app.get("/scrapping/status")
 def scrapping_status():
+    print(SCRAPING_STATUS)
     return SCRAPING_STATUS
 
 @app.post("/scrapping/start")
