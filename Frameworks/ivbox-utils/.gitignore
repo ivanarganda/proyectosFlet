@@ -1,0 +1,85 @@
+# ============================================================
+#  PYTHON / PACKAGE DEVELOPMENT IGNORE RULES
+# ============================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cache
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.cache
+*.log
+
+# C extensions
+*.so
+
+# ============================================================
+#  VENV
+# ============================================================
+venv/
+env/
+.venv/
+
+# ============================================================
+#  BUILD + DISTRIBUTION FILES
+#  Mantener pyproject.toml y MANIFEST.in visibles
+# ============================================================
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ============================================================
+#  IDE / EDITOR FILES
+# ============================================================
+.vscode/
+.idea/
+*.iml
+
+# ============================================================
+#  SYSTEM FILES
+# ============================================================
+.DS_Store
+Thumbs.db
+
+# ============================================================
+#  PROJECT-SPECIFIC (no subir datos sensibles)
+# ============================================================
+
+# Database files (si generas .db en local)
+*.db
+
+# Resultados del scrapping o data temporal
+files_initted/
+scrapping_output/
+temp/
+tmp/
+
+# Archivo .env
+.env
+.env.*
+
+# ============================================================
+#  FLET / FLASK / RUN-TIME CACHES
+# ============================================================
+*.log
+*.pid
+
+# ============================================================
+#  KEEP NECESSARY FILES
+#  (NO BORRAR, SOLO EJEMPLO EXPLICATIVO)
+# ============================================================
+# !pyproject.toml
+# !MANIFEST.in
+# !ivbox/
+# !ivbox/**/*.py

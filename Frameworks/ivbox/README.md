@@ -1,145 +1,207 @@
-# ivbox
+# **ivbox**
 
 [![PyPI version](https://img.shields.io/pypi/v/ivbox.svg)](https://pypi.org/project/ivbox/)
 [![Python](https://img.shields.io/pypi/pyversions/ivbox.svg)](https://pypi.org/project/ivbox/)
 [![License](https://img.shields.io/pypi/l/ivbox.svg)](LICENSE)
 
-ivbox is a Python utility framework focused on improving developer productivity through **better project structure** and **reusable utility functions**, built from real-world usage and repetition.
+🚀 **ivbox** es un framework ligero para Python enfocado en mejorar la **experiencia de desarrollo (DX)** mediante:
 
-It is designed to grow organically, introducing abstractions **only when patterns prove useful**.
+* estructuras de proyecto claras y repetibles,
+* utilidades reutilizables probadas en proyectos reales, y
+* scaffolding automático vía CLI para aplicaciones basadas en **Flet**.
 
-> Current version: **0.2.0**
+ivbox no pretende reemplazar a Flet: **te ayuda a trabajar mejor con él.**
 
----
-
-## Why ivbox?
-
-When you build real projects, you quickly notice the same pain points repeating:
-
-- You rewrite the same helpers again and again
-- UI code grows fast and becomes hard to maintain
-- Small architectural decisions become expensive later
-- You want *structure* without over-engineering
-
-ivbox exists to reduce that friction with a simple rule:
-
-> **Abstractions are created only when something is repeated.**
+> Versión actual: **1.0.0**
 
 ---
 
-## Features
+## 🎯 Filosofía
 
-- Improved internal project structure (0.2.0 refactor)
-- Reusable **general-purpose utilities**
-- UI helper utilities for **Flet-based applications**
-- Modular design: add what you need, keep it clean
-- Built from real usage, not theoretical patterns
+ivbox sigue una regla simple:
 
----
+> **Primero se repite. Luego se abstrae.**
 
-## Project Status
-
-ivbox is under **active development**.
-
-- The API may evolve until version `1.0.0`
-- Changes are driven by real usage, not assumptions
-- Stability increases progressively with each release
+Las abstracciones nacen de problemas reales, no de patrones teóricos.
 
 ---
 
-## Installation
+## 🤔 ¿Por qué ivbox?
+
+Al construir aplicaciones reales con Flet, suelen aparecer los mismos problemas:
+
+* Arquitecturas poco claras
+* Routing manual y repetitivo
+* Falta de scaffolding (generadores de código)
+* Duplicación de lógica entre proyectos
+* Poca estandarización de estructura
+
+ivbox nace para reducir esa fricción y ofrecer un punto de partida profesional y consistente.
+
+---
+
+## ✨ Características principales
+
+* 📁 **Plantillas de proyecto listas para usar**
+* ⚡ **CLI con scaffolding automático**
+* 🧩 Integración nativa con **ivbox-utils**
+* 🗄️ Base para trabajar con SQLite + ORM propio
+* 🧱 Arquitectura modular y extensible
+* 🧪 Construido desde casos reales de uso con Flet
+
+---
+
+## 📦 Instalación
 
 ```bash
 pip install ivbox
-
 ```
 
-## Quick Start
-### General utilities
+> Recomendado también:
+
+```bash
+pip install ivbox-utils[flet]
+```
+
+---
+
+## 🚀 Inicio rápido (lo importante)
+
+### 1) Crea un nuevo proyecto en segundos
+
+```bash
+ivbox new MiApp --install
+```
+
+Esto generará automáticamente:
+
+```
+MiApp/
+  App/
+  Server/
+```
+
+con una estructura lista para ejecutar con Flet.
+
+### 2) Ejecuta tu aplicación
+
+```bash
+cd MiApp
+python App/main.py
+```
+
+---
+
+## 🧠 Qué te da ivbox
+
+### 🔹 Estructura estándar de proyecto
+
+Un proyecto generado incluye por defecto:
+
+```
+App/
+  main.py
+  params.py
+  components/
+  helpers/
+  middlewares/
+  MainMenu/
+    Views/
+
+Server/
+  api.py
+  db.py
+  auth.py
+```
+
+Esto permite:
+
+* separar UI y backend,
+* mantener orden y escalabilidad,
+* y facilitar el trabajo en equipo.
+
+---
+
+### 🔹 CLI de scaffolding
+
+Comandos principales:
+
+```bash
+ivbox new MiApp
+ivbox create view Dashboard
+ivbox create middleware Auth
+ivbox create component PopupMenu
+```
+
+(La generación de views y middlewares está en desarrollo y creciendo con cada versión.)
+
+---
+
+### 🔹 Integración con ivbox-utils
+
+ivbox trabaja de la mano con **ivbox-utils**, que aporta helpers listos para usar:
 
 ```python
-from ivbox.utils import general
-
-# Example usage (adapt to your real functions)
-# general.slugify("Hello World") -> "hello-world"
-# general.now_str() -> "2025-12-29 20:15:00"
-```
-### Flet utilities
-
-```python
-from ivbox.utils import flet as ivf
-import flet as ft
-
-def main(page: ft.Page):
-    # Example usage (adapt to your real helpers)
-    # page.add(ivf.section_title("Dashboard"))
-    pass
-
-ft.app(target=main)
-
+from ivbox_utils.app.auth import init_auth
+from ivbox_utils.general.fs import read_file
 ```
 
-## Utilities
-### General-purpose utilities
+Flujo recomendado:
 
-These helpers are framework-agnostic and intended to reduce repetitive code across projects:
+```bash
+pip install ivbox
+pip install ivbox-utils[flet]
+ivbox new MiApp --install
+```
 
-- strings and formatting helpers
+---
 
-- date/time helpers
+## 🧩 Estado del proyecto
 
-- validation helpers
+ivbox está en **desarrollo activo**:
 
-- file/path helpers
+* API puede cambiar hasta `1.0.0`
+* Cada versión mejora estabilidad y ergonomía
+* Los cambios nacen de uso real, no de teoría
 
-- misc productivity utilities
+---
 
-### Flet UI utilities
+## 🔢 Versionado
 
-Helpers focused on reducing repetition in Flet apps:
+Seguimos **Semantic Versioning**:
 
-- reusable layout patterns
+* `0.x` → desarrollo activo
+* `1.0.0` → API estable
 
-- UI composition helpers
+---
 
-- common components wrappers (only when repeated)
+## 🤝 Contribuciones
 
-- navigation and page composition helpers (if applicable)
+Son bienvenidas si:
 
-ivbox does not replace Flet — it helps you work with it more efficiently.
+1. Resuelven un problema real y repetido
+2. Mantienen el proyecto simple
+3. Aportan ejemplo mínimo de uso
 
-### Versioning
+Flujo sugerido:
 
-ivbox follows semantic versioning with the usual meaning:
+1. Abrir issue describiendo el problema
+2. Proponer solución mínima
+3. Aportar ejemplo o test
 
-- 0.x → active development, API may change
+---
 
-- 1.0.0 → stable and committed API
+## ✍️ Autor
 
-### Contributing
+**Ivan González Valles (IGV)**
+Python | Data | Automation | Flet
 
-Contributions are welcome if they:
+🔗 GitHub: [https://github.com/ivanarganda](https://github.com/ivanarganda)
 
-- solve a real, repeated problem
+---
 
-- keep the project simple and understandable
+## 💡 Inspiración
 
-- respect the philosophy of “repeat first, abstract later”
+ivbox está inspirado por frameworks que crecieron desde el uso real, como **Laravel**.
 
-Suggested flow:
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1.** Open an issue describing the repeated pain point
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2.** Propose a minimal helper/abstraction
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**3.** Add a small example + tests if applicable
-
-## Author
-
-### Ivan Gonzalez Valles
-**GitHub**: https://github.com/ivanarganda
-
-## Inspiration
-
-ivbox is inspired by developer pain points and by frameworks that grew through real usage, like Laravel.
-Build what hurts. Keep what repeats
+> *Build what hurts. Keep what repeats.*

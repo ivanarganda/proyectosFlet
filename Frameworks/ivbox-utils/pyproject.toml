@@ -1,0 +1,14 @@
+[project]
+name = "ivbox-utils"
+version = "0.1.0"
+description = "Utilidades para ivbox y proyectos Flet"
+requires-python = ">=3.9"
+dependencies = [
+  "pandas",
+  "polars",
+  "requests",
+  "flet"
+]
+
+[project.optional-dependencies]
+flet = ["flet"]
